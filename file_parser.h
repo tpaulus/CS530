@@ -44,6 +44,8 @@ class file_parser {
     private:
         // your variables and private methods go here
 
+        struct line;
+
 };
 
 #endif    
