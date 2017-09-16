@@ -13,5 +13,10 @@ struct line {
         operand = "";
         comment = "";
     }
-
 };
+
+int main() {
+    vector<line> victor; //add new elements with .push_back(<line>);
+
+
+}
