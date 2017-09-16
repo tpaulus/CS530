@@ -15,6 +15,8 @@ struct line {
     }
 };
 
+vector<line> victor; //add new elements with .push_back(<line>);
+
 string line :: getLabel(string label){
 	return label;
 }
@@ -28,8 +30,6 @@ string line :: getLabel(string comment){
 	return comment;
 }
 
-int main() {
-    vector<line> victor; //add new elements with .push_back(<line>);
-
-
+int size(){
+  return victor.size();
 }
