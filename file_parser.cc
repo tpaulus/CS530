@@ -33,3 +33,20 @@ string line :: getLabel(string comment){
 int size(){
   return victor.size();
 }
+
+string get_token(unsigned int row, unsigned int column){
+  if(row < victor.size()){
+    //Is a valid row
+    if(column == 1){                //   0      1       2        3
+      return victor[row].label;    //(label/opcode/operands/comments)
+    } else if (column == 2) {
+      return victor[row].opcode;
+    } else if (column == 3) {
+      return victor[row].operand;
+    } else if (column == 4) {
+      return victor[row].comment;
+    }
+  }
+  //Not Valid row or column
+  return "";
+}
