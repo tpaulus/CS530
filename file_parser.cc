@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <vector>
-#incluse <cctype>
+#include <cctype>
 
 using namespace std;
 
