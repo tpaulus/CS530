@@ -6,8 +6,6 @@
 
 using namespace std;
 
-string file_name = argv[1]  
-
 struct line {
 
     string label;
