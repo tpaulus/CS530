@@ -25,13 +25,13 @@ struct line {
         comment = "";
     }
 
-    string getLabel();
+    string getLabel() const;
 
-    string getOpcode();
+    string getOpcode() const;
 
-    string getOperand();
+    string getOperand() const;
 
-    string getComment();
+    string getComment() const;
 };
 
 vector<line> victor; //add new elements with .push_back(<line>);
