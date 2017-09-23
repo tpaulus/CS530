@@ -7,7 +7,6 @@
 using namespace std;
 
 struct line {
-
     string label;
     string opcode;
     string operand;
@@ -19,26 +18,36 @@ struct line {
         operand = "";
         comment = "";
     }
+
+    string getLabel();
+
+    string getOpcode();
+
+    string getOperand();
+
+    string getComment();
 };
 
 vector<line> victor; //add new elements with .push_back(<line>);
 
-string line :: getLabel(string label){
-	return label;
-}
-string line :: getOpcode(string opcode){
-	return opcode;
-}
-string line :: getLabel(string operand){
-	return operand;
-}
-string line :: getLabel(string comment){
-	return comment;
+string line::getLabel() {
+    return label;
 }
 
+string line::getOpcode() {
+    return opcode;
+}
 
-int size(){
-  return victor.size();
+string line::getOperand() {
+    return operand;
+}
+
+string line::getComment() {
+    return comment;
+}
+
+int size() {
+    return static_cast<int>(victor.size());
 }
 
 void print_error(string);
