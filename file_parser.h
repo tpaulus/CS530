@@ -44,9 +44,12 @@ class file_parser {
 
     private:
         // your variables and private methods go here
+        string file_name;
 
         struct line;
-        vector<line>;
+
+        line line_parser(string);
+        void read_file(string);
 
 };
 
