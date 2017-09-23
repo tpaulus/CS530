@@ -4,10 +4,11 @@
 #include <vector>
 #include <cctype>
 
+#include "file_parser.h"
+
 using namespace std;
 
 struct line {
-
     string label;
     string opcode;
     string operand;
@@ -20,135 +21,146 @@ struct line {
         comment = "";
     }
 
+    string getLabel();
+
+    string getOpcode();
+
+    string getOperand();
+
+    string getComment();
 };
 
-string line :: getLabel(string label){
-	return label;
-}
-string line :: getOpcode(string opcode){
-	return opcode;
-}
-string line :: getLabel(string operand){
-	return operand;
-}
-string line :: getLabel(string comment){
-	return comment;
+vector<line> victor; //add new elements with .push_back(<line>);
+string file_name;
+
+string line::getLabel() {
+    return label;
 }
 
-
-int size(){
-  return victor.size();
+string line::getOpcode() {
+    return opcode;
 }
 
-void print_error(string);
+string line::getOperand() {
+    return operand;
+}
 
-/*
+string line::getComment() {
+    return comment;
+}
+
+int size() {
+    return static_cast<int>(victor.size());
+}
+
+// Prototypes
+void print_error(const string &);
+
+vector<string> read_file();
+
+line line_parser(const string &raw_line);
+
+
+
+/**
  * Reads the file from the command line and parses through the input.
  * @param file_name: assembly code source file.
  * 
  */
-void file_parser(file_name){
-	
-	read_file(); //loads contents with indexed lines.
-	
-	//loop to parse through contents line by line. Each line is passed through the line_parser.
-	for(int i =0; i<contents.size;i++){
-		line_parser(contents[i]);
-	}
-	return 0;
+void file_parser(string parse_name) {
+    file_name = std::move(parse_name);
+    vector<string> contents = read_file(); //loads contents with indexed lines.
+
+    //loop to parse through contents line by line. Each line is passed through the line_parser.
+    for (int i = 0; i < contents.size(); i++) {
+        line_parser(contents[i]);
+    }
 }
 
-/*
+/**
  * Parse through a raw line and assign the words to a line structure
  * the line structure will then be pushed onto victor.
  * @param raw_line: string containing the entire line to be parsed.
  */
-void line_parser(string raw_line){
-	line tmp_line = raw_line;	//temporary struct to be pushed onto victor.
-    // string* raw_index;  //pointer for the raw_line
-    
-    string delimiters = " \t\n";
-    
-    int last = target.find_first_not_of(delimiters, 0); // Find the first thing that's not a delimiter
-    int first = target.find_first_of(delimiters, last);  // Define the first token with the delimiter (first delimiter)
-    
-    string token = target.substring(last, first-last);
-    
-    while(first != -1 || last != -1) {
-        token = substring
+line line_parser(const string &raw_line) {
+    line tmp_line;    //temporary struct to be pushed onto victor.
+    string *raw_index;  //pointer for the raw_line
+
+    //Skips over spaces
+    while (!isblank(*raw_index)) {
+        //there is probably a fancier c++ way to do this
     }
-	
-	// Skips over spaces
-	// while(!isblank(*raw_index)){
-    //     //there is probably a fancier c++ way to do this 
-        
-	// }
-	
-	
+
+
+    // TODO Implement conversion from string to line
+    return nullptr;
 }
 
-/*
+/**
  * Takes the file assigned to file_name 
  * iterates line by line and assigns each to an index to vector contents
  */
-void read_file() {
+vector<string> read_file() {
     ifstream infile; // input stream
     ofstream outfile; // output stream
-    int i=0; // vector index
+    vector<string> contents;  // file contents
+    int i = 0; // vector index
     string line;
 
-    if(argc != 2)
+    if (file_name.empty())
         print_error("You must specify a filename on the command line");
 
-    infile.open(file_name,ios::in);
-    if(!infile)
+    infile.open(file_name, ios::in);
+    if (!infile)
         print_error("Sorry, could not open the file for reading");
 
-    while(!infile.eof()) {
-        getline(infile,line);
+    while (!infile.eof()) {
+        getline(infile, line);
         contents.push_back(line);
-        }
+    }
     infile.close();
 
+    return contents;
 }
+
 /**
  * prints the indexes of vector victor
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
-void print_file(){ 
+void print_file() {
 
     cout << "Now dumping what we read from file ..." << endl;
-    for(int i=0; i < victor.size(); i++)
+    for (int i = 0; i < victor.size(); i++)
         cout << victor[i] << endl;
 
-    outfile.open("output.txt",ios::out);
-    if(!outfile)
+    outfile.open("output.txt", ios::out);
+    if (!outfile)
         print_error("Sorry, could not open the file for writing");
 
-    for(int i=0; i < victor.size(); i++)
+    for (int i = 0; i < victor.size(); i++)
         outfile << victor[i] << endl;
     outfile.close();
 
 }
 
-void print_error(string s) {
+void print_error(const string &s) {
     cout << s << endl;
     exit(1);
 }
 
-string get_token(unsigned int row, unsigned int column){
-  if(row < victor.size()){
-    //Is a valid row
-    if(column == 0){                //   0      1       2        3
-      return victor[row].label;    //(label/opcode/operands/comments)
-    } else if (column == 1) {
-      return victor[row].opcode;
-    } else if (column == 2) {
-      return victor[row].operand;
-    } else if (column == 3) {
-      return victor[row].comment;
+string get_token(unsigned int row, unsigned int column) {
+    if (row < victor.size()) {
+        //Is a valid row
+        if (column == 0) {                //   0      1       2        3
+            return victor[row].label;    //(label/opcode/operands/comments)
+        } else if (column == 1) {
+            return victor[row].opcode;
+        } else if (column == 2) {
+            return victor[row].operand;
+        } else if (column == 3) {
+            return victor[row].comment;
+        }
     }
-  }
-  //Not Valid row or column
-  return "";
+    //Not Valid row or column
+    return "";
 }

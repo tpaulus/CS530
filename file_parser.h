@@ -44,17 +44,12 @@ class file_parser {
 
     private:
         // your variables and private methods go here
+        string file_name;
 
         struct line;
-        vector<line> victor; // Contents of file as line struct; add new elements with .push_back(<line>);
-        vector<string> contents; // Contents of file as strings
 
-        /*
-        * Parse through a raw line and assign the words to a line structure
-        * the line structure will then be pushed onto victor.
-        * @param raw_line: string containing the entire line to be parsed.
-        */
-        void line_parser(string);
+        line line_parser(string);
+        void read_file(string);
 
 };
 
