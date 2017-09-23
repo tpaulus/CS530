@@ -35,7 +35,8 @@ struct line {
 };
 
 vector<line> victor; //add new elements with .push_back(<line>);
-string file_name;
+vector<string> contents;  // file contents in string form
+string file_name; // Class variable for file_name
 
 string line::getLabel() const {
     return label;
@@ -60,7 +61,7 @@ int size() {
 // Prototypes
 void print_error(const string &);
 
-vector<string> read_file();
+void read_file();
 
 line line_parser(const string &raw_line);
 
@@ -73,7 +74,7 @@ line line_parser(const string &raw_line);
  */
 void file_parser(string parse_name) {
     file_name = std::move(parse_name);
-    vector<string> contents = read_file(); //loads contents with indexed lines.
+    read_file(); //loads contents with indexed lines.
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
     for (int i = 0; i < contents.size(); i++) {
@@ -91,23 +92,21 @@ line line_parser(const string &raw_line) {
     string *raw_index;  //pointer for the raw_line
 
     //Skips over spaces
-    while (!isblank(*raw_index)) {
-        //there is probably a fancier c++ way to do this
-    }
+    // while (!isblank(*raw_index)) {
+    //     //there is probably a fancier c++ way to do this
+    // }
 
 
     // TODO Implement conversion from string to line
-    return nullptr;
+    return tmp_line;
 }
 
 /**
  * Takes the file assigned to file_name
  * iterates line by line and assigns each to an index to vector contents
  */
-vector<string> read_file() {
+void read_file() {
     ifstream infile; // input stream
-    ofstream outfile; // output stream
-    vector<string> contents;  // file contents
     int i = 0; // vector index
     string line;
 
@@ -123,8 +122,6 @@ vector<string> read_file() {
         contents.push_back(line);
     }
     infile.close();
-
-    return contents;
 }
 
 /**
@@ -137,13 +134,13 @@ void print_file() {
     for (int i = 0; i < victor.size(); i++)
         cout << victor[i] << endl;
 
-    outfile.open("output.txt", ios::out);
-    if (!outfile)
-        print_error("Sorry, could not open the file for writing");
+    // outfile.open("output.txt", ios::out);
+    // if (!outfile)
+    //     print_error("Sorry, could not open the file for writing");
 
-    for (int i = 0; i < victor.size(); i++)
-        outfile << victor[i] << endl;
-    outfile.close();
+    // for (int i = 0; i < victor.size(); i++)
+    //     outfile << victor[i] << endl;
+    // outfile.close();
 
 }
 

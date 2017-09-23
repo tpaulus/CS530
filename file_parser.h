@@ -48,8 +48,7 @@ class file_parser {
 
         struct line;
 
-        line line_parser(string);
-        void read_file(string);
+        void print_error(const string);
 
 };
 
