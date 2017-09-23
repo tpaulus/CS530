@@ -19,9 +19,8 @@ struct line {
         operand = "";
         comment = "";
     }
-};
 
-vector<line> victor; //add new elements with .push_back(<line>);
+};
 
 string line :: getLabel(string label){
 	return label;
@@ -65,13 +64,25 @@ void file_parser(file_name){
  * @param raw_line: string containing the entire line to be parsed.
  */
 void line_parser(string raw_line){
-	line tmp_line;	//temporary struct to be pushed onto victor.
-	string* raw_index;  //pointer for the raw_line
+	line tmp_line = raw_line;	//temporary struct to be pushed onto victor.
+    // string* raw_index;  //pointer for the raw_line
+    
+    string delimiters = " \t\n";
+    
+    int last = target.find_first_not_of(delimiters, 0); // Find the first thing that's not a delimiter
+    int first = target.find_first_of(delimiters, last);  // Define the first token with the delimiter (first delimiter)
+    
+    string token = target.substring(last, first-last);
+    
+    while(first != -1 || last != -1) {
+        token = substring
+    }
 	
-	//Skips over spaces
-	while(!isblank(*raw_index)){
-		//there is probably a fancier c++ way to do this 
-	}
+	// Skips over spaces
+	// while(!isblank(*raw_index)){
+    //     //there is probably a fancier c++ way to do this 
+        
+	// }
 	
 	
 }
@@ -83,7 +94,6 @@ void line_parser(string raw_line){
 void read_file() {
     ifstream infile; // input stream
     ofstream outfile; // output stream
-    vector<string> contents;  // file contents
     int i=0; // vector index
     string line;
 
