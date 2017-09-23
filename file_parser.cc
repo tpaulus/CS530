@@ -9,7 +9,7 @@
 using namespace std;
 
 file_parser(string file_name) {
-    
+
 }
 
 struct line {
@@ -37,19 +37,19 @@ struct line {
 vector<line> victor; //add new elements with .push_back(<line>);
 string file_name;
 
-string line::getLabel() {
+string line::getLabel() const {
     return label;
 }
 
-string line::getOpcode() {
+string line::getOpcode() const {
     return opcode;
 }
 
-string line::getOperand() {
+string line::getOperand() const {
     return operand;
 }
 
-string line::getComment() {
+string line::getComment() const {
     return comment;
 }
 
@@ -69,7 +69,7 @@ line line_parser(const string &raw_line);
 /**
  * Reads the file from the command line and parses through the input.
  * @param file_name: assembly code source file.
- * 
+ *
  */
 void file_parser(string parse_name) {
     file_name = std::move(parse_name);
@@ -101,7 +101,7 @@ line line_parser(const string &raw_line) {
 }
 
 /**
- * Takes the file assigned to file_name 
+ * Takes the file assigned to file_name
  * iterates line by line and assigns each to an index to vector contents
  */
 vector<string> read_file() {
