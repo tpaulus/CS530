@@ -123,8 +123,26 @@ vector<string> read_file() {
         contents.push_back(line);
     }
     infile.close();
+}
 
-    return contents;
+/**
+ * Stream out a Line Struct
+ *
+ * @param out Output Stream
+ * @param value Line to Print
+ * @return Output Stream
+ */
+ostream &operator<<(ostream &out, const line &value) {
+    const int label_col_width = 8;
+    const int opcode_col_width = 8;
+    const int operand_col_width = 8;
+
+    out << setw(label_col_width) << ios::left << setfill(' ') << label;
+    out << setw(opcode_col_width) << ios::left << setfill(' ') << opcode;
+    out << setw(operand_col_width) << ios::left << setfill(' ') << operand_col_width;
+    out << comment << endl;
+
+    return out;
 }
 
 /**
@@ -132,19 +150,9 @@ vector<string> read_file() {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
-
-    cout << "Now dumping what we read from file ..." << endl;
-    for (int i = 0; i < victor.size(); i++)
-        cout << victor[i] << endl;
-
-    outfile.open("output.txt", ios::out);
-    if (!outfile)
-        print_error("Sorry, could not open the file for writing");
-
-    for (int i = 0; i < victor.size(); i++)
-        outfile << victor[i] << endl;
-    outfile.close();
-
+    for (const auto &i : victor) {
+        cout << i << endl;
+    }
 }
 
 void print_error(const string &s) {
