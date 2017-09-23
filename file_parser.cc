@@ -8,6 +8,10 @@
 
 using namespace std;
 
+file_parser(string file_name) {
+
+}
+
 struct line {
     string label;
     string opcode;
@@ -21,32 +25,32 @@ struct line {
         comment = "";
     }
 
-    string getLabel();
+    string getLabel() const;
 
-    string getOpcode();
+    string getOpcode() const;
 
-    string getOperand();
+    string getOperand() const;
 
-    string getComment();
+    string getComment() const;
 };
 
 vector<line> victor; //add new elements with .push_back(<line>);
 vector<string> contents;  // file contents in string form
 string file_name; // Class variable for file_name
 
-string line::getLabel() {
+string line::getLabel() const {
     return label;
 }
 
-string line::getOpcode() {
+string line::getOpcode() const {
     return opcode;
 }
 
-string line::getOperand() {
+string line::getOperand() const {
     return operand;
 }
 
-string line::getComment() {
+string line::getComment() const {
     return comment;
 }
 
@@ -66,7 +70,7 @@ line line_parser(const string &raw_line);
 /**
  * Reads the file from the command line and parses through the input.
  * @param file_name: assembly code source file.
- * 
+ *
  */
 void file_parser(string parse_name) {
     file_name = std::move(parse_name);
@@ -98,7 +102,7 @@ line line_parser(const string &raw_line) {
 }
 
 /**
- * Takes the file assigned to file_name 
+ * Takes the file assigned to file_name
  * iterates line by line and assigns each to an index to vector contents
  */
 void read_file() {
@@ -121,23 +125,33 @@ void read_file() {
 }
 
 /**
+ * Stream out a Line Struct
+ *
+ * @param out Output Stream
+ * @param value Line to Print
+ * @return Output Stream
+ */
+ostream &operator<<(ostream &out, const line &value) {
+    const int label_col_width = 8;
+    const int opcode_col_width = 8;
+    const int operand_col_width = 8;
+
+    out << setw(label_col_width) << ios::left << setfill(' ') << label;
+    out << setw(opcode_col_width) << ios::left << setfill(' ') << opcode;
+    out << setw(operand_col_width) << ios::left << setfill(' ') << operand_col_width;
+    out << comment << endl;
+
+    return out;
+}
+
+/**
  * prints the indexes of vector victor
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
-
-    cout << "Now dumping what we read from file ..." << endl;
-    for (int i = 0; i < victor.size(); i++)
-        cout << victor[i] << endl;
-
-    // outfile.open("output.txt", ios::out);
-    // if (!outfile)
-    //     print_error("Sorry, could not open the file for writing");
-
-    // for (int i = 0; i < victor.size(); i++)
-    //     outfile << victor[i] << endl;
-    // outfile.close();
-
+    for (const auto &i : victor) {
+        cout << i << endl;
+    }
 }
 
 void print_error(const string &s) {
