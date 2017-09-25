@@ -9,10 +9,6 @@
 
 using namespace std;
 
-file_parser(string file_name) {
-
-}
-
 struct line {
     string label;
     string opcode;
@@ -64,8 +60,7 @@ void print_error(const string &);
 
 void read_file();
 
-line line_parser(const string &raw_line);
-
+line line_parser(string);
 
 
 /**
@@ -73,31 +68,59 @@ line line_parser(const string &raw_line);
  * @param file_name: assembly code source file.
  *
  */
-void file_parser(string parse_name) {
+file_parser(string file_name) {
     file_name = std::move(parse_name);
-    read_file(); //loads contents with indexed lines.
-
-    //loop to parse through contents line by line. Each line is passed through the line_parser.
-    for (int i = 0; i < contents.size(); i++) {
-        line_parser(contents[i]);
-    }
 }
+
+
+// void file_parser(string parse_name) {
+//     file_name = std::move(parse_name);
+//     read_file(); //loads contents with indexed lines.
+
+//     //loop to parse through contents line by line. Each line is passed through the line_parser.
+//     for (int i = 0; i < contents.size(); i++) {
+//         line_parser(contents[i]);
+//     }
+// }
 
 /**
  * Parse through a raw line and assign the words to a line structure
  * the line structure will then be pushed onto victor.
  * @param raw_line: string containing the entire line to be parsed.
  */
-line line_parser(const string &raw_line) {
+line line_parser(string raw_line) {
     line tmp_line;    //temporary struct to be pushed onto victor.
-    string *raw_index;  //pointer for the raw_line
 
-    //Skips over spaces
-    // while (!isblank(*raw_index)) {
-    //     //there is probably a fancier c++ way to do this
-    // }
+    string delimiters = "\t\n";
+    
+    int last = raw_line.find_first_not_of(delimiters, 0); // Find the first thing that's not a delimiter
+    int first = raw_line.find_first_of(delimiters, last);  // Define the first token with the delimiter (first delimiter)
+    
+    string token = raw_line.substring(last, first-last);
 
+    // If it's in the first column, it is a label
+    tmp_line.label = token;
 
+    int column = 1;
+    
+    while(first != -1 || last != -1) {
+        first = raw_line.find_first_not_of(delimiters, first);
+        last = raw_line.find_first_of(delimiters, first);
+        token = raw_line.substring(first, last-first);
+
+        column++;
+
+        if(column == 2) {
+            tmp_line.opcode = token;
+        }
+        else if(column == 3) {
+            tmp_line.operand = token;
+        }
+        else if(column == 4) {
+            tmp_line.comment = token;
+        }
+    }
+    
     // TODO Implement conversion from string to line
     return tmp_line;
 }
@@ -123,6 +146,11 @@ void read_file() {
         contents.push_back(line);
     }
     infile.close();
+
+    //loop to parse through contents line by line. Each line is passed through the line_parser.
+    for (int i = 0; i < contents.size(); i++) {
+        victor.push_back(line_parser(contents[i]));
+    }
 
 }
 
