@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <vector>
 #include <cctype>
+#include <iomanip>
 
 #include "file_parser.h"
 
@@ -122,6 +123,29 @@ void read_file() {
         contents.push_back(line);
     }
     infile.close();
+<<<<<<< HEAD
+=======
+}
+
+/**
+ * Stream out a Line Struct
+ *
+ * @param out Output Stream
+ * @param value Line to Print
+ * @return Output Stream
+ */
+ostream &operator<<(ostream &out, const line &value) {
+    const int label_col_width = 8;
+    const int opcode_col_width = 8;
+    const int operand_col_width = 8;
+
+    out << setw(label_col_width) << ios::left << setfill(' ') << label;
+    out << setw(opcode_col_width) << ios::left << setfill(' ') << opcode;
+    out << setw(operand_col_width) << ios::left << setfill(' ') << operand_col_width;
+    out << comment << endl;
+
+    return out;
+>>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
 
 /**
@@ -129,6 +153,7 @@ void read_file() {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
+<<<<<<< HEAD
 
     cout << "Now dumping what we read from file ..." << endl;
     for (int i = 0; i < victor.size(); i++)
@@ -142,6 +167,11 @@ void print_file() {
     //     outfile << victor[i] << endl;
     // outfile.close();
 
+=======
+    for (const auto &i : victor) {
+        cout << i << endl;
+    }
+>>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
 
 void print_error(const string &s) {

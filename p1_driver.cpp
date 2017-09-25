@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stdlib.h>
 #include "file_parser.h"
 #include "file_parse_exception.h"
 
