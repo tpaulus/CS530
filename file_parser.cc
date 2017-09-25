@@ -123,8 +123,7 @@ void read_file() {
         contents.push_back(line);
     }
     infile.close();
-<<<<<<< HEAD
-=======
+
 }
 
 /**
@@ -145,7 +144,6 @@ ostream &operator<<(ostream &out, const line &value) {
     out << comment << endl;
 
     return out;
->>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
 
 /**
@@ -153,7 +151,6 @@ ostream &operator<<(ostream &out, const line &value) {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
-<<<<<<< HEAD
 
     cout << "Now dumping what we read from file ..." << endl;
     for (int i = 0; i < victor.size(); i++)
@@ -167,11 +164,10 @@ void print_file() {
     //     outfile << victor[i] << endl;
     // outfile.close();
 
-=======
+
     for (const auto &i : victor) {
         cout << i << endl;
     }
->>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
 
 void print_error(const string &s) {
