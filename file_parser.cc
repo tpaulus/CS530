@@ -157,8 +157,10 @@ ostream &operator<<(ostream &out, const line &value) {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
-    for (const auto &i : victor) {
-        cout << i << endl;
+    vector<int>::iterator v_iter;
+    
+    for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
+        cout << *v_iter << endl;
     }
 }
 
