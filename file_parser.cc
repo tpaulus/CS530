@@ -71,7 +71,7 @@ line line_parser(const string &raw_line);
 *
 */
 
-file_parser(const tring file_name) {
+file_parser::file_parser(const string file_name) {
 
 }
 
