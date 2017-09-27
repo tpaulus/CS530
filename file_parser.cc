@@ -144,10 +144,10 @@ ostream &operator<<(ostream &out, const line &value) {
     const int opcode_col_width = 8;
     const int operand_col_width = 8;
 
-    out << setw(label_col_width) << ios::left << setfill(' ') << *value.getlabel();
-    out << setw(opcode_col_width) << ios::left << setfill(' ') << *value.getopcode();
-    out << setw(operand_col_width) << ios::left << setfill(' ') << *value.getoperand();
-    out << *value.getcomment() << endl;
+    out << setw(label_col_width) << ios::left << setfill(' ') << value.getlabel();
+    out << setw(opcode_col_width) << ios::left << setfill(' ') << value.getopcode();
+    out << setw(operand_col_width) << ios::left << setfill(' ') << value.getoperand();
+    out << value.getcomment() << endl;
 
     return out;
 }
