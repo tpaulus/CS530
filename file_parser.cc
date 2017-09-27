@@ -101,9 +101,11 @@ line line_parser(string raw_line) {
     // If it's in the first column, it is a label
     tmp_line.label = token;
 
+    last = first;
+
     int column = 1;
     
-    while(first != -1 || last != -1) {
+    while((first != -1 || last != -1) && column < 5) {
         first = raw_line.find_first_not_of(delimiters, first);
         last = raw_line.find_first_of(delimiters, first);
         token = raw_line.substring(first, last-first);
@@ -120,7 +122,7 @@ line line_parser(string raw_line) {
             tmp_line.comment = token;
         }
     }
-    
+
     // TODO Implement conversion from string to line
     return tmp_line;
 }
