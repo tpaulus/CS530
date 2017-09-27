@@ -4,14 +4,13 @@
 #include <vector>
 #include <cctype>
 #include <iomanip>
+#include <string>
 
 #include "file_parser.h"
 
 using namespace std;
 
-file_parser(string file_name) {
 
-}
 
 struct line {
     string label;
@@ -26,32 +25,32 @@ struct line {
         comment = "";
     }
 
-    string getLabel() const;
+    string getlabel() const;
 
-    string getOpcode() const;
+    string getopcode() const;
 
-    string getOperand() const;
+    string getoperand() const;
 
-    string getComment() const;
+    string getcomment() const;
 };
 
 vector<line> victor; //add new elements with .push_back(<line>);
 vector<string> contents;  // file contents in string form
 string file_name; // Class variable for file_name
 
-string line::getLabel() const {
+string line::getlabel() const {
     return label;
 }
 
-string line::getOpcode() const {
+string line::getopcode() const {
     return opcode;
 }
 
-string line::getOperand() const {
+string line::getoperand() const {
     return operand;
 }
 
-string line::getComment() const {
+string line::getcomment() const {
     return comment;
 }
 
@@ -66,14 +65,22 @@ void read_file();
 
 line line_parser(const string &raw_line);
 
+/**
+* Constructor
+*
+*
+*/
 
+file_parser::file_parser(const string file_name) {
+
+}
 
 /**
  * Reads the file from the command line and parses through the input.
  * @param file_name: assembly code source file.
  *
  */
-void file_parser(string parse_name) {
+void file_parser(const string parse_name) {
     file_name = std::move(parse_name);
     read_file(); //loads contents with indexed lines.
 
@@ -139,10 +146,10 @@ ostream &operator<<(ostream &out, const line &value) {
     const int opcode_col_width = 8;
     const int operand_col_width = 8;
 
-    out << setw(label_col_width) << ios::left << setfill(' ') << label;
-    out << setw(opcode_col_width) << ios::left << setfill(' ') << opcode;
-    out << setw(operand_col_width) << ios::left << setfill(' ') << operand_col_width;
-    out << comment << endl;
+    out << setw(label_col_width) << ios::left << setfill(' ') << *value.getlabel();
+    out << setw(opcode_col_width) << ios::left << setfill(' ') << *value.getopcode();
+    out << setw(operand_col_width) << ios::left << setfill(' ') << *value.getoperand();
+    out << *value.getcomment() << endl;
 
     return out;
 >>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
@@ -153,6 +160,7 @@ ostream &operator<<(ostream &out, const line &value) {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     cout << "Now dumping what we read from file ..." << endl;
@@ -170,6 +178,12 @@ void print_file() {
 =======
     for (const auto &i : victor) {
         cout << i << endl;
+=======
+    vector<int>::iterator v_iter;
+    
+    for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
+        cout << *v_iter << endl;
+>>>>>>> 539f0b86f6a652e755e277a8a00a0dbc1ad400ad
     }
 >>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
