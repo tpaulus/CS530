@@ -10,11 +10,8 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> master
 struct line {
     string label;
     string opcode;
@@ -66,32 +63,16 @@ void print_error(const string &);
 
 void read_file();
 
-<<<<<<< HEAD
 line line_parser(string);
-=======
-line line_parser(const string &raw_line);
 
 /**
-* Constructor
-*
-*
-*/
-
-file_parser::file_parser(const string file_name) {
->>>>>>> master
-
-}
-
-/**
- * Reads the file from the command line and parses through the input.
+ * Constructor
+ * Reads the file from the command line and saves it locally
  * @param file_name: assembly code source file.
  *
  */
-<<<<<<< HEAD
-file_parser(string file_name) {
-=======
-void file_parser(const string parse_name) {
->>>>>>> master
+
+file_parser::file_parser(const string file_name) {
     file_name = std::move(parse_name);
 }
 
@@ -114,36 +95,147 @@ void file_parser(const string parse_name) {
 line line_parser(string raw_line) {
     line tmp_line;    //temporary struct to be pushed onto victor.
 
-    string delimiters = "\t\n";
-    
-    int last = raw_line.find_first_not_of(delimiters, 0); // Find the first thing that's not a delimiter
-    int first = raw_line.find_first_of(delimiters, last);  // Define the first token with the delimiter (first delimiter)
-    
-    string token = raw_line.substring(last, first-last);
+    string token;
 
-    // If it's in the first column, it is a label
-    tmp_line.label = token;
+    string delimiters = " \t\n";
 
-    last = first;
+    if(!raw_line.empty()) {
+        int column_start = 0;
+        int col_space; // Distance to start of next column
+        int tok_first;
+        int tok_last;
 
-    int column = 1;
-    
-    while((first != -1 || last != -1) && column < 5) {
-        first = raw_line.find_first_not_of(delimiters, first);
-        last = raw_line.find_first_of(delimiters, first);
-        token = raw_line.substring(first, last-first);
+        int column_num = 1; // Which column are you in
 
-        column++;
+        bool isQuote = false;
 
-        if(column == 2) {
-            tmp_line.opcode = token;
+        string column;     
+
+        while(column_num < 5) {
+
+            if(column_start > raw_line.length()) {
+                if(column_num == 4)
+                    tmp_line.comment = "";
+                break;
+            }
+
+            if(raw_line.find_first_of(" \t") > raw_line.length()) {
+                tmp_line.label = raw_line;
+                tmp_line.opcode = "";
+                tmp_line.operand = "";
+                tmp_line.comment = "";
+                break;
+            }
+
+            column = raw_line.substr(column_start, 8);
+
+            tok_last = column.find_first_not_of(delimiters, 0); // Start of token
+            tok_first = column.find_first_of(delimiters, tok_last); // End of token
+
+            if(column_num == 1 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+        
+                // Check if the column is a comment
+                if(first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+
+                tmp_line.label = column.substr(tok_last, tok_first-tok_last);
+            }
+            else if(column_num == 1 && tok_last == -1) {
+                tmp_line.label = "";
+            }
+            
+            if(column_num == 2 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+                
+                // Check if the column is a comment
+                if(first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+
+                tmp_line.opcode = column.substr(tok_last, tok_first-tok_last);
+            }
+            else if(column_num == 2 && tok_last == -1) {
+                tmp_line.opcode = "";
+            }
+            
+            if(column_num == 3 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+                
+                // Check if the column is a comment
+                if(first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+
+                if(column[1] == '\'') {
+                    isQuote = true;
+                }
+
+                tmp_line.operand = column.substr(tok_last, tok_first-tok_last);
+            }
+            else if(column_num == 3 && tok_last == -1) {
+                tmp_line.operand = "";  
+            }
+            
+            if(column_num == 4 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+                
+                // Check if the column is a comment, throw error if not
+                if(first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+                else {
+                    cout << "ERROR: Expected a comment." << endl;
+                }
+            }
+            else if(column_num == 4 && tok_last == -1) {
+                tmp_line.comment = "";  
+            }
+
+            // If the column is blank, move on to the next one.
+            if(tok_last == -1) {
+                column_start = column_start + 8;
+                column_num = column_num + 1;
+            }
+            else {
+
+                // If the column takes up all 8 characters, find the next delimiter/white space
+                if(tok_first == -1) {
+                    int column_end = raw_line.find_first_of(delimiters, (column_start + 8));
+                    col_space = raw_line.find_first_not_of(delimiters, column_end);
+                }
+                else if(isQuote) {
+                    // index of the last quote
+                    int end_quote = raw_line.find_first_of('\'', (column_start + tok_first));
+
+                    // index of where the next column begins after end of quote marks
+                    int column_end = raw_line.find_first_of(delimiters, end_quote);
+                    col_space = raw_line.find_first_not_of(delimiters, column_end);
+                    isQuote = false;
+                }
+                else {
+                    col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
+                }
+                
+                column_start = col_space;
+                column_num = column_num + 1;
+            }
         }
-        else if(column == 3) {
-            tmp_line.operand = token;
-        }
-        else if(column == 4) {
-            tmp_line.comment = token;
-        }
+    }
+    else {
+        tmp_line.label = "";
+        tmp_line.comment = "";
+        tmp_line.opcode = "";
+        tmp_line.operand = "";
     }
 
     // TODO Implement conversion from string to line
@@ -204,33 +296,10 @@ ostream &operator<<(ostream &out, const line &value) {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> master
-
-    cout << "Now dumping what we read from file ..." << endl;
-    for (int i = 0; i < victor.size(); i++)
-        cout << victor[i] << endl;
-
-    // outfile.open("output.txt", ios::out);
-    // if (!outfile)
-    //     print_error("Sorry, could not open the file for writing");
-
-    // for (int i = 0; i < victor.size(); i++)
-    //     outfile << victor[i] << endl;
-    // outfile.close();
-
-
-    for (const auto &i : victor) {
-        cout << i << endl;
-=======
     vector<int>::iterator v_iter;
     
     for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
         cout << *v_iter << endl;
->>>>>>> 539f0b86f6a652e755e277a8a00a0dbc1ad400ad
     }
 }
 
