@@ -73,7 +73,7 @@ line line_parser(string);
  */
 
 file_parser::file_parser(const string file_name) {
-    file_name = std::move(parse_name);
+    file_name = std::move(file_name);
 }
 
 
@@ -238,7 +238,6 @@ line line_parser(string raw_line) {
         tmp_line.operand = "";
     }
 
-    // TODO Implement conversion from string to line
     return tmp_line;
 }
 
