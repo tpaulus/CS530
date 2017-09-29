@@ -34,8 +34,8 @@ struct line {
     string getcomment() const;
 };
 
-vector<line> victor; //add new elements with .push_back(<line>);
-vector<string> contents;  // file contents in string form
+vector<line> victor (100); //add new elements with .push_back(<line>);
+vector<string> contents (100);  // file contents in string form
 string file_name; // Class variable for file_name
 
 string line::getlabel() const {
@@ -83,7 +83,7 @@ file_parser::file_parser(const string file_name) {
 
 //     //loop to parse through contents line by line. Each line is passed through the line_parser.
 //     for (int i = 0; i < contents.size(); i++) {
-//         line_parser(contents[i]);
+//         line_parser(contents.at(i));
 //     }
 // }
 
@@ -265,7 +265,7 @@ void read_file() {
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
     for (int i = 0; i < contents.size(); i++) {
-        victor.push_back(line_parser(contents[i]));
+        victor.push_back(line_parser(contents.at(i)));
     }
 
 }
@@ -308,18 +308,15 @@ void print_error(const string &s) {
 }
 
 string get_token(unsigned int row, unsigned int column) {
-    if (row < victor.size()) {
-        //Is a valid row
-        if (column == 0) {                //   0      1       2        3
-            return victor[row].label;    //(label/opcode/operands/comments)
-        } else if (column == 1) {
-            return victor[row].opcode;
-        } else if (column == 2) {
-            return victor[row].operand;
-        } else if (column == 3) {
-            return victor[row].comment;
-        }
+    if (column == 0) {                  //   0      1       2        3
+        return victor.at(row).label;    //(label/opcode/operands/comments)
+    } else if (column == 1) {
+        return victor.at(row).opcode;
+    } else if (column == 2) {
+        return victor.at(row).operand;
+    } else if (column == 3) {
+        return victor.at(row).comment;
     }
-    //Not Valid row or column
+    //No matching column
     return "";
 }
