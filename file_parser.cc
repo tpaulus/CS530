@@ -21,6 +21,11 @@ using namespace std;
 
 
 //Struct Implementations
+
+struct formated_line {
+
+};
+
 formated_line::formatted_line(){
     label = "";
     opcode = "";

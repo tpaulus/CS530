@@ -64,9 +64,12 @@ private:
     std::vector<formated_line> victor;
     std::vector<std::string> file_contents;
     std::string file_name;
-
+    //Methods	
     formated_line line_parser(std:: string);
 
+
 };
-ios::ostream &operator<<(ostream &out, const formated_line &);
+//Can't get this working atm
+// std::ostream& operator<<(std::ostream &out, const file_parser::formated_line &fs);
+
 #endif
