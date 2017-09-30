@@ -89,7 +89,7 @@ int file_parser::size() {
  * the line structure will then be pushed onto victor.
  * @param raw_line: string containing the entire line to be parsed.
  */
-line file_parser::line_parser(string raw_line) {
+line line_parser(string raw_line) {
     line tmp_line;    //temporary struct to be pushed onto victor.
 
     string token;
