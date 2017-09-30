@@ -69,10 +69,10 @@ string file_name;
 file_parser::file_parser(const string f_n) {
     file_name = f_n;
 }
-file_parser::~file_parser();
 
 string file_parser::get_token(unsigned int, unsigned int) {
 
+    return "";
 }
 
 void file_parser::read_file() {
@@ -83,8 +83,9 @@ void file_parser::print_file() {
 
 }
 
-formatted_line file_parser::line_parser(std::string) {
-
+formatted_line line_parser(std::string) {
+    //Change to real value
+    return formatted_line();
 }
 
 
