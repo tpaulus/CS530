@@ -73,7 +73,7 @@ line line_parser(string);
  */
 
 file_parser::file_parser(const string file_name) {
-    file_name = std::move(file_name);
+    file_name = file_name;
 }
 
 
@@ -267,7 +267,6 @@ void read_file() {
     for (int i = 0; i < contents.size(); i++) {
         victor.push_back(line_parser(contents.at(i)));
     }
-
 }
 
 /**
