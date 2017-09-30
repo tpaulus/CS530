@@ -97,7 +97,7 @@ line line_parser(string raw_line) {
     string delimiters = " \t\n";
 
     if(!raw_line.empty()) {
-        int column_start = 0;
+        unsigned int column_start = 0;
         int col_space; // Distance to start of next column
         int tok_first;
         int tok_last;
@@ -245,7 +245,6 @@ line line_parser(string raw_line) {
  */
 void read_file() {
     ifstream infile; // input stream
-    int i = 0; // vector index
     string line;
 
     if (file_name.empty())
