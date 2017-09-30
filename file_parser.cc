@@ -35,7 +35,7 @@ struct formatted_line {
     string getcomment() const;
 
     //Constructor
-    formatted_line::formatted_line(){
+    formatted_line(){
         label = "";
         opcode = "";
         operand = "";
