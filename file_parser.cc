@@ -70,10 +70,7 @@ file_parser::file_parser(const string f_n) {
     file_name = f_n;
 }
 
-string file_parser::get_token(unsigned int, unsigned int) {
 
-    return "";
-}
 
 void file_parser::read_file() {
 
@@ -83,15 +80,31 @@ void file_parser::print_file() {
 
 }
 
+string file_parser::get_token(unsigned int, unsigned int) {
+    if (column == 0) {                  //   0      1       2        3
+        return victor.at(row).label;    //(label/opcode/operands/comments)
+    } else if (column == 1) {
+        return victor.at(row).opcode;
+    } else if (column == 2) {
+        return victor.at(row).operand;
+    } else if (column == 3) {
+        return victor.at(row).comment;
+    }
+    //No matching column
+    return "";
+}
+
+int file_parser::size() {
+    return static_cast<int>(victor.size());
+}
+
 formatted_line line_parser(std::string) {
     //Change to real value
     return formatted_line();
 }
 
 
-int file_parser::size() {
-    return static_cast<int>(victor.size());
-}
+
 
 
 
