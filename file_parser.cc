@@ -10,7 +10,8 @@
 
 using namespace std;
 
-
+vector<line> victor (100); //add new elements with .push_back(<line>);
+vector<string> contents (100);  // file contents in string form
 
 struct line {
     string label;
@@ -34,10 +35,6 @@ struct line {
     string getcomment() const;
 };
 
-vector<line> victor (100); //add new elements with .push_back(<line>);
-vector<string> contents (100);  // file contents in string form
-string file_name; // Class variable for file_name
-
 string line::getlabel() const {
     return label;
 }
@@ -58,13 +55,6 @@ int size() {
     return static_cast<int>(victor.size());
 }
 
-// Prototypes
-void print_error(const string &);
-
-void read_file();
-
-line line_parser(string);
-
 /**
  * Constructor
  * Reads the file from the command line and saves it locally
@@ -72,8 +62,8 @@ line line_parser(string);
  *
  */
 
-file_parser::file_parser(const string file_name) {
-    file_name = file_name;
+file_parser::file_parser(const string f_n) {
+    file_name = f_n;
 }
 
 
@@ -194,7 +184,8 @@ line line_parser(string raw_line) {
                     break;
                 }
                 else {
-                    cout << "ERROR: Expected a comment." << endl;
+                    // Throw comment error
+                    file_parse_exception("Expected a comment.");
                 }
             }
             else if(column_num == 4 && tok_last == -1) {
@@ -251,11 +242,11 @@ void read_file() {
     string line;
 
     if (file_name.empty())
-        print_error("You must specify a filename on the command line");
+        file_parse_exception("You must specify a filename on the command line");
 
     infile.open(file_name, ios::in);
     if (!infile)
-        print_error("Sorry, could not open the file for reading");
+        file_parse_exception("Sorry, could not open the file for reading");
 
     while (!infile.eof()) {
         getline(infile, line);
@@ -299,11 +290,6 @@ void print_file() {
     for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
         cout << *v_iter << endl;
     }
-}
-
-void print_error(const string &s) {
-    cout << s << endl;
-    exit(1);
 }
 
 string get_token(unsigned int row, unsigned int column) {

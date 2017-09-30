@@ -47,8 +47,8 @@ class file_parser {
         string file_name;
 
         struct line;
-
-        void print_error(const string);
+        
+        line line_parser(string);
 
 };
 
