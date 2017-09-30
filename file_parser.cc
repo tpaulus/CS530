@@ -30,12 +30,15 @@ struct formatted_line {
     string comment;
 
     string getlabel() const;
+
     string getopcode() const;
+
     string getoperand() const;
+
     string getcomment() const;
 
     //Constructor
-    formatted_line(){
+    formatted_line() {
         label = "";
         opcode = "";
         operand = "";
@@ -71,9 +74,30 @@ file_parser::file_parser(const string f_n) {
 }
 
 
-
 void file_parser::read_file() {
+    ifstream infile; // input stream
+    string raw_line;
+    vector<string>::iterator v_iter;
 
+    if (file_name.empty())
+        file_parse_exception("You must specify a filename on the command line");
+
+    infile.open(file_name.c_str(), ios::in);
+
+    if (!infile) //Unreachable code?
+        file_parse_exception("Sorry, could not open the file for reading");
+
+    while (!infile.eof()) {
+        getline(infile, raw_line);
+        file_contents.push_back(raw_line);
+    }
+    
+    infile.close();
+
+    //Each line is passed through the line_parser then pushed into victor
+    for (v_iter = file_contents.begin(); v_iter != file_contents.end(); v_iter++) {
+        victor.push_back(line_parser(*v_iter));
+    }
 }
 
 void file_parser::print_file() {
