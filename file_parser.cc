@@ -246,7 +246,7 @@ line line_parser(string raw_line) {
 void read_file() {
     ifstream infile; // input stream
     string line;
-    vector <line>::iterator v_iter;
+    vector<string>::iterator v_iter;
 
     if (file_name.empty())
     file_parse_exception("You must specify a filename on the command line");
