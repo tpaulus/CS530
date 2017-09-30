@@ -73,7 +73,10 @@ file_parser::file_parser(const string f_n) {
     file_name = f_n;
 }
 
-
+formatted_line line_parser(string raw_line) {
+    //Change to real value
+    return formatted_line();
+}
 void file_parser::read_file() {
     ifstream infile; // input stream
     string raw_line;
@@ -96,7 +99,7 @@ void file_parser::read_file() {
 
     //Each line is passed through the line_parser then pushed into victor
     for (v_iter = file_contents.begin(); v_iter != file_contents.end(); v_iter++) {
-        victor.push_back(line_parser(*v_iter));
+        victor.push_back(file_parser::line_parser(*v_iter));
     }
 }
 
@@ -122,10 +125,7 @@ int file_parser::size() {
     return static_cast<int>(victor.size());
 }
 
-formatted_line line_parser(std::string) {
-    //Change to real value
-    return formatted_line();
-}
+
 
 
 

@@ -65,7 +65,7 @@ private:
     std::vector<std::string> file_contents;
     std::string file_name;
     //Methods	
-    formatted_line line_parser(std:: string);
+    formatted_line line_parser(std::string);
 
 
 };
