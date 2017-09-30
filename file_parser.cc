@@ -10,7 +10,8 @@
 
 using namespace std;
 
-
+vector<line> victor (100); //add new elements with .push_back(<line>);
+vector<string> contents (100);  // file contents in string form
 
 struct line {
     string label;
