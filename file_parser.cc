@@ -62,8 +62,8 @@ int size() {
  *
  */
 
-file_parser::file_parser(const string file_name) {
-    file_name = file_name;
+file_parser::file_parser(const string f_n) {
+    file_name = f_n;
 }
 
 
