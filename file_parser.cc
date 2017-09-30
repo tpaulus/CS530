@@ -73,15 +73,7 @@ line line_parser(string);
  */
 
 file_parser::file_parser(const string file_name) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    file_name = std::move(parse_name);
-=======
     file_name = std::move(file_name);
->>>>>>> master
-=======
-    file_name = std::move(file_name);
->>>>>>> a0e560928164147193d14fba622ceca53cee7579
 }
 
 
@@ -91,11 +83,7 @@ file_parser::file_parser(const string file_name) {
 
 //     //loop to parse through contents line by line. Each line is passed through the line_parser.
 //     for (int i = 0; i < contents.size(); i++) {
-<<<<<<< HEAD
-//         line_parser(contents[i]);
-=======
 //         line_parser(contents.at(i));
->>>>>>> master
 //     }
 // }
 
@@ -277,14 +265,8 @@ void read_file() {
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
     for (int i = 0; i < contents.size(); i++) {
-<<<<<<< HEAD
-        victor.push_back(line_parser(contents[i]));
-    }
-
-=======
         victor.push_back(line_parser(contents.at(i)));
     }
->>>>>>> master
 }
 
 /**
