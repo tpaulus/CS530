@@ -29,19 +29,19 @@ struct formatted_line {
     string operand;
     string comment;
 
-};
-
-formatted_line::formatted_line(){
-    label = "";
-    opcode = "";
-    operand = "";
-    comment = "";
-
     string getlabel() const;
     string getopcode() const;
     string getoperand() const;
     string getcomment() const;
-}
+
+    //Constructor
+    formatted_line::formatted_line(){
+        label = "";
+        opcode = "";
+        operand = "";
+        comment = "";
+    }
+};
 
 string formatted_line::getlabel() const {
     return label;
