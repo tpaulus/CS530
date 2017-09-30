@@ -10,9 +10,6 @@
 
 using namespace std;
 
-vector<line> victor (100); //add new elements with .push_back(<line>);
-vector<string> contents (100);  // file contents in string form
-
 struct line {
     string label;
     string opcode;
@@ -51,9 +48,13 @@ string line::getcomment() const {
     return comment;
 }
 
-int size() {
-    return static_cast<int>(victor.size());
-}
+//Class Level Variables
+
+//Private
+
+vector<line> victor (100); //add new elements with .push_back(<line>);
+vector<string> contents (100);  // file contents in string form
+string file_name;
 
 /**
  * Constructor
@@ -66,6 +67,11 @@ file_parser::file_parser(const string f_n) {
     file_name = f_n;
 }
 
+
+
+int size() {
+    return static_cast<int>(victor.size());
+}
 
 // void file_parser(string parse_name) {
 //     file_name = std::move(parse_name);
