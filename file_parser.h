@@ -47,12 +47,6 @@ class file_parser {
         string file_name;
 
         struct line;
-
-        vector<line> victor (100); //add new elements with .push_back(<line>);
-        vector<string> contents (100);  // file contents in string form
-        string file_name; // Class variable for file_name
-        
-        void read_file();
         
         line line_parser(string);
 
