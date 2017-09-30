@@ -7,6 +7,7 @@
 #include <string>
 
 #include "file_parser.h"
+#include "file_parse_exception.h"
 
 using namespace std;
 
@@ -248,7 +249,7 @@ void read_file() {
     string line;
 
     if (file_name.empty())
-        file_parse_exception("You must specify a filename on the command line");
+    file_parse_exception("You must specify a filename on the command line");
 
     infile.open(file_name, ios::in);
     if (!infile)
