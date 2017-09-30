@@ -70,7 +70,7 @@ file_parser::file_parser(const string f_n) {
 
 
 
-int size() {
+int file_parser::size() {
     return static_cast<int>(victor.size());
 }
 
