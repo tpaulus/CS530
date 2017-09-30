@@ -74,10 +74,14 @@ line line_parser(string);
 
 file_parser::file_parser(const string file_name) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     file_name = std::move(parse_name);
 =======
     file_name = std::move(file_name);
 >>>>>>> master
+=======
+    file_name = std::move(file_name);
+>>>>>>> a0e560928164147193d14fba622ceca53cee7579
 }
 
 
