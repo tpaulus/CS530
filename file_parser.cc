@@ -246,7 +246,6 @@ line line_parser(string raw_line) {
 void file_parser::read_file() {
     ifstream infile; // input stream
     string line;
-    vector<string>::iterator v_iter;
 
     if (file_name.empty())
     file_parse_exception("You must specify a filename on the command line");
@@ -262,8 +261,9 @@ void file_parser::read_file() {
     infile.close();
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
-    for (v_iter = contents.begin(); v_iter != contents.end(); v_iter++) {
-        victor.push_back(line_parser(*v_iter));
+
+    for (int i = 0; i < contents.size(); i++) {
+        victor.push_back(line_parser(contents.at(i)));
     }
 }
 
