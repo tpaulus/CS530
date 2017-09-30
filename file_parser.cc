@@ -70,7 +70,7 @@ file_parser::file_parser(const string f_n) {
 
 
 
-int size() {
+int file_parser::size() {
     return static_cast<int>(victor.size());
 }
 
@@ -243,7 +243,7 @@ line line_parser(string raw_line) {
  * Takes the file assigned to file_name
  * iterates line by line and assigns each to an index to vector contents
  */
-void read_file() {
+void file_parser::read_file() {
     ifstream infile; // input stream
     string line;
     vector<string>::iterator v_iter;
@@ -291,7 +291,7 @@ ostream &operator<<(ostream &out, const line &value) {
  * prints the indexes of vector victor
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
-void print_file() {
+void file_parser::print_file() {
     vector<line>::iterator v_iter;
     
     for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
@@ -299,7 +299,7 @@ void print_file() {
     }
 }
 
-string get_token(unsigned int row, unsigned int column) {
+string fileparser::get_token(unsigned int row, unsigned int column) {
     if (column == 0) {                  //   0      1       2        3
         return victor.at(row).label;    //(label/opcode/operands/comments)
     } else if (column == 1) {
