@@ -70,7 +70,7 @@ file_parser::file_parser(const string f_n) {
 
 
 
-int size() {
+int file_parser::size() {
     return static_cast<int>(victor.size());
 }
 
@@ -97,7 +97,7 @@ line line_parser(string raw_line) {
     string delimiters = " \t\n";
 
     if(!raw_line.empty()) {
-        int column_start = 0;
+        unsigned int column_start = 0;
         int col_space; // Distance to start of next column
         int tok_first;
         int tok_last;
@@ -243,15 +243,14 @@ line line_parser(string raw_line) {
  * Takes the file assigned to file_name
  * iterates line by line and assigns each to an index to vector contents
  */
-void read_file() {
+void file_parser::read_file() {
     ifstream infile; // input stream
-    int i = 0; // vector index
     string line;
 
     if (file_name.empty())
     file_parse_exception("You must specify a filename on the command line");
 
-    infile.open(file_name, ios::in);
+    infile.open(file_name.c_str(), ios::in);
     if (!infile)
         file_parse_exception("Sorry, could not open the file for reading");
 
@@ -262,6 +261,7 @@ void read_file() {
     infile.close();
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
+
     for (int i = 0; i < contents.size(); i++) {
         victor.push_back(line_parser(contents.at(i)));
     }
@@ -291,7 +291,7 @@ ostream &operator<<(ostream &out, const line &value) {
  * prints the indexes of vector victor
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
-void print_file() {
+void file_parser::print_file() {
     vector<line>::iterator v_iter;
     
     for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
@@ -299,7 +299,7 @@ void print_file() {
     }
 }
 
-string get_token(unsigned int row, unsigned int column) {
+string file_parser::get_token(unsigned int row, unsigned int column) {
     if (column == 0) {                  //   0      1       2        3
         return victor.at(row).label;    //(label/opcode/operands/comments)
     } else if (column == 1) {
