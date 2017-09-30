@@ -62,11 +62,11 @@ private:
     };
     //Class Level Variables
     std::vector<formated_line> victor;
-    std::vector<string> file_contents;
+    std::vector<std::string> file_contents;
     std::string file_name;
 
     formated_line line_parser(std:: string);
 
 };
-ostream &operator<<(ostream &out, const formated_line &);
+ios::ostream &operator<<(ostream &out, const formated_line &);
 #endif

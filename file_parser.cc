@@ -46,7 +46,7 @@ string formated_line::getcomment() const {
 
 //Class Level Variables
 
-vector <line> victor(100); //add new elements with .push_back(<line>);
+vector <formated_line> victor(100); //add new elements with .push_back(<line>);
 vector <string> contents(100);  // file contents in string form
 string file_name;
 
