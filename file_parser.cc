@@ -22,36 +22,46 @@ using namespace std;
 
 //Struct Implementations
 
-struct formated_line {
+struct formatted_line {
+    //Fields
+    string label;
+    string opcode;
+    string operand;
+    string comment;
 
 };
 
-formated_line::formatted_line(){
+formatted_line::formatted_line(){
     label = "";
     opcode = "";
     operand = "";
     comment = "";
+
+    string getlabel() const;
+    string getopcode() const;
+    string getoperand() const;
+    string getcomment() const;
 }
 
-string formated_line::getlabel() const {
+string formatted_line::getlabel() const {
     return label;
 }
 
-string formated_line::getopcode() const {
+string formatted_line::getopcode() const {
     return opcode;
 }
 
-string formated_line::getoperand() const {
+string formatted_line::getoperand() const {
     return operand;
 }
 
-string formated_line::getcomment() const {
+string formatted_line::getcomment() const {
     return comment;
 }
 
 //Class Level Variables
 
-vector <formated_line> victor(100); //add new elements with .push_back(<line>);
+vector <formatted_line> victor(100); //add new elements with .push_back(<line>);
 vector <string> contents(100);  // file contents in string form
 string file_name;
 

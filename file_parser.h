@@ -47,29 +47,29 @@ public:
 
 private:
     // your variables and private methods go here
-    struct formated_line {
+    struct formatted_line {
         //Fields
         std::string label;
         std::string opcode;
         std::string operand;
         std::string comment;
         //Methods
-        formated_line();
+        formatted_line();
         std::string getlabel() const;
         std::string getopcode() const;
         std::string getoperand() const;
         std::string getcomment() const;
     };
     //Class Level Variables
-    std::vector<formated_line> victor;
+    std::vector<formatted_line> victor;
     std::vector<std::string> file_contents;
     std::string file_name;
     //Methods	
-    formated_line line_parser(std:: string);
+    formatted_line line_parser(std:: string);
 
 
 };
 //Can't get this working atm
-// std::ostream& operator<<(std::ostream &out, const file_parser::formated_line &fs);
+// std::ostream& operator<<(std::ostream &out, const file_parser::formatted_line &fs);
 
 #endif
