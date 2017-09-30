@@ -80,7 +80,7 @@ void file_parser::print_file() {
 
 }
 
-string file_parser::get_token(unsigned int, unsigned int) {
+string file_parser::get_token(unsigned int row, unsigned int column) {
     if (column == 0) {                  //   0      1       2        3
         return victor.at(row).label;    //(label/opcode/operands/comments)
     } else if (column == 1) {
