@@ -262,17 +262,11 @@ void read_file() {
         contents.push_back(line);
     }
     infile.close();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
     for (int i = 0; i < contents.size(); i++) {
         victor.push_back(line_parser(contents.at(i)));
     }
-
->>>>>>> 7352a6118bb725d110759244221fb88af74ed528
 }
 
 /**
@@ -293,7 +287,6 @@ ostream &operator<<(ostream &out, const line &value) {
     out << value.getcomment() << endl;
 
     return out;
->>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
 
 /**
@@ -301,32 +294,11 @@ ostream &operator<<(ostream &out, const line &value) {
  * Note: May need to be fixed to iterate through the line struct at each index (works for strings atm)
  */
 void print_file() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-    cout << "Now dumping what we read from file ..." << endl;
-    for (int i = 0; i < victor.size(); i++)
-        cout << victor[i] << endl;
-
-    // outfile.open("output.txt", ios::out);
-    // if (!outfile)
-    //     print_error("Sorry, could not open the file for writing");
-
-    // for (int i = 0; i < victor.size(); i++)
-    //     outfile << victor[i] << endl;
-    // outfile.close();
-
-=======
-    for (const auto &i : victor) {
-        cout << i << endl;
-=======
     vector<int>::iterator v_iter;
     
     for (v_iter = victor.begin(); v_iter != victor.end(); v_iter++) {
         cout << *v_iter << endl;
->>>>>>> 539f0b86f6a652e755e277a8a00a0dbc1ad400ad
     }
->>>>>>> e39d472fd0e0bbe3993c6d26c70a824ee183048d
 }
 
 void print_error(const string &s) {
