@@ -262,7 +262,8 @@ void read_file() {
     infile.close();
 
     //loop to parse through contents line by line. Each line is passed through the line_parser.
-    for (int i = 0; i < contents.size(); i++) {
+    vector <line>::iterator v_iter;
+    for (v_iter = contents.begin(); v_iter != contents.end(); v_iter++) {
         victor.push_back(line_parser(contents.at(i)));
     }
 }
