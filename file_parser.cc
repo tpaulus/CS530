@@ -35,7 +35,7 @@ struct formatted_line {
     string getcomment() const;
 
     //Constructor
-    formatted_line::formatted_line(){
+    formatted_line(){
         label = "";
         opcode = "";
         operand = "";
@@ -62,12 +62,29 @@ string formatted_line::getcomment() const {
 //Class Level Variables
 
 vector <formatted_line> victor(100); //add new elements with .push_back(<line>);
-vector <string> contents(100);  // file contents in string form
+vector <string> file_contents(100);  // file contents in string form
 string file_name;
 
 //Constructor
 file_parser::file_parser(const string f_n) {
     file_name = f_n;
+}
+file_parser::~file_parser();
+
+string file_parser::get_token(unsigned int, unsigned int) {
+
+}
+
+void file_parser::read_file() {
+
+}
+
+void file_parser::print_file() {
+
+}
+
+formatted_line file_parser::line_parser(std::string) {
+
 }
 
 
