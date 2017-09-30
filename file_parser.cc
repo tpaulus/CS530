@@ -251,7 +251,7 @@ void read_file() {
     if (file_name.empty())
     file_parse_exception("You must specify a filename on the command line");
 
-    infile.open(file_name, ios::in);
+    infile.open(file_name.c_str(), ios::in);
     if (!infile)
         file_parse_exception("Sorry, could not open the file for reading");
 
