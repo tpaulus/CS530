@@ -73,7 +73,7 @@ line line_parser(string);
  */
 
 file_parser::file_parser(const string file_name) {
-    file_name = std::move(file_name);
+    file_name = file_name;
 }
 
 
