@@ -231,6 +231,11 @@ void file_parser::read_file() {
 }
 
 void file_parser::print_file() {
+    vector<formatted_line>::iterator v_iter;
+
+    for( v_iter = victor.begin(); v_iter != victor.end(); v_iter++){
+        cout << *v_iter << endl;
+    }
 
 }
 
