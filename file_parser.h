@@ -81,9 +81,9 @@ inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_
     const int opcode_col_width = 8;
     const int operand_col_width = 8;
 
-    out << std::setw(label_col_width) << std::ios::left << std::setfill('\t') << f_l.label;
-    out << std::setw(opcode_col_width) << std::ios::left << std::setfill('\t') << f_l.opcode;
-    out << std::setw(operand_col_width) << std::ios::left << std::setfill('\t') << f_l.operand;
+    out << std::setw(label_col_width) << std::ios::left << std::setfill(' ') << f_l.label;
+    out << std::setw(opcode_col_width) << std::ios::left << std::setfill(' ') << f_l.opcode;
+    out << std::setw(operand_col_width) << std::ios::left << std::setfill(' ') << f_l.operand;
     out << f_l.comment << std::endl;
 
     return out;
