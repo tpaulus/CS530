@@ -74,6 +74,10 @@ file_parser::file_parser(const string f_n) {
     file_name = f_n;
 }
 
+//Deconstructor
+file_parser::~file_parser(void){
+}
+
 formatted_line line_parser(const string raw_line) {
     formatted_line tmp_line;    //temporary struct to be pushed onto victor.
     string token;
