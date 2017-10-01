@@ -55,7 +55,12 @@ private:
         std::string operand;
         std::string comment;
         //Methods
-        formatted_line();
+        inline formatted_line() {
+        label = "";
+        opcode = "";
+        operand = "";
+        comment = "";
+    	}
         std::string getlabel() const;
         std::string getopcode() const;
         std::string getoperand() const;
