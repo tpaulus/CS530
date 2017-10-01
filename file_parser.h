@@ -65,11 +65,23 @@ private:
     std::vector<std::string> file_contents;
     std::string file_name;
     //Methods	
-    formatted_line line_parser(std::string);
-
-
+    formatted_line line_parser(const std::string);
+    //Always good to make friends, especially if it makes your compiler happy
+    friend std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l);
 };
-//Can't get this working atm
-// std::ostream& operator<<(std::ostream &out, const file_parser::formatted_line &fs);
+
+inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l) {
+    const int label_col_width = 8;
+    const int opcode_col_width = 8;
+    const int operand_col_width = 8;
+
+    out << std::setw(label_col_width) << std::ios::left << std::setfill(' ') << f_l.label;
+    out << std::setw(opcode_col_width) << std::ios::left << std::setfill(' ') << f_l.opcode;
+    out << std::setw(operand_col_width) << std::ios::left << std::setfill(' ') << f_l.operand;
+    out << f_l.comment << std::endl;
+
+    return out;
+    }
+
 
 #endif

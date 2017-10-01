@@ -44,6 +44,7 @@ struct formatted_line {
         operand = "";
         comment = "";
     }
+           
 };
 
 string formatted_line::getlabel() const {
@@ -73,7 +74,7 @@ file_parser::file_parser(const string f_n) {
     file_name = f_n;
 }
 
-formatted_line line_parser(string raw_line) {
+formatted_line line_parser(const string raw_line) {
     formatted_line tmp_line;    //temporary struct to be pushed onto victor.
     string token;
     string delimiters = " \t\n";
@@ -226,22 +227,10 @@ void file_parser::read_file() {
 
     //Each line is passed through the line_parser then pushed into victor
     for (v_iter = file_contents.begin(); v_iter != file_contents.end(); v_iter++) {
-        victor.push_back(file_parser::line_parser(*v_iter));
+        victor.push_back(line_parser(*v_iter));
     }
 }
 
-ostream &operator<<(ostream &out, const formatted_line &value) {
-    const int label_col_width = 8;
-    const int opcode_col_width = 8;
-    const int operand_col_width = 8;
-
-    out << setw(label_col_width) << ios::left << setfill(' ') << value.getlabel();
-    out << setw(opcode_col_width) << ios::left << setfill(' ') << value.getopcode();
-    out << setw(operand_col_width) << ios::left << setfill(' ') << value.getoperand();
-    out << value.getcomment() << endl;
-
-    return out;
-}
 
 void file_parser::print_file() {
     vector<formatted_line>::iterator v_iter;
