@@ -78,7 +78,7 @@ file_parser::file_parser(const string f_n) {
 file_parser::~file_parser(void){
 }
 
-formatted_line line_parser(const string raw_line) {
+formatted_line file_parser::line_parser(const string raw_line) {
     formatted_line tmp_line;    //temporary struct to be pushed onto victor.
     string token;
     string delimiters = " \t\n";
@@ -231,7 +231,10 @@ void file_parser::read_file() {
 
     //Each line is passed through the line_parser then pushed into victor
     for (v_iter = file_contents.begin(); v_iter != file_contents.end(); v_iter++) {
-        victor.push_back(line_parser(*v_iter));
+    	//string temp = *v_ioter
+	formatted_line f_l = line_parser(*v_iter);
+	victor.push_back(f_l);
+        //victor.push_back(line_parser(*v_iter));
     }
 }
 

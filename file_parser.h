@@ -10,6 +10,7 @@
 #define FILE_PARSER_H
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <string>
 
