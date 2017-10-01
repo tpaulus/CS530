@@ -38,11 +38,13 @@ struct formatted_line {
     string getcomment() const;
 
     //Constructor
-    formatted_line() {
+    formatted_line(void) {
         label = "";
         opcode = "";
         operand = "";
         comment = "";
+    }
+    ~formatted_line(){
     }
            
 };
@@ -72,14 +74,15 @@ string file_name;
 //Constructor
 file_parser::file_parser(const string f_n) {
     file_name = f_n;
+    
 }
 
 //Deconstructor
 file_parser::~file_parser(void){
 }
 
-formatted_line file_parser::line_parser(const string raw_line) {
-    formatted_line tmp_line;    //temporary struct to be pushed onto victor.
+file_parser::formatted_line file_parser::line_parser(string raw_line) {
+    file_parser::formatted_line tmp_line;    //temporary struct to be pushed onto victor.
     string token;
     string delimiters = " \t\n";
 
