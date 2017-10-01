@@ -74,9 +74,136 @@ file_parser::file_parser(const string f_n) {
 }
 
 formatted_line line_parser(string raw_line) {
-    //Change to real value
-    return formatted_line();
+    formatted_line tmp_line;    //temporary struct to be pushed onto victor.
+    string token;
+    string delimiters = " \t\n";
+
+    if (!raw_line.empty()) {
+        unsigned int column_start = 0;
+        int col_space; // Distance to start of next column
+        int tok_first;
+        int tok_last;
+
+        int column_num = 1; // Which column are you in
+
+        bool isQuote = false;
+
+        string column;
+
+        while (column_num < 5) {
+            if (column_start > raw_line.length()) {
+                if (column_num == 4)
+                    tmp_line.comment = "";
+                break;
+            }
+            if (raw_line.find_first_of(" \t") > raw_line.length()) {
+                tmp_line.label = raw_line;
+                tmp_line.opcode = "";
+                tmp_line.operand = "";
+                tmp_line.comment = "";
+                break;
+            }
+
+            column = raw_line.substr(column_start, 8);
+            tok_last = column.find_first_not_of(delimiters, 0); // Start of token
+            tok_first = column.find_first_of(delimiters, tok_last); // End of token
+
+            if (column_num == 1 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+                // Check if the column is a comment
+                if (first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+
+                tmp_line.label = column.substr(tok_last, tok_first - tok_last);
+            } else if (column_num == 1 && tok_last == -1) {
+                tmp_line.label = "";
+            }
+
+            if (column_num == 2 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+                // Check if the column is a comment
+                if (first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+                tmp_line.opcode = column.substr(tok_last, tok_first - tok_last);
+            } else if (column_num == 2 && tok_last == -1) {
+                tmp_line.opcode = "";
+            }
+
+            if (column_num == 3 && (tok_last != -1)) {
+                char first_letter = column[0];
+                // Check if the column is a comment
+                if (first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                }
+
+                if (column[1] == '\'') {
+                    isQuote = true;
+                }
+
+                tmp_line.operand = column.substr(tok_last, tok_first - tok_last);
+            } else if (column_num == 3 && tok_last == -1) {
+                tmp_line.operand = "";
+            }
+
+            if (column_num == 4 && (tok_last != -1)) {
+
+                char first_letter = column[0];
+
+                // Check if the column is a comment, throw error if not
+                if (first_letter == '.') {
+                    tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
+                    break;
+                } else {
+                    // Throw comment error
+                    file_parse_exception("Expected a comment.");
+                }
+            } else if (column_num == 4 && tok_last == -1) {
+                tmp_line.comment = "";
+            }
+
+            // If the column is blank, move on to the next one.
+            if (tok_last == -1) {
+                column_start = column_start + 8;
+                column_num = column_num + 1;
+            } else {
+
+                // If the column takes up all 8 characters, find the next delimiter/white space
+                if (tok_first == -1) {
+                    int column_end = raw_line.find_first_of(delimiters, (column_start + 8));
+                    col_space = raw_line.find_first_not_of(delimiters, column_end);
+                } else if (isQuote) {
+                    // index of the last quote
+                    int end_quote = raw_line.find_first_of('\'', (column_start + tok_first));
+
+                    // index of where the next column begins after end of quote marks
+                    int column_end = raw_line.find_first_of(delimiters, end_quote);
+                    col_space = raw_line.find_first_not_of(delimiters, column_end);
+                    isQuote = false;
+                } else {
+                    col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
+                }
+
+                column_start = col_space;
+                column_num = column_num + 1;
+            }
+        }
+    } else {
+        tmp_line.label = "";
+        tmp_line.comment = "";
+        tmp_line.opcode = "";
+        tmp_line.operand = "";
+    }
+
+    return tmp_line;
 }
+
 void file_parser::read_file() {
     ifstream infile; // input stream
     string raw_line;
@@ -94,7 +221,7 @@ void file_parser::read_file() {
         getline(infile, raw_line);
         file_contents.push_back(raw_line);
     }
-    
+
     infile.close();
 
     //Each line is passed through the line_parser then pushed into victor
