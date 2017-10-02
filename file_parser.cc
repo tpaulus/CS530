@@ -81,12 +81,15 @@ file_parser::file_parser(const string f_n) {
 file_parser::~file_parser(void){
 }
 
-file_parser::formatted_line file_parser::line_parser(string raw_line) {
+file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned int row_n) {
     file_parser::formatted_line tmp_line;    //temporary struct to be pushed onto victor.
     string token;
     string delimiters = " \t\n";
 
+    string row_num = to_string(row_n);
+
     if (!raw_line.empty()) {
+
         unsigned int column_start = 0;
         int col_space; // Distance to start of next column
         int tok_first;
@@ -114,7 +117,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                     break;
                 }
 
-                tmp_line.label = raw_line;
+                tmp_line.label = raw_line.substr(0, 8);
                 tmp_line.opcode = "";
                 tmp_line.operand = "";
                 tmp_line.comment = "";
@@ -132,6 +135,12 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                     tmp_line.comment = raw_line.substr(column_start, raw_line.length() - column_start);
                     break;
                 }
+
+                if(!isalpha(first_letter)) {
+                    throw file_parse_exception("the first character of your label needs to be a letter at line " + row_num + ".");
+                }
+
+                
 
                 tmp_line.label = column.substr(tok_last, tok_first - tok_last);
             } else if (column_num == 1 && tok_last == -1) {
@@ -178,7 +187,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                     break;
                 } else {
                     // Throw comment error
-                    throw file_parse_exception("expected a comment.");
+                    throw file_parse_exception("expected a comment at line " + row_num + ".");
                 }
             } else if (column_num == 4 && tok_last == -1) {
                 tmp_line.comment = "";
@@ -196,12 +205,15 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
                         
                         if(end_quote == -1) {
-                            throw file_parse_exception("quotation marks were not closed.");
+                            throw file_parse_exception("quotation marks were not closed at line " + row_num + ".");
                         }
                         
                         // index of where the next column begins after end of quote marks
                         int column_end = raw_line.find_first_of(delimiters, end_quote);
                         col_space = raw_line.find_first_not_of(delimiters, column_end);
+
+                        tmp_line.operand = raw_line.substr(column_start, column_end - column_start);
+
                         isQuote = false;
                         
                     } else {
@@ -214,14 +226,19 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
                         
                         if(end_quote == -1) {
-                            throw file_parse_exception("quotation marks were not closed.");
+                            throw file_parse_exception("quotation marks were not closed at line " + row_num + ".");
                         }
+
+                        int column_end = raw_line.find_first_of(delimiters, end_quote);
+                        col_space = raw_line.find_first_not_of(delimiters, column_end);
+
+                        tmp_line.operand = raw_line.substr(column_start, column_end - column_start);
 
                         isQuote = false;
                         
+                    } else {
+                        col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
                     }
-
-                    col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
                 }
 
                 column_start = col_space;
@@ -260,10 +277,12 @@ void file_parser::read_file() {
 
     infile.close();
 
+    unsigned int row_number = 1;
+
     //Each line is passed through the line_parser then pushed into victor
     for (v_iter = file_contents.begin(); v_iter != file_contents.end(); v_iter++) {
     	//string temp = *v_ioter
-	formatted_line f_l = line_parser(*v_iter);
+	formatted_line f_l = line_parser(*v_iter, row_number++);
 	victor.push_back(f_l);
         //victor.push_back(line_parser(*v_iter));
     }

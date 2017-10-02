@@ -71,7 +71,7 @@ private:
     std::vector<std::string> file_contents;
     std::string file_name;
     //Methods	
-    formatted_line line_parser(std::string);
+    formatted_line line_parser(std::string, unsigned int);
     //Always good to make friends, especially if it makes your compiler happy
     friend std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l);
 };
