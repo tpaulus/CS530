@@ -170,7 +170,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                     break;
                 } else {
                     // Throw comment error
-                    file_parse_exception("Expected a comment.");
+                    throw file_parse_exception("Expected a comment.");
                 }
             } else if (column_num == 4 && tok_last == -1) {
                 tmp_line.comment = "";
@@ -218,12 +218,12 @@ void file_parser::read_file() {
     vector<string>::iterator v_iter;
 
     if (file_name.empty())
-        file_parse_exception("You must specify a filename on the command line");
+    throw file_parse_exception("You must specify a filename on the command line");
 
     infile.open(file_name.c_str(), ios::in);
 
     if (!infile) //Unreachable code?
-        file_parse_exception("Sorry, could not open the file for reading");
+        throw file_parse_exception("Sorry, could not open the file for reading");
 
     while (!infile.eof()) {
         getline(infile, raw_line);
@@ -246,7 +246,7 @@ void file_parser::print_file() {
     vector<formatted_line>::iterator v_iter;
 
     for( v_iter = victor.begin(); v_iter != victor.end(); v_iter++){
-        cout << *v_iter << endl;
+        cout << *v_iter;
     }
 
 }
