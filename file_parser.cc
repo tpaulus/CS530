@@ -117,7 +117,11 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     break;
                 }
 
+<<<<<<< HEAD
                 tmp_line.label = raw_line.substr(0, 8);
+=======
+                tmp_line.label = raw_line;
+>>>>>>> master
                 tmp_line.opcode = "";
                 tmp_line.operand = "";
                 tmp_line.comment = "";
@@ -187,7 +191,11 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     break;
                 } else {
                     // Throw comment error
+<<<<<<< HEAD
                     throw file_parse_exception("expected a comment at line " + row_num + ".");
+=======
+                    throw file_parse_exception("expected a comment.");
+>>>>>>> master
                 }
             } else if (column_num == 4 && tok_last == -1) {
                 tmp_line.comment = "";
@@ -205,15 +213,22 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
                         
                         if(end_quote == -1) {
+<<<<<<< HEAD
                             throw file_parse_exception("quotation marks were not closed at line " + row_num + ".");
+=======
+                            throw file_parse_exception("quotation marks were not closed.");
+>>>>>>> master
                         }
                         
                         // index of where the next column begins after end of quote marks
                         int column_end = raw_line.find_first_of(delimiters, end_quote);
                         col_space = raw_line.find_first_not_of(delimiters, column_end);
+<<<<<<< HEAD
 
                         tmp_line.operand = raw_line.substr(column_start, column_end - column_start);
 
+=======
+>>>>>>> master
                         isQuote = false;
                         
                     } else {
@@ -226,6 +241,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
                         
                         if(end_quote == -1) {
+<<<<<<< HEAD
                             throw file_parse_exception("quotation marks were not closed at line " + row_num + ".");
                         }
 
@@ -239,6 +255,16 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     } else {
                         col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
                     }
+=======
+                            throw file_parse_exception("quotation marks were not closed.");
+                        }
+
+                        isQuote = false;
+                        
+                    }
+
+                    col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
+>>>>>>> master
                 }
 
                 column_start = col_space;
