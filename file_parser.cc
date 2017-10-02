@@ -178,7 +178,11 @@ file_parser::formatted_line file_parser::line_parser(string raw_line) {
                     break;
                 } else {
                     // Throw comment error
+<<<<<<< HEAD
                     throw file_parse_exception("expected a comment.");
+=======
+                    throw file_parse_exception("Expected a comment.");
+>>>>>>> master
                 }
             } else if (column_num == 4 && tok_last == -1) {
                 tmp_line.comment = "";
@@ -243,6 +247,7 @@ void file_parser::read_file() {
     string raw_line;
     vector<string>::iterator v_iter;
 
+<<<<<<< HEAD
     if (file_name.empty()) {
         throw file_parse_exception("you must specify a filename on the command line");
     }
@@ -252,6 +257,15 @@ void file_parser::read_file() {
     if (!infile) { //Unreachable code?
         throw file_parse_exception("sorry, could not open the file for reading");
     }
+=======
+    if (file_name.empty())
+    throw file_parse_exception("You must specify a filename on the command line");
+
+    infile.open(file_name.c_str(), ios::in);
+
+    if (!infile) //Unreachable code?
+        throw file_parse_exception("Sorry, could not open the file for reading");
+>>>>>>> master
 
     while (!infile.eof()) {
         getline(infile, raw_line);
