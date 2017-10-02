@@ -13,6 +13,7 @@
 #include <cctype>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 #include "file_parser.h"
 #include "file_parse_exception.h"
@@ -85,8 +86,9 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
     file_parser::formatted_line tmp_line;    //temporary struct to be pushed onto victor.
     string token;
     string delimiters = " \t\n";
-
-    string row_num = to_string(row_n);
+    ostringstream oss;
+    oss << row_n;	//toString(row_n)
+    string row_num = oss.str();
 
     if (!raw_line.empty()) {
 
