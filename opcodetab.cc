@@ -16,7 +16,7 @@ public:
 	  "STSW", "STT", "STX", "SUB", "SUBF", "SUBR", "SVC", "TD", "TIO", "TIX", 
 	  "TIXR", "WD"};
 	
-	string code [59] = {"18", "58", "90", "40", "B4", "28", "88", "A0", "24", 
+	string mcode [59] = {"18", "58", "90", "40", "B4", "28", "88", "A0", "24", 
 	"64", "9C", "C4", "C0", "F4", "3C", "30", "34", "38", "48", "00", "68", 
 	"50", "70", "08", "6C", "74", "04", "D0", "20", "60", "98", "C8", "44", 
 	"D8", "AC", "4C", "A4", "A8", "F0", "EC", "0C", "78", "54", "80", "D4", 
@@ -27,11 +27,11 @@ public:
 	 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1, 3, 3, 2, 3, 2, 2, 1, 3, 3, 3, 3,
 	 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 1, 3, 2, 3};
 
-	map<string,pair<string,int> > opcodemap;
+	map<string,pair<string,int> > marvin;
 	
 	for(int i=0; i<59; i++){
-		opcodemap.insert(pair<string, pair<string,int> >(opcode[i],
-		pair<string,int>(code[i],opsize[i])));
+		marvin.insert(pair<string, pair<string,int> >(opcode[i],
+		pair<string,int>(mcode[i],opsize[i])));
 	 }
 
        }
