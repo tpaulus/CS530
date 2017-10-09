@@ -1,9 +1,10 @@
 #include <iostream>
 #include <map>
-//#include "opcodetab.h"
+#include "opcodetab.h"
 using namespace std;
 
-map <string, pair<string, int>> marvin;
+map <string, pair<string, int> > marvin;
+
 opcodetab::opcodetab() {
 
     string opcode[59] = {"ADD", "ADDF", "ADDR", "AND", "CLEAR", "COMP", "COMPF",

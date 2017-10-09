@@ -41,7 +41,7 @@ class opcodetab {
                         
     private:
         // your variables and private methods go here
-        map<string,pair<string, int>> marvin;
+        map<string,pair<string, int> > marvin;
 
 };
 
