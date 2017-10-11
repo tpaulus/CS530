@@ -43,7 +43,7 @@ class opcodetab {
         // your variables and private methods go here
         map<string,pair<string, int> > marvin;
 
-        bool isValid(string);
+        bool is_valid(string);
 
 };
 

@@ -8,10 +8,10 @@ map<string, pair<string, int> > marvin; // Don't make the space between > > go a
 
 // ============== BEGIN Helper Functions ==============
 
-bool isIncremented(const string &s) { return s.substr(0, 1) == "+"; }
+bool is_incremented(string s) { return s.substr(0, 1) == "+"; }
 
-string stripSpecial(string s) {
-    if (isIncremented(s)) {
+string strip_incremented(string s) {
+    if (is_incremented(s)) {
         return s.substr(1, s.size() - 1);  // TODO should this be 2?
     }
 
@@ -24,7 +24,7 @@ string to_upper(string s) {
 }
 
 
-bool isSpecial(const string &s) { return to_upper(s) == "RSUB"; }
+bool is_special(const string &s) { return to_upper(s) == "RSUB"; }
 
 // ============== END Helper Functions ==============
 
@@ -64,10 +64,10 @@ opcodetab::opcodetab() {
  * @return Instruction Size, between 1 and 4
  */
 int opcodetab::get_instruction_size(string s) {
-    if (isValid(s)) {
-        int instruction_size = marvin.at(s).second;
+    if (is_valid(s)) {
+        int instruction_size = marvin.at(to_upper(strip_incremented(s))).second;
 
-        if (isIncremented(s) && instruction_size == 3 && !isSpecial(s)) {
+        if (is_incremented(s) && instruction_size == 3 && !is_special(s)) {
             return instruction_size + 1;
         }
         return instruction_size;
@@ -84,8 +84,8 @@ int opcodetab::get_instruction_size(string s) {
  * @return HEX Machine Code
  */
 string opcodetab::get_machine_code(string s) {
-    if (isValid(s)) {
-        return marvin.at(s).first;
+    if (is_valid(s)) {
+        return marvin.at(to_upper(strip_incremented(s))).first;
     }
 
     throw opcode_error_exception("You done fudged!");
@@ -98,6 +98,6 @@ string opcodetab::get_machine_code(string s) {
  * @param opcode Opcode String Ex: "ADD"
  * @return is valid opcode
  */
-bool opcodetab::isValid(string opcode) {
-    return marvin.find(stripSpecial(to_upper(opcode))) != marvin.end();
+bool opcodetab::is_valid(string opcode) {
+    return marvin.find(to_upper(strip_incremented(opcode))) != marvin.end();
 }
