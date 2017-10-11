@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void attempt(opcodetab opcodetab, const string s) {
+void attempt(opcodetab opcodetab, const string &s) {
     try {
         cout << "Machine Code of " << s << " is: " << opcodetab.get_machine_code(s) << endl;
         cout << "Size of " << s << " is: " << opcodetab.get_instruction_size(s) << endl;
