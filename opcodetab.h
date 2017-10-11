@@ -1,7 +1,7 @@
 /*
- * Alexander Pearson-Goulart, Athena Campbell, Jon Verne, Neha Nene, Tom Paulas, William Fox
+ * Alexander Pearson-Goulart, Athena Campbell, Jon Verne, Neha Nene, Tom Paulus, William Fox
  * cssc1015
- * prog1
+ * prog2
  * CS530, Fall 2017
  *
 */
@@ -40,11 +40,8 @@ class opcodetab {
         int get_instruction_size(string);
                         
     private:
-        // your variables and private methods go here
         map<string,pair<string, int> > marvin;
-
         bool is_valid(string);
-
 };
 
 #endif
