@@ -1,5 +1,8 @@
 #include <iostream>
 #include <map>
+#include <algorithm>
+#include <string>
+#include <sstream>
 #include "opcodetab.h"
 
 using namespace std;
@@ -10,6 +13,12 @@ map<string, pair<string, int> > marvin;
 // ============== BEGIN Helper Functions ==============
 
 bool is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
+
+string to_string(int val){
+    ostringstream s;
+    s << val;
+    return s.str();
+}
 
 string strip_incremented(const string &s) {
     if (is_incremented(s)) {
