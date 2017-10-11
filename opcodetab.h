@@ -11,7 +11,7 @@
 
 #include<string>
 #include<map>
-//#include<pair> //Not Sure about this yet
+#include "opcode_error_exception.h"
 
 using namespace std;
 
@@ -42,6 +42,8 @@ class opcodetab {
     private:
         // your variables and private methods go here
         map<string,pair<string, int> > marvin;
+
+        bool isValid(string);
 
 };
 
