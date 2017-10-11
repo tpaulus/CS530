@@ -1,33 +1,23 @@
 #include <iostream>
-#include <fstream>
-#include <vector>
 #include <stdlib.h>
-#include "file_parser.h"
-#include "file_parse_exception.h"
-
+#include "opcodetab.h.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    if(argc != 2) {
-        cout << "Error, you must supply the name of the file " <<
-        "to process at the command line." << endl;
-        exit(1);
-    }
-    string filename = argv[1];
     try {
-    file_parser parser(filename);
-    parser.read_file();
-    parser.print_file();
-    cout << "Token at 2,0 is: " << parser.get_token(2,0) << endl;    
-    cout << "Token at 2,1 is: " << parser.get_token(2,1) << endl;
-    cout << "Token at 2,2 is: " << parser.get_token(2,2) << endl;
-    cout << "Token at 2,3 is: " << parser.get_token(2,3) << endl;
-    
-    cout << "Token at 15,0 is: " << parser.get_token(15,0) << endl;    
-    cout << "Token at 15,1 is: " << parser.get_token(15,1) << endl;
-    cout << "Token at 15,2 is: " << parser.get_token(15,2) << endl;
-    cout << "Token at 15,3 is: " << parser.get_token(15,3) << endl;    
-            
+    opcodetab marvin()
+    cout << "Machine Code of Add is: " << marvin.get_machine_code("Add") << endl;    
+    cout << "Machine Code of ADD is: " << marvin.get_machine_code("ADD") << endl;    
+    cout << "Machine Code of LDA is: " << marvin.get_machine_code("LDA") << endl; 
+    cout << "Machine Code of +LDA is: " << marvin.get_machine_code("+LDA") << endl;    
+
+    cout << "Size of +LDA is: " << marvin.get_instruction_size("+LDA") << endl;
+    cout << "Size of LDA is: " << marvin.get_instruction_size("LDA") << endl;    
+
+    cout << "Machine Code of blarg is: " << marvin.get_machine_code("blarg") << endl;    
+    cout << "Size of blarg is: " << marvin.get_instruction_size("blarg") << endl;  
+    cout << "Size of +rsub is: " << marvin.get_instruction_size("+rsub") << endl;  
+
     }
     catch(file_parse_exception excpt) {
         cout << "**Sorry, error " << excpt.getMessage() << endl;
