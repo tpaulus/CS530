@@ -4,15 +4,16 @@
 
 using namespace std;
 
-map<string, pair<string, int> > marvin; // Don't make the space between > > go away - You will cry!
+map<string, pair<string, int> > marvin;
+// Don't make the space between > > go away - You will cry!
 
 // ============== BEGIN Helper Functions ==============
 
-bool is_incremented(string s) { return s.substr(0, 1) == "+"; }
+bool is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
 
-string strip_incremented(string s) {
+string strip_incremented(const string &s) {
     if (is_incremented(s)) {
-        return s.substr(1, s.size() - 1);  // TODO should this be 2?
+        return s.substr(1, s.size() - 1);
     }
 
     return s;
@@ -24,7 +25,7 @@ string to_upper(string s) {
 }
 
 
-bool is_special(string s) {
+bool is_special(const string &s) {
 //    cout << "SP Check: " << s << " == " << (to_upper(strip_incremented(s)) == "RSUB" ? "TRUE" : "FALSE") << endl;
     return to_upper(strip_incremented(s)) == "RSUB";
 }
@@ -67,7 +68,7 @@ opcodetab::opcodetab() {
  * @return Instruction Size, between 1 and 4
  * @throws opcode_error_exception Invalid Opcode
  */
-int opcodetab::get_instruction_size(string s) {
+int opcodetab::get_instruction_size(const string s) {
     if (is_valid(s)) {
         int instruction_size = marvin.at(to_upper(strip_incremented(s))).second;
 
@@ -85,7 +86,7 @@ int opcodetab::get_instruction_size(string s) {
  * @return HEX Machine Code
  * @throws opcode_error_exception Invalid Opcode
  */
-string opcodetab::get_machine_code(string s) {
+string opcodetab::get_machine_code(const string s) {
     if (is_valid(s)) {
         if (is_incremented(s) && is_special(s)) {
             throw opcode_error_exception("RSUB cannot be incremented as it takes no operands");
@@ -104,7 +105,7 @@ string opcodetab::get_machine_code(string s) {
  * @return is valid opcode
  * @throws opcode_error_exception Invalid Opcode
  */
-bool opcodetab::is_valid(string opcode) {
+bool opcodetab::is_valid(const string opcode) {
     if (marvin.find(to_upper(strip_incremented(opcode))) == marvin.end()) {
         throw opcode_error_exception("\"" + opcode + "\" is not a valid opcode!");
     }
