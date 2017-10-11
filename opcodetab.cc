@@ -4,15 +4,16 @@
 
 using namespace std;
 
-map<string, pair<string, int> > marvin; // Don't make the space between > > go away - You will cry!
+map<string, pair<string, int> > marvin;
+// Don't make the space between > > go away - You will cry!
 
 // ============== BEGIN Helper Functions ==============
 
-bool isIncremented(const string &s) { return s.substr(0, 1) == "+"; }
+bool is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
 
-string stripSpecial(string s) {
-    if (isIncremented(s)) {
-        return s.substr(1, s.size() - 1);  // TODO should this be 2?
+string strip_incremented(const string &s) {
+    if (is_incremented(s)) {
+        return s.substr(1, s.size() - 1);
     }
 
     return s;
@@ -24,7 +25,10 @@ string to_upper(string s) {
 }
 
 
-bool isSpecial(const string &s) { return to_upper(s) == "RSUB"; }
+bool is_special(const string &s) {
+//    cout << "SP Check: " << s << " == " << (to_upper(strip_incremented(s)) == "RSUB" ? "TRUE" : "FALSE") << endl;
+    return to_upper(strip_incremented(s)) == "RSUB";
+}
 
 // ============== END Helper Functions ==============
 
@@ -55,26 +59,24 @@ opcodetab::opcodetab() {
         marvin.insert(pair<string, pair<string, int> >(opcode[i], pair<string, int>(mcode[i], opsize[i])));
     }
 
-} //opcodetab()
+}
 
 /**
  * Get the Size of a Given Instruction based off of its opcode
  *
  * @param s Opcode String
  * @return Instruction Size, between 1 and 4
+ * @throws opcode_error_exception Invalid Opcode
  */
-int opcodetab::get_instruction_size(string s) {
-    if (isValid(s)) {
-        int instruction_size = marvin.at(s).second;
+int opcodetab::get_instruction_size(const string s) {
+    if (is_valid(s)) {
+        int instruction_size = marvin.at(to_upper(strip_incremented(s))).second;
 
-        if (isIncremented(s) && instruction_size == 3 && !isSpecial(s)) {
-            return instruction_size + 1;
-        }
+        if (instruction_size == 3 && is_incremented(s)) { return instruction_size + 1; }
         return instruction_size;
     }
 
-    throw opcode_error_exception("You done fudged!");
-    // TODO Throw some crap!
+    throw opcode_error_exception("Something went wrong!");
 }
 
 /**
@@ -82,14 +84,18 @@ int opcodetab::get_instruction_size(string s) {
  *
  * @param s Opcode String
  * @return HEX Machine Code
+ * @throws opcode_error_exception Invalid Opcode
  */
-string opcodetab::get_machine_code(string s) {
-    if (isValid(s)) {
-        return marvin.at(s).first;
+string opcodetab::get_machine_code(const string s) {
+    if (is_valid(s)) {
+        if (is_incremented(s) && is_special(s)) {
+            throw opcode_error_exception("RSUB cannot be incremented as it takes no operands");
+        }
+
+        return marvin.at(to_upper(strip_incremented(s))).first;
     }
 
-    throw opcode_error_exception("You done fudged!");
-    // TODO Throw some crap!
+    throw opcode_error_exception("Something went wrong!");
 }
 
 /**
@@ -97,7 +103,23 @@ string opcodetab::get_machine_code(string s) {
  *
  * @param opcode Opcode String Ex: "ADD"
  * @return is valid opcode
+ * @throws opcode_error_exception Invalid Opcode
  */
-bool opcodetab::isValid(string opcode) {
-    return marvin.find(stripSpecial(to_upper(opcode))) != marvin.end();
+bool opcodetab::is_valid(const string opcode) {
+    if (marvin.find(to_upper(strip_incremented(opcode))) == marvin.end()) {
+        throw opcode_error_exception("\"" + opcode + "\" is not a valid opcode!");
+    }
+
+    const bool incremented = is_incremented(opcode);
+    const bool b = is_special(opcode);
+    const int instruction_size = marvin.at(to_upper(strip_incremented(opcode))).second;
+
+
+    if (incremented && b) {
+        throw opcode_error_exception("RSUB cannot be incremented as it takes no operands");
+    } else if (incremented && instruction_size != 3) {
+        throw opcode_error_exception("Type " + to_string(instruction_size) + " instructions cannot be incremented");
+    }
+
+    return true;
 }

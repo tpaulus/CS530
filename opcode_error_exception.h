@@ -11,7 +11,7 @@ using namespace std;
 class opcode_error_exception {
 
 public:
-    opcode_error_exception(string s) {
+    explicit opcode_error_exception(string s) {
         message = s;        
         }
 

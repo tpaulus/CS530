@@ -1,27 +1,38 @@
 #include <iostream>
 #include <stdlib.h>
-#include "opcodetab.h.h"
+#include "opcodetab.h"
+
 using namespace std;
 
-int main(int argc, char *argv[]) {
+void attempt(opcodetab opcodetab, const string &s) {
     try {
-    opcodetab marvin()
-    cout << "Machine Code of Add is: " << marvin.get_machine_code("Add") << endl;    
-    cout << "Machine Code of ADD is: " << marvin.get_machine_code("ADD") << endl;    
-    cout << "Machine Code of LDA is: " << marvin.get_machine_code("LDA") << endl; 
-    cout << "Machine Code of +LDA is: " << marvin.get_machine_code("+LDA") << endl;    
-
-    cout << "Size of +LDA is: " << marvin.get_instruction_size("+LDA") << endl;
-    cout << "Size of LDA is: " << marvin.get_instruction_size("LDA") << endl;    
-
-    cout << "Machine Code of blarg is: " << marvin.get_machine_code("blarg") << endl;    
-    cout << "Size of blarg is: " << marvin.get_instruction_size("blarg") << endl;  
-    cout << "Size of +rsub is: " << marvin.get_instruction_size("+rsub") << endl;  
-
+        cout << "Machine Code of " << s << " is: " << opcodetab.get_machine_code(s) << endl;
+        cout << "Size of " << s << " is: " << opcodetab.get_instruction_size(s) << endl;
+    } catch (opcode_error_exception &exception) {
+        cout << "ERROR - " << exception.getMessage() << endl;
     }
-    catch(file_parse_exception excpt) {
-        cout << "**Sorry, error " << excpt.getMessage() << endl;
-    }
-    
-    
+}
+
+int main(int argc, char *argv[]) {
+    opcodetab opcodetab;
+
+    attempt(opcodetab, "ADD");
+    attempt(opcodetab, "Add");
+
+    cout << endl;
+
+    attempt(opcodetab, "LDA");
+    attempt(opcodetab, "+LDA");
+
+    cout << endl;
+
+    attempt(opcodetab, "blarg");
+    attempt(opcodetab, "blarg");
+
+    cout << endl;
+
+    attempt(opcodetab, "+rsub");
+    attempt(opcodetab, "+RSUB");
+    attempt(opcodetab, "+ADDR");
+    attempt(opcodetab, "+FIX");
 }
