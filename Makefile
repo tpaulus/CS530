@@ -1,18 +1,18 @@
-# Makefile for file parser
+# Makefile for Opcode
 
 
-TORM = driver driver.o file_parser.o 
+TORM = driver driver.o opcodetab.o
 CC = g++
 CCFLAGS = -g -O3 -Wall -Wpointer-arith -Wcast-qual -Wwrite-strings
 
-driver:	driver.o file_parser.o
-	${CC} ${CCFLAGS} -o driver driver.o file_parser.o
+driver:	driver.o opcodetab.o
+	${CC} ${CCFLAGS} -o driver driver.o opcodetab.o
 
-p1_driver.o:	driver.cpp
-		${CC} ${CCFLAGS} -c driver.cpp 
+p1_driver.o:	opcodetab.cpp
+		${CC} ${CCFLAGS} -c opcodetab.cpp
 
-file_parser.o:	file_parser.cc file_parser.h file_parse_exception.h
-		${CC} ${CCFLAGS} -c file_parser.cc
+file_parser.o:	opcodetab.cc opcodetab.h opcode_error_exception.h
+		${CC} ${CCFLAGS} -c opcodetab.cc
 
 clean:
 	rm -f ${TORM}
