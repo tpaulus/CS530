@@ -32,6 +32,9 @@ int main(int argc, char *argv[]) {
     cout << endl;
 
     attempt(opcodetab, "blarg"); //invalid
+    attempt(opcodetab, "blarg");
+    attempt(opcodetab, "this is an opcode that is both way to long and has spaced");
+    attempt(opcodetab, "!@##$%^&*()");
     attempt(opcodetab, "45");
     attempt(opcodetab, "+mulr+"); 
     attempt(opcodetab, "++ADD");
