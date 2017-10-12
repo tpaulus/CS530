@@ -16,23 +16,35 @@ void attempt(opcodetab opcodetab, const string &s) {
 int main(int argc, char *argv[]) {
     opcodetab opcodetab;
 
-    attempt(opcodetab, "ADD");
-    attempt(opcodetab, "Add");
+    attempt(opcodetab, "ADD"); //case sensitivity
+    attempt(opcodetab, "+aDd");
 
     cout << endl;
 
-    attempt(opcodetab, "LDA");
-    attempt(opcodetab, "+LDA");
+    attempt(opcodetab, "+WD"); //increment size
+    attempt(opcodetab, "SSK");
 
     cout << endl;
 
-    attempt(opcodetab, "blarg");
-    attempt(opcodetab, "blarg");
+    attempt(opcodetab, "+ADDR"); //type 2
+    attempt(opcodetab, "+FLOAT"); //type 1
 
     cout << endl;
 
-    attempt(opcodetab, "+rsub");
+    attempt(opcodetab, "blarg"); //invalid
+    attempt(opcodetab, "45");
+    attempt(opcodetab, "+mulr+"); 
+    attempt(opcodetab, "++ADD");
+
+    cout << endl;
+
+    attempt(opcodetab, ""); //empty
+
+    cout << endl;
+
+    attempt(opcodetab, "rsub"); //special
+    attempt(opcodetab, "+rsub"); 
     attempt(opcodetab, "+RSUB");
-    attempt(opcodetab, "+ADDR");
-    attempt(opcodetab, "+FIX");
+
+
 }
