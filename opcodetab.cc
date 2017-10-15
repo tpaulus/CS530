@@ -120,12 +120,12 @@ bool opcodetab::is_valid(const string opcode) {
     }
 
     const bool incremented = is_incremented(opcode);
-    const bool b = is_special(opcode);
+    const bool is_rsub = is_special(opcode);
     const int instruction_size = marvin.at(to_upper(strip_incremented(opcode))).second;
 
 
-    if (incremented && b) {
-        throw opcode_error_exception("RSUB cannot be incremented as it takes no operands");
+    if (incremented && is_rsub) {
+        throw opcode_error_exception("\"" + opcode + "\" cannot be incremented as it takes no operands");
     } else if (incremented && instruction_size != 3) {
         throw opcode_error_exception("Type " + to_string(instruction_size) + " instructions cannot be incremented");
     }
