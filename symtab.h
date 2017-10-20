@@ -25,12 +25,14 @@ public:
     symtab();
 
     //Obj insert
-    void insert(pair<string, pair <string, bool> >);
+    void insert(pair<string, pair<string, bool> >);
+
     //Primative Insert
     void insert(string, string, bool);
 
     //Updates the entry using an object
-    void update(pair <string, pair <string, bool> >);
+    void update(pair<string, pair<string, bool> >);
+
     //Updates the entry using Primitives
     void update(string, string, bool);
 
@@ -46,7 +48,8 @@ public:
 private:
 
     //Key <Label> Value<Address/Value, is_relative>
-    map<string, pair <string, bool> > symbol_table;
+    map<string, pair<string, bool> > symbol_table;
 
 };
+
 #endif //SYMTAB_H

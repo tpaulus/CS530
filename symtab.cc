@@ -16,7 +16,7 @@
 
 using namespace std;
 
-map <string, pair<string, bool> > symbol_table;
+map<string, pair<string, bool> > symbol_table;
 
 string to_upper(string s) {
     transform(s.begin(), s.end(), s.begin(), ::toupper);
@@ -34,20 +34,20 @@ void symtab::insert(pair<string, pair<string, bool> > obj) {
 }
 
 void symtab::insert(string string1, string string2, bool is_r) {
-    symtab::insert(pair<string, pair<string, bool> > (string1, pair<string, bool>(string2, is_r)));
+    symtab::insert(pair<string, pair<string, bool> >(string1, pair<string, bool>(string2, is_r)));
 }
 
 void symtab::update(pair<string, pair<string, bool> > obj) {
     map<string, pair<string, bool> >::iterator m_iter = symbol_table.find(to_upper(obj.first));
     //if key was found
-    if (m_iter != symbol_table.end()){
+    if (m_iter != symbol_table.end()) {
         m_iter->second = obj.second;
     }
     //TODO: Else throw exception?
 }
 
 void symtab::update(string string1, string string2, bool is_r) {
-    symtab::update(pair<string, pair <string, bool> > (string1, pair<string, bool>(string2, is_r)));
+    symtab::update(pair<string, pair<string, bool> >(string1, pair<string, bool>(string2, is_r)));
 }
 
 bool symtab::contains(string key) {
@@ -55,14 +55,14 @@ bool symtab::contains(string key) {
 }
 
 string symtab::get_value(string string1) {
-    if(symtab::contains(string1)){
+    if (symtab::contains(string1)) {
         return symbol_table.at(string1).first;
     }
     //TODO: Else throw exception?
 }
 
 bool symtab::is_relative(string string1) {
-    if(symtab::contains(string1)){
+    if (symtab::contains(string1)) {
         return symbol_table.at(string1).second;
     }
     //TODO: Else throw exception?
