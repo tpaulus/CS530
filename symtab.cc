@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <string>
 #include <sstream>
-#include "opcodetab.h"
+#include "symtab.h"
 
 using namespace std;
 
