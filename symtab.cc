@@ -38,7 +38,7 @@ void symtab::insert(string string1, string string2, bool is_r) {
 }
 
 void symtab::update(pair<string, pair<string, bool> > obj) {
-    map<string, pair<string, bool> >::iterator m_iter = symbol_table.find(toupper(obj.first));
+    map<string, pair<string, bool> >::iterator m_iter = symbol_table.find(to_upper(obj.first));
     //if key was found
     if (m_iter != symbol_table.end()){
         m_iter->second = obj.second;
