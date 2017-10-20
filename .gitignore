@@ -85,3 +85,8 @@ fabric.properties
 
 # Driver
 driver
+
+# CLion Stuff
+
+.idea/*
+CMakeLists.txt
