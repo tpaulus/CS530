@@ -31,7 +31,7 @@ public:
 
     //Updates the entry using an object
     void update(pair <string, pair <string, bool> >);
-    //Updates the entry using Primatives
+    //Updates the entry using Primitives
     void update(string, string, bool);
 
     //Returns true if key exists, false if not
