@@ -34,7 +34,7 @@ void symtab::insert(pair<string, pair<string, bool> > obj) {
 }
 
 void symtab::insert(string string1, string string2, bool is_r) {
-    symtab::insert(pair<string1, pair< string2, bool> > (string1, pair<string, bool>(string2, is_r)));
+    symtab::insert(pair<string, pair<string, bool> > (string1, pair<string, bool>(string2, is_r)));
 }
 
 void symtab::update(pair<string, pair<string, bool> > obj) {
@@ -47,7 +47,7 @@ void symtab::update(pair<string, pair<string, bool> > obj) {
 }
 
 void symtab::update(string string1, string string2, bool is_r) {
-    symtab::update(pair<string1, pair <string2, is_r> >);
+    symtab::update(pair<string, pair <string, is_r> > (string1, pair<string, bool>(string2, is_r)));
 }
 
 bool symtab::contains(string key) {
