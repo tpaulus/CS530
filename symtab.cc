@@ -19,7 +19,7 @@ using namespace std;
 map <string, pair<string, bool> > symbol_table;
 
 string to_upper(string s) {
-    transform(s.begin(), s.end(), s.begin(), ::to_upper);
+    transform(s.begin(), s.end(), s.begin(), ::toupper);
     return s;
 }
 
