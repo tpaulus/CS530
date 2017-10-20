@@ -47,7 +47,7 @@ void symtab::update(pair<string, pair<string, bool> > obj) {
 }
 
 void symtab::update(string string1, string string2, bool is_r) {
-    symtab::update(pair<string, pair <string, is_r> > (string1, pair<string, bool>(string2, is_r)));
+    symtab::update(pair<string, pair <string, bool> > (string1, pair<string, bool>(string2, is_r)));
 }
 
 bool symtab::contains(string key) {
@@ -63,7 +63,7 @@ string symtab::get_value(string string1) {
 
 bool symtab::is_relative(string string1) {
     if(symtab::contains(string1)){
-        return symbol_table.at(string1).first;
+        return symbol_table.at(string1).second;
     }
     //TODO: Else throw exception?
 }
