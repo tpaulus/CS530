@@ -8,8 +8,8 @@
 */
 
 
-#ifndef CS530_SYMTAB_H
-#define CS530_SYMTAB_H
+#ifndef SYMTAB_H
+#define SYMTAB_H
 
 
 #include<string>
@@ -49,4 +49,4 @@ private:
     map<string, pair <string, bool> > symbol_table;
 
 };
-#endif //CS530_SYMTAB_H
+#endif //SYMTAB_H
