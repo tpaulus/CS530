@@ -49,7 +49,4 @@ private:
     map<string, pair <string, bool> > symbol_table;
 
 };
-
-
-
 #endif //CS530_SYMTAB_H
