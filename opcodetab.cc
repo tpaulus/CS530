@@ -107,7 +107,7 @@ int opcodetab::get_instruction_size(const string s) {
 string opcodetab::get_machine_code(const string s) {
     if (is_valid(s)) {
         if (is_incremented(s) && is_special(s)) {
-            throw opcode_error_exception("RSUB cannot be incremented as it takes no operands");
+            throw opcode_error_exception("RSUB cannot be format four as it takes no operands");
         }
 
         return marvin.at(to_upper(strip_incremented(s))).first;
@@ -134,9 +134,9 @@ bool opcodetab::is_valid(const string opcode) {
 
 
     if (incremented && is_rsub) {
-        throw opcode_error_exception("\"" + opcode + "\" cannot be incremented as it takes no operands");
+        throw opcode_error_exception("\"" + opcode + "\" cannot be format four as it takes no operands");
     } else if (incremented && instruction_size != 3) {
-        throw opcode_error_exception("Type " + to_string(instruction_size) + " instructions cannot be incremented");
+        throw opcode_error_exception("Type " + to_string(instruction_size) + " instructions cannot be format four");
     }
 
     return true;
