@@ -27,7 +27,7 @@ struct listing_line {
     string getlabel() const;
     string getopcode() const;
     string getoperand() const;
-    stirng getmachinecode() const;
+    string getmachinecode() const;
     
     listing_line(void){
         address="";
