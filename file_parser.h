@@ -74,7 +74,7 @@ private:
         std::string getcomment() const;
         std::string getaddress() const;
         std::string getmachinecode() const;
-        unsigned int getlinenum() const;
+        unsigned int getlinenum();
     };
     //Class Level Variables
     std::vector<formatted_line> victor;

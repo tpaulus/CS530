@@ -48,7 +48,7 @@ struct formatted_line {
 
     string getmachinecode() const;
 
-    unsigned int getlinenum() const;
+    unsigned int getlinenum();
 
     //Constructor
     formatted_line(void) {
@@ -90,7 +90,7 @@ string formatted_line::getaddress() const {
     return address;
 }
 
-int formatted_line::getlinenum() const {
+int formatted_line::getlinenum() {
     return linenum;
 }
 
