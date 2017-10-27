@@ -189,7 +189,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     break;
                 } else {
                     // Throw comment error
-                    throw file_parse_exception("expected a comment at line " + row_num + ".");
+                    throw file_parse_exception("too many tokens on " + row_num + ".");
                 }
             } else if (column_num == 4 && tok_last == -1) {
                 tmp_line.comment = "";
