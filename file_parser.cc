@@ -30,6 +30,12 @@ struct formatted_line {
     string operand;
     string comment;
 
+    //Bonus Features
+    string address;
+    string machinecode;
+    unsigned int linenum;
+
+
     string getlabel() const;
 
     string getopcode() const;
@@ -38,12 +44,22 @@ struct formatted_line {
 
     string getcomment() const;
 
+    string getaddress() const;
+
+    string getmachinecode() const;
+
+    unsigned int getlinenum() const;
+
     //Constructor
     formatted_line(void) {
         label = "";
         opcode = "";
         operand = "";
         comment = "";
+
+        address = "";
+        machinecode = "";
+        linenum = 0;
     }
     ~formatted_line(){
     }
@@ -64,6 +80,18 @@ string formatted_line::getoperand() const {
 
 string formatted_line::getcomment() const {
     return comment;
+}
+
+string formatted_line::getmachinecode() const {
+    return machinecode;
+}
+
+string formatted_line::getaddress() const {
+    return address;
+}
+
+int formatted_line::getlinenum() const {
+    return linenum;
 }
 
 //Class Level Variables
