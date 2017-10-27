@@ -40,7 +40,7 @@ private:
         }
             
         std::string getaddress() const;
-        std::unsigned int getlinenum() const;
+        unsigned int getlinenum() const;
         std::string getlabel() const;
         std::string getopcode() const;
         std::string getoperand() const;
