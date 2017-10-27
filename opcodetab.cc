@@ -23,7 +23,7 @@ map<string, pair<string, int> > marvin;
 
 bool is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
 
-string to_string(int val){
+string our_to_string(int val){
     ostringstream s;
     s << val;
     return s.str();
@@ -136,7 +136,7 @@ bool opcodetab::is_valid(const string opcode) {
     if (incremented && is_rsub) {
         throw opcode_error_exception("\"" + opcode + "\" cannot be format four as it takes no operands");
     } else if (incremented && instruction_size != 3) {
-        throw opcode_error_exception("Type " + to_string(instruction_size) + " instructions cannot be format four");
+        throw opcode_error_exception("Type " + our_to_string(instruction_size) + " instructions cannot be format four");
     }
 
     return true;
