@@ -90,7 +90,7 @@ string formatted_line::getaddress() const {
     return address;
 }
 
-int formatted_line::getlinenum() {
+unsigned int formatted_line::getlinenum() {
     return linenum;
 }
 
