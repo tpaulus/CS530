@@ -23,7 +23,7 @@ map<string, pair<string, int> > marvin;
 
 bool is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
 
-string to_string(int val){
+string our_to_string(int val){
     ostringstream s;
     s << val;
     return s.str();
@@ -37,15 +37,15 @@ string strip_incremented(const string &s) {
     return s;
 }
 
-string to_upper(string s) {
+string opcode_to_upper(string s) {
     transform(s.begin(), s.end(), s.begin(), ::toupper);
     return s;
 }
 
 
 bool is_special(const string &s) {
-//    cout << "SP Check: " << s << " == " << (to_upper(strip_incremented(s)) == "RSUB" ? "TRUE" : "FALSE") << endl;
-    return to_upper(strip_incremented(s)) == "RSUB";
+//    cout << "SP Check: " << s << " == " << (opcode_to_upper(strip_incremented(s)) == "RSUB" ? "TRUE" : "FALSE") << endl;
+    return opcode_to_upper(strip_incremented(s)) == "RSUB";
 }
 
 // ============== END Helper Functions ==============
@@ -88,7 +88,7 @@ opcodetab::opcodetab() {
  */
 int opcodetab::get_instruction_size(const string s) {
     if (is_valid(s)) {
-        int instruction_size = marvin.at(to_upper(strip_incremented(s))).second;
+        int instruction_size = marvin.at(opcode_to_upper(strip_incremented(s))).second;
 
         if (instruction_size == 3 && is_incremented(s)) { return instruction_size + 1; }
         return instruction_size;
@@ -110,7 +110,7 @@ string opcodetab::get_machine_code(const string s) {
             throw opcode_error_exception("RSUB cannot be format four as it takes no operands");
         }
 
-        return marvin.at(to_upper(strip_incremented(s))).first;
+        return marvin.at(opcode_to_upper(strip_incremented(s))).first;
     }
 
     throw opcode_error_exception("Something went wrong!");
@@ -124,19 +124,19 @@ string opcodetab::get_machine_code(const string s) {
  * @throws opcode_error_exception Invalid Opcode
  */
 bool opcodetab::is_valid(const string opcode) {
-    if (marvin.find(to_upper(strip_incremented(opcode))) == marvin.end()) {
+    if (marvin.find(opcode_to_upper(strip_incremented(opcode))) == marvin.end()) {
         throw opcode_error_exception("\"" + opcode + "\" is not a valid opcode!");
     }
 
     const bool incremented = is_incremented(opcode);
     const bool is_rsub = is_special(opcode);
-    const int instruction_size = marvin.at(to_upper(strip_incremented(opcode))).second;
+    const int instruction_size = marvin.at(opcode_to_upper(strip_incremented(opcode))).second;
 
 
     if (incremented && is_rsub) {
         throw opcode_error_exception("\"" + opcode + "\" cannot be format four as it takes no operands");
     } else if (incremented && instruction_size != 3) {
-        throw opcode_error_exception("Type " + to_string(instruction_size) + " instructions cannot be format four");
+        throw opcode_error_exception("Type " + our_to_string(instruction_size) + " instructions cannot be format four");
     }
 
     return true;

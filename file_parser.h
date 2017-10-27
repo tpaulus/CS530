@@ -55,17 +55,26 @@ private:
         std::string opcode;
         std::string operand;
         std::string comment;
+        std::string address;
+        std::string machinecode;
+        unsigned int linenum;
         //Methods
         inline formatted_line() {
         label = "";
         opcode = "";
         operand = "";
         comment = "";
+        address = "";
+        machinecode = "";
+        linenum = 0;
     	}
         std::string getlabel() const;
         std::string getopcode() const;
         std::string getoperand() const;
         std::string getcomment() const;
+        std::string getaddress() const;
+        std::string getmachinecode() const;
+        unsigned int getlinenum();
     };
     //Class Level Variables
     std::vector<formatted_line> victor;
