@@ -13,7 +13,7 @@
 #include <string>
 #include <sstream>
 #include "symtab.h"
-
+#include "symtab_exception.h"
 using namespace std;
 
 map<string, pair<string, bool> > symbol_table;
@@ -30,7 +30,7 @@ symtab::symtab() {
 void symtab::insert(pair<string, pair<string, bool> > obj) {
     obj.first = sym_to_upper(obj.first);
     symbol_table.insert(obj);
-    //TODO: Should only insert if doesn't exist?
+    throw symtab_exception(obj.first + ": Duplicate Label");
 }
 
 void symtab::insert(string string1, string string2, bool is_r) {
@@ -43,7 +43,7 @@ void symtab::update(pair<string, pair<string, bool> > obj) {
     if (m_iter != symbol_table.end()) {
         m_iter->second = obj.second;
     }
-    //TODO: Else throw exception?
+    throw symtab_exception(obj.first + ": Not found");
 }
 
 void symtab::update(string string1, string string2, bool is_r) {
@@ -58,12 +58,12 @@ string symtab::get_value(string string1) {
     if (symtab::contains(string1)) {
         return symbol_table.at(string1).first;
     }
-    //TODO: Else throw exception?
+    throw symtab_exception(string1 + ": Not found");
 }
 
 bool symtab::is_relative(string string1) {
     if (symtab::contains(string1)) {
         return symbol_table.at(string1).second;
     }
-    //TODO: Else throw exception?
+    throw symtab_exception(string1 + ": Not found");
 }
