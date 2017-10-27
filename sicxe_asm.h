@@ -23,12 +23,12 @@ private:
     string filename;
     
     struct listing_line{
-        std::string address;
-        std::unsigned int linenum;
-        std::string label;
-        std::string opcode;
-        std::string operand;
-        std::string machinecode;
+        string address;
+        unsigned int linenum;
+        string label;
+        string opcode;
+        string operand;
+        string machinecode;
         
         inline listing_line(){
         address="";
@@ -36,7 +36,7 @@ private:
         label="";
         opcode="";
         operand="";
-        machinecode=""
+        machinecode="";
         }
             
         std::string getaddress() const;
@@ -44,7 +44,7 @@ private:
         std::string getlabel() const;
         std::string getopcode() const;
         std::string getoperand() const;
-        std::stirng getmachinecode() const;
+        std::string getmachinecode() const;
         
     };
 
