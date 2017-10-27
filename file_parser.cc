@@ -118,6 +118,8 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
     oss << row_n;	//toString(row_n)
     string row_num = oss.str();
 
+    tmp_line.linenum = row_n;
+
     if (!raw_line.empty()) {
 
         unsigned int column_start = 0;
