@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
     for(unsigned int i = 0; i < parser.size(); i++) {
         if(skip_check(parser,i))
             continue;
-        tmp_line.linenum = i;
+        tmp_line.linenum = i + 1; //Source files are one based
         tmp_line.label = parser.get_token(i,0);
         tmp_line.opcode = parser.get_token(i,1);
         tmp_line.operand = parser.get_token(i,2);
