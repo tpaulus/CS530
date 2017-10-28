@@ -81,8 +81,7 @@ int main(int argc, char *argv[]) {
     listing_line tmp_line;
 
 
-    for(int i = 0; i < parser.size(); i++)
-    {
+    for(int i = 0; i < parser.size(); i++) {
         if(skip_check(parser,i))
             continue;
         tmp_line.linenum = i;
@@ -94,8 +93,7 @@ int main(int argc, char *argv[]) {
 
 }
 
-bool skip_check(file_parser parser, int row_num)
-{
+bool skip_check(file_parser parser, int row_num) {
     string comment = parser.get_token(row_num,3);
     string label = parser.get_token(row_num,0);
     string opcode = parser.get_token(row_num,1);
@@ -106,4 +104,3 @@ bool skip_check(file_parser parser, int row_num)
         return true;
     return false;
 }
-                                                                                       
