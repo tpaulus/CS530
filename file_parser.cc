@@ -348,10 +348,6 @@ int file_parser::size() {
     return static_cast<int>(victor.size());
 }
 
-
-
-
-
-
-
-
+struct file_parser::formatted_line file_parser::get_struct(unsigned int row){
+    return victor.at(row);
+}
