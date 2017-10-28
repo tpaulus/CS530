@@ -11,8 +11,6 @@
 #include <iomanip>
 
 #include "sicxe_asm.h"
-#include "file_parser.cc"
-#include "opcodetab.cc"
 
 using namespace std;
 
@@ -44,27 +42,27 @@ struct listing_line {
 
 };
 
-string listing_line::getaddress() const {
+string sicxe_asm::listing_line::getaddress() const {
     return address;
 }
 
-unsigned int listing_line::getlinenum() const {
+unsigned int sicxe_asm::listing_line::getlinenum() const {
     return linenum;
 }
 
-string listing_line::getlabel() const {
+string sicxe_asm::listing_line::getlabel() const {
     return label;
 }
 
-string listing_line::getopcode() const {
+string sicxe_asm::listing_line::getopcode() const {
     return opcode;
 }
 
-string listing_line::getoperand() const {
+string sicxe_asm::listing_line::getoperand() const {
     return operand;
 }
 
-string listing_line::getmachinecode() const {
+string sicxe_asm::listing_line::getmachinecode() const {
     return machinecode;
 }
 
@@ -81,7 +79,7 @@ int main(int argc, char *argv[]) {
     listing_line tmp_line;
 
 
-    for(int i = 0; i < parser.size(); i++) {
+    for(unsigned int i = 0; i < parser.size(); i++) {
         if(skip_check(parser,i))
             continue;
         tmp_line.linenum = i;
