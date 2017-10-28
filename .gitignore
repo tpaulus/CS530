@@ -85,8 +85,10 @@ fabric.properties
 
 # Driver
 driver
+sicxe_asm
 
 # CLion Stuff
 
 .idea/*
 CMakeLists.txt
+
