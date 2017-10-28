@@ -66,31 +66,29 @@ string sicxe_asm::listing_line::getmachinecode() const {
     return machinecode;
 }
 
-bool skip_check(listing_line line);
+bool is_comment_or_empty(listing_line line);
 
 int main(int argc, char *argv[]) {
 
     string filename = argv[1];  //TODO: Need to check if this exists
     file_parser parser(filename);
     parser.read_file();
-
-    vector <listing_line> list_vec(100);
-    listing_line tmp_line;
-
+    vector <listing_line> listing_vector(100);
+    listing_line new_line;
 
     for(unsigned int i = 0; i < parser.size(); i++) {
-
-        tmp_line.linenum = i + 1; //Source files are one based
-        tmp_line.label = parser.get_token(i,0);
-        tmp_line.opcode = parser.get_token(i,1);
-        tmp_line.operand = parser.get_token(i,2);
-        if(skip_check(tmp_line))
+        //Loads new line from file_parser
+        new_line.linenum = i + 1; //Source files are one based
+        new_line.label = parser.get_token(i,0);
+        new_line.opcode = parser.get_token(i,1);
+        new_line.operand = parser.get_token(i,2);
+        if(is_comment_or_empty(new_line))
             continue;
-        list_vec.push_back(tmp_line);
+        listing_vector.push_back(new_line);
     }
 
 }
 
-bool skip_check(listing_line line) {
+bool is_comment_or_empty(listing_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }

@@ -24,9 +24,6 @@ public:
 
 private:
 
-    string filename;
-    file_parser parser;
-    
     struct listing_line{
         string address;
         unsigned int linenum;
@@ -52,7 +49,8 @@ private:
         std::string getmachinecode() const;
         
     };
-
+    string filename;
+    file_parser parser;
     vector<listing_line> list_vec;
     listing_line tmp_line;
 
