@@ -21,7 +21,7 @@ map<string, pair<string, int> > marvin;
 
 // ============== BEGIN Helper Functions ==============
 
-bool is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
+bool opcodetab::is_incremented(const string &s) { return s.substr(0, 1) == "+"; }
 
 string our_to_string(int val){
     ostringstream s;
@@ -29,23 +29,23 @@ string our_to_string(int val){
     return s.str();
 }
 
-string strip_incremented(const string &s) {
-    if (is_incremented(s)) {
+string opcodetab::strip_incremented(const string &s) {
+    if (opcodetab::is_incremented(s)) {
         return s.substr(1, s.size() - 1);
     }
 
     return s;
 }
 
-string opcode_to_upper(string s) {
+string opcodetab::opcode_to_upper(string s) {
     transform(s.begin(), s.end(), s.begin(), ::toupper);
     return s;
 }
 
 
-bool is_special(const string &s) {
+bool opcodetab::is_special(const string &s) {
 //    cout << "SP Check: " << s << " == " << (opcode_to_upper(strip_incremented(s)) == "RSUB" ? "TRUE" : "FALSE") << endl;
-    return opcode_to_upper(strip_incremented(s)) == "RSUB";
+    return opcodetab::opcode_to_upper(opcodetab::strip_incremented(s)) == "RSUB";
 }
 
 // ============== END Helper Functions ==============
@@ -90,7 +90,7 @@ int opcodetab::get_instruction_size(const string s) {
     if (is_valid(s)) {
         int instruction_size = marvin.at(opcode_to_upper(strip_incremented(s))).second;
 
-        if (instruction_size == 3 && is_incremented(s)) { return instruction_size + 1; }
+        if (instruction_size == 3 && opcodetab::is_incremented(s)) { return instruction_size + 1; }
         return instruction_size;
     }
 
@@ -106,7 +106,7 @@ int opcodetab::get_instruction_size(const string s) {
  */
 string opcodetab::get_machine_code(const string s) {
     if (is_valid(s)) {
-        if (is_incremented(s) && is_special(s)) {
+        if (opcodetab::is_incremented(s) && is_special(s)) {
             throw opcode_error_exception("RSUB cannot be format four as it takes no operands");
         }
 
@@ -128,7 +128,7 @@ bool opcodetab::is_valid(const string opcode) {
         throw opcode_error_exception("\"" + opcode + "\" is not a valid opcode!");
     }
 
-    const bool incremented = is_incremented(opcode);
+    const bool incremented = opcodetab::is_incremented(opcode);
     const bool is_rsub = is_special(opcode);
     const int instruction_size = marvin.at(opcode_to_upper(strip_incremented(opcode))).second;
 
