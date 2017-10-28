@@ -92,5 +92,5 @@ int main(int argc, char *argv[]) {
 }
 
 bool skip_check(listing_line line) {
-    return line.label.empty() && line.opcode.empty();
+    return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }
