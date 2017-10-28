@@ -66,39 +66,31 @@ string sicxe_asm::listing_line::getmachinecode() const {
     return machinecode;
 }
 
-bool skip_check(file_parser,int);
+bool skip_check(listing_line line);
 
 int main(int argc, char *argv[]) {
 
-    string filename = argv[1];
+    string filename = argv[1];  //TODO: Need to check if this exists
     file_parser parser(filename);
     parser.read_file();
 
     vector <listing_line> list_vec(100);
-
     listing_line tmp_line;
 
 
     for(unsigned int i = 0; i < parser.size(); i++) {
-        if(skip_check(parser,i))
-            continue;
+
         tmp_line.linenum = i + 1; //Source files are one based
         tmp_line.label = parser.get_token(i,0);
         tmp_line.opcode = parser.get_token(i,1);
         tmp_line.operand = parser.get_token(i,2);
+        if(skip_check(tmp_line))
+            continue;
         list_vec.push_back(tmp_line);
     }
 
 }
 
-bool skip_check(file_parser parser, int row_num) {
-    string comment = parser.get_token(row_num,3);
-    string label = parser.get_token(row_num,0);
-    string opcode = parser.get_token(row_num,1);
-
-    if(label.empty() && opcode.empty()&& comment[0] == '.')
-        return true;
-    if(label.empty() && opcode.empty() && comment.empty())
-        return true;
-    return false;
+bool skip_check(listing_line line) {
+    return line.label.empty() && line.opcode.empty();
 }
