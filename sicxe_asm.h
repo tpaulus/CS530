@@ -32,34 +32,16 @@ public:
 
 private:
 
-    struct listing_line{
-        string address;
-        unsigned int linenum;
-        string label;
-        string opcode;
-        string operand;
-        string machinecode;
-        
-        inline listing_line(){
-        address="";
-        linenum=0; 
-        label="";
-        opcode="";
-        operand="";
-        machinecode="";
-        }
-            
-        std::string getaddress() const;
-        unsigned int getlinenum() const;
-        std::string getlabel() const;
-        std::string getopcode() const;
-        std::string getoperand() const;
-        std::string getmachinecode() const;
-        
-    };
     string filename;
     file_parser parser;
-    vector<listing_line> list_vec;
+    vector<file_parser::formatted_line> list_vec;
+
+    inline static int string_to_int(string s){
+        istringstream instr(s);
+        int n;
+        instr >> n;
+        return n;
+    }
 
     inline static int hex_to_int(string s){
         int value;
