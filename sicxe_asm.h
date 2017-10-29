@@ -30,12 +30,6 @@ class sicxe_asm {
 
 public:
 
-private:
-
-    string filename;
-    file_parser parser;
-    vector<file_parser::formatted_line> list_vec;
-
     inline static int string_to_int(string s){
         istringstream instr(s);
         int n;
@@ -64,6 +58,17 @@ private:
         out << setw(width) << setfill('0') << hex << num;
         return to_uppercase(out.str());
     }
+
+private:
+
+    string filename;
+    file_parser parser;
+    vector<file_parser::formatted_line> list_vec;
+    vector<file_parser::formatted_line>::iterator line_iter;
+    string program_name;
+    int location_counter;
+
+
 
 };
 
