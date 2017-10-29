@@ -12,6 +12,9 @@
 
 #include <string>
 #include <vector>
+#include <cstdio>
+#include <sstream>
+#include <algorithm>
 
 #include "file_parser.h"
 #include "file_parse_exception.h"
@@ -19,6 +22,7 @@
 #include "opcode_error_exception.h"
 #include "symtab.h"
 #include "symtab_exception.h"
+
 
 using namespace std;
 
@@ -56,7 +60,28 @@ private:
     string filename;
     file_parser parser;
     vector<listing_line> list_vec;
-    listing_line tmp_line;
+
+    inline static int hex_to_int(string s){
+        int value;
+        sscanf(s.c_str(), "%x", &value);
+        return value;
+    }
+
+    inline static int dec_to_int(string s){
+        int value;
+        sscanf(s.c_str(), "%d", &value);
+        return value;
+    }
+
+    inline static string to_uppercase(string s){
+        transform(s.begin(), s.end(), s.begin(), ::toupper);
+        return s;
+    }
+    inline static string int_to_hex(int num, int width){
+        stringstream out;
+        out << setw(width) << setfill('0') << hex << num;
+        return to_uppercase(out.str());
+    }
 
 };
 

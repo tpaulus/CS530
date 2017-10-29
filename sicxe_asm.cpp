@@ -26,12 +26,14 @@ int main(int argc, char *argv[]) {
     parser.read_file();
     vector <file_parser::formatted_line> listing_vector(100);
     //Loads new Vector of Structs
-    for(unsigned int i = 0; i < parser.size(); i++) {
-        listing_vector.push_back(parser.get_struct(i));
+    for(int i = 0; i < parser.size(); i++) {
+        listing_vector.push_back(parser.get_struct((unsigned int)i));
     }
+
 
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }
+
