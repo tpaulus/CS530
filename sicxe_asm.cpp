@@ -21,14 +21,14 @@ struct listing_line {
     string opcode;
     string operand;
     string machinecode;
-    
+
     string getaddress() const;
     unsigned int getlinenum() const;
     string getlabel() const;
     string getopcode() const;
     string getoperand() const;
     string getmachinecode() const;
-    
+
     listing_line(void){
         address="";
         linenum=0; //TODO check if 0 is the correct initializer in C++
@@ -39,35 +39,56 @@ struct listing_line {
     }
     ~listing_line(){
     }
-        
+
 };
 
-string listing_line::getaddress() const {
+string sicxe_asm::listing_line::getaddress() const {
     return address;
 }
 
-unsigned int listing_line::getlinenum() const {
+unsigned int sicxe_asm::listing_line::getlinenum() const {
     return linenum;
 }
 
-string listing_line::getlabel() const {
+string sicxe_asm::listing_line::getlabel() const {
     return label;
 }
 
-string listing_line::getopcode() const {
+string sicxe_asm::listing_line::getopcode() const {
     return opcode;
 }
 
-string listing_line::getoperand() const {
+string sicxe_asm::listing_line::getoperand() const {
     return operand;
 }
 
-string listing_line::getmachinecode() const {
+string sicxe_asm::listing_line::getmachinecode() const {
     return machinecode;
 }
 
+bool is_comment_or_empty(listing_line line);
+
 int main(int argc, char *argv[]) {
-    string filename = argv[1];
+
+    string filename = argv[1];  //TODO: Need to check if this exists
+    file_parser parser(filename);
+    parser.read_file();
+    vector <listing_line> listing_vector(100);
+    listing_line new_line;
+
+    for(unsigned int i = 0; i < parser.size(); i++) {
+        //Loads new line from file_parser
+        new_line.linenum = i + 1; //Source files are one based
+        new_line.label = parser.get_token(i,0);
+        new_line.opcode = parser.get_token(i,1);
+        new_line.operand = parser.get_token(i,2);
+        if(is_comment_or_empty(new_line))
+            continue;
+        listing_vector.push_back(new_line);
+    }
 
 }
 
+bool is_comment_or_empty(listing_line line) {
+    return line.label.empty() && line.opcode.empty() && line.operand.empty();
+}

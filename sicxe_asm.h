@@ -11,6 +11,10 @@
 #define SICXE_ASM_H
 
 #include <string>
+#include <vector>
+
+#include "file_parser.h"
+#include "opcodetab.h"
 
 using namespace std;
 
@@ -20,8 +24,6 @@ public:
 
 private:
 
-    string filename;
-    
     struct listing_line{
         string address;
         unsigned int linenum;
@@ -47,6 +49,10 @@ private:
         std::string getmachinecode() const;
         
     };
+    string filename;
+    file_parser parser;
+    vector<listing_line> list_vec;
+    listing_line tmp_line;
 
 };
 
