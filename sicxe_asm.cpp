@@ -22,26 +22,23 @@ sicxe_asm::sicxe_asm(string fn) {
     this->parser = new file_parser(fn);// = new file_parser(fn);
     try {
         parser->read_file();
-       file_parser::formatted_line name = parser->get_struct(0);
     } catch (file_parse_exception fileParseException) {
         cout << "ERROR - " << fileParseException.getMessage() << endl;
         exit(1);
     }
-    symtab symbol_table;
-    opcodetab opcode_table;
-    vector<file_parser::formatted_line> listing_vector;
-    vector<file_parser::formatted_line>::iterator line_iter;
-    string program_name = "";
-    string BASE = "";
-    int location_counter = 0;
-    for (int i = 0; i < parser->size(); i++) {
-        this->listing_vector.push_back(parser->get_struct((unsigned int) i));
-    }
+    symbol_table = new symtab();
+    opcode_table = new opcodetab();
+    listing_vector = new vector<file_parser::formatted_line>();
+    program_name = "";
+    BASE = "";
+    location_counter = 0;
+    load_vector();
+    line_iter = listing_vector->begin();
 }
 
 void sicxe_asm::load_vector() {
     for (int i = 0; i < parser->size(); i++) {
-        listing_vector.push_back(parser->get_struct((unsigned int) i));
+        listing_vector->push_back(parser->get_struct((unsigned int) i));
     }
 }
 
@@ -58,9 +55,9 @@ int main(int argc, char *argv[]) {
 }
 
 void sicxe_asm::get_to_start() {
-    line_iter = listing_vector.begin(); //Grabs first line
+    line_iter = listing_vector->begin(); //Grabs first line
     //While more lines and operand != start
-    while (line_iter != listing_vector.end() && sicxe_asm::to_uppercase(line_iter->opcode) != "START") {
+    while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "START") {
         if (!is_comment_or_empty(*line_iter)) {
             cout << "ERROR - No executable code before START Directive: Line " << line_iter->linenum << endl;
             cout << *line_iter << endl;
@@ -68,7 +65,7 @@ void sicxe_asm::get_to_start() {
         }
         line_iter++; //Grab next line
     }
-    if (line_iter == listing_vector.end()) {
+    if (line_iter == listing_vector->end()) {
         cout << "ERROR - No START Directive" << endl; //We can't know the line number, following the iterator is nullptr
         exit(3);
     }
@@ -92,11 +89,11 @@ void sicxe_asm::do_first_pass() {
 
     } else {
         if (line_iter->label != "") {
-            if (symbol_table.contains(line_iter->label)) {
+            if (symbol_table->contains(line_iter->label)) {
                 cout << "ERROR - Duplicate label on line " << line_iter->linenum << endl;
                 exit(4);
             }
-            symbol_table.insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
+            symbol_table->insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
         }
         string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
         if (opcode == "BASE")
