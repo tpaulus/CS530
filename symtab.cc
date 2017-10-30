@@ -14,6 +14,7 @@
 #include <sstream>
 #include "symtab.h"
 #include "symtab_exception.h"
+
 using namespace std;
 
 map<string, pair<string, bool> > symbol_table;
@@ -28,9 +29,13 @@ symtab::symtab() {
 }
 
 void symtab::insert(pair<string, pair<string, bool> > obj) {
+
     obj.first = sym_to_upper(obj.first);
+    if (contains(obj.first)) {
+        throw symtab_exception(obj.first + ": Duplicate Label");
+
+    }
     symbol_table.insert(obj);
-    throw symtab_exception(obj.first + ": Duplicate Label");
 }
 
 void symtab::insert(string string1, string string2, bool is_r) {

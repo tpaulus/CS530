@@ -59,6 +59,12 @@ public:
         return to_uppercase(out.str());
     }
 
+    inline static string int_to_dec(int num){
+        stringstream out;
+        out << dec << num;
+        return out.str();
+    }
+
 private:
 
     string filename;
