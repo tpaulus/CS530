@@ -78,6 +78,8 @@ void sicxe_asm::get_to_start() {
 
 void sicxe_asm::do_first_pass() {
     get_to_start();
+    //loop_through_lines(); //In here implement flowchart
+
 
     //TODO: This is now where start is in the flowchart
 
