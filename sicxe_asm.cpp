@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 		exit(5);
 	  }
           if ((line_iter->operand).find("C") == 0) //starts with C		
-		location_counter += token.length(); //maybe should just be +1? 
+		location_counter++; //TODO: Check to see if will always be just +1 
 	  else if((line_iter->operand).find("X") == 0){  //starts with X
 		if((token.length &1) == 1){
 			cout << "ERROR - Invalid operand for BYTE on line " << line_iter->line_num << endl;
