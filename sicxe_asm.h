@@ -67,7 +67,7 @@ private:
     vector<file_parser::formatted_line>::iterator line_iter;
     string program_name;
     int location_counter;
-    string base;
+    string BASE;
 
 
 };
