@@ -18,11 +18,11 @@ using namespace std;
 bool is_comment_or_empty(file_parser::formatted_line line);
 
 sicxe_asm::sicxe_asm(string fn) {
-    string filename = fn;
-    file_parser parser(fn);// = new file_parser(fn);// = new file_parser(fn);
+    filename = fn;
+    this->parser = new file_parser(fn);// = new file_parser(fn);
     try {
-        parser.read_file();
-       file_parser::formatted_line name = parser.get_struct(0);
+        parser->read_file();
+       file_parser::formatted_line name = parser->get_struct(0);
     } catch (file_parse_exception fileParseException) {
         cout << "ERROR - " << fileParseException.getMessage() << endl;
         exit(1);
@@ -34,8 +34,8 @@ sicxe_asm::sicxe_asm(string fn) {
     string program_name = "";
     string BASE = "";
     int location_counter = 0;
-    for (int i = 0; i < parser.size(); i++) {
-        this->listing_vector.push_back(parser.get_struct((unsigned int) i));
+    for (int i = 0; i < parser->size(); i++) {
+        this->listing_vector.push_back(parser->get_struct((unsigned int) i));
     }
 }
 
