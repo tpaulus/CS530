@@ -17,6 +17,33 @@
 
 class file_parser {
 public:
+    struct formatted_line {
+        //Fields
+        std::string label;
+        std::string opcode;
+        std::string operand;
+        std::string comment;
+        std::string address;
+        std::string machinecode;
+        unsigned int linenum;
+        //Methods
+        inline formatted_line() {
+            label = "";
+            opcode = "";
+            operand = "";
+            comment = "";
+            address = "";
+            machinecode = "";
+            linenum = 0;
+        }
+        std::string getlabel() const;
+        std::string getopcode() const;
+        std::string getoperand() const;
+        std::string getcomment() const;
+        std::string getaddress() const;
+        std::string getmachinecode() const;
+        unsigned int getlinenum();
+    };
     // ctor, filename is the parameter.  A driver program will read
     // the filename from the command line, and pass the filename to
     // the file_parser constructor.  Filenames must not be hard-coded.
@@ -47,35 +74,13 @@ public:
     // returns the number of lines in the source code file
     int size();
 
-private:
+    struct formatted_line get_struct(unsigned int);
+
     // your variables and private methods go here
-    struct formatted_line {
-        //Fields
-        std::string label;
-        std::string opcode;
-        std::string operand;
-        std::string comment;
-        std::string address;
-        std::string machinecode;
-        unsigned int linenum;
-        //Methods
-        inline formatted_line() {
-        label = "";
-        opcode = "";
-        operand = "";
-        comment = "";
-        address = "";
-        machinecode = "";
-        linenum = 0;
-    	}
-        std::string getlabel() const;
-        std::string getopcode() const;
-        std::string getoperand() const;
-        std::string getcomment() const;
-        std::string getaddress() const;
-        std::string getmachinecode() const;
-        unsigned int getlinenum();
-    };
+
+
+
+private:
     //Class Level Variables
     std::vector<formatted_line> victor;
     std::vector<std::string> file_contents;
