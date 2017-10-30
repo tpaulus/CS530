@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
         } else if (comp == "RESB") {
             location_counter += sicxe_asm::dec_to_int(line_iter->operand);
         }
-
+        line_iter->linenum = sicxe_asm::int_to_hex(location_counter, 5);
     }
 
 }
