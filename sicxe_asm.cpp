@@ -18,7 +18,7 @@ bool is_comment_or_empty(file_parser::formatted_line line);
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
-        cout << "Error, you must supply the name of the file to assemble." << endl;
+        cout << "ERROR - You must supply the name of the file to assemble." << endl;
         exit(1);
     }
     string filename = argv[1];
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     try{
         parser.read_file();
     }catch (file_parse_exception fileParseException){
-        cout << "ERROR - " << fileParseException.getMessage() << endl;
+        cout << "ERROR - " << fileParseException.getMessage() << endl; //This should have a line number already
         exit(1);
     }
     vector <file_parser::formatted_line> listing_vector(0);
@@ -62,9 +62,9 @@ int main(int argc, char *argv[]) {
     else{
 	if ((line_iter->label) != ''){
 		if(symtab.contains(line_iter->label))
-			cout << "ERROR: Duplicate label on line " << line_iter->line_num << endl;
+			cout << "ERROR - Duplicate label on line " << line_iter->line_num << endl;
 			exit(4);
-		symtab.insert((line_iter->label), location_counter);
+		symtab.insert((line_iter->label), location_counter, true);
 	    }
 	 string comp = sicxe_asm::to_uppercase(line_iter->opcode);
 	 if (comp == "BASE")
