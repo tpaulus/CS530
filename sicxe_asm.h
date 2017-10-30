@@ -73,6 +73,7 @@ private:
 
     string filename;
     file_parser *parser;
+    //file_parser parser;
     symtab symbol_table;
     opcodetab opcode_table;
     vector<file_parser::formatted_line> listing_vector;

@@ -19,9 +19,10 @@ bool is_comment_or_empty(file_parser::formatted_line line);
 
 sicxe_asm::sicxe_asm(string fn) {
     string filename = fn;
-    file_parser *parser = new file_parser(fn);
+    file_parser parser(fn);// = new file_parser(fn);// = new file_parser(fn);
     try {
-        parser->read_file();
+        parser.read_file();
+       file_parser::formatted_line name = parser.get_struct(0);
     } catch (file_parse_exception fileParseException) {
         cout << "ERROR - " << fileParseException.getMessage() << endl;
         exit(1);
@@ -33,7 +34,9 @@ sicxe_asm::sicxe_asm(string fn) {
     string program_name = "";
     string BASE = "";
     int location_counter = 0;
-    load_vector();
+    for (int i = 0; i < parser.size(); i++) {
+        this->listing_vector.push_back(parser.get_struct((unsigned int) i));
+    }
 }
 
 void sicxe_asm::load_vector() {
@@ -70,8 +73,9 @@ void sicxe_asm::get_to_start() {
         exit(3);
     }
     //Get Program name and starting location counter
-    string program_name = line_iter->label;
+    program_name = line_iter->label;
     location_counter = sicxe_asm::hex_to_int(line_iter->operand);
+    line_iter++;
 }
 
 
