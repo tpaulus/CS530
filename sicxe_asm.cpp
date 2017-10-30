@@ -74,8 +74,11 @@ void sicxe_asm::get_to_start() {
     location_counter = sicxe_asm::hex_to_int(line_iter->operand);
 }
 
+
+
 void sicxe_asm::do_first_pass() {
     get_to_start();
+
     //TODO: This is now where start is in the flowchart
 
     //starts part D
@@ -89,14 +92,14 @@ void sicxe_asm::do_first_pass() {
             }
             symbol_table.insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
         }
-        string comp = sicxe_asm::to_uppercase(line_iter->opcode);
-        if (comp == "BASE")
+        string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
+        if (opcode == "BASE")
             BASE = (line_iter->operand);
-        else if (comp == "NOBASE")
+        else if (opcode == "NOBASE")
             BASE = "";
-        else if (comp == "WORD")
+        else if (opcode == "WORD")
             location_counter += 3;
-        else if (comp == "BYTE") {
+        else if (opcode == "BYTE") {
 
 
             size_t pos_left = (line_iter->operand).find_first_of("'"); //Left '
@@ -115,9 +118,9 @@ void sicxe_asm::do_first_pass() {
                 cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
                 exit(7);
             }
-        } else if (comp == "RESW") {
+        } else if (opcode == "RESW") {
             location_counter += 3 * sicxe_asm::dec_to_int(line_iter->operand);
-        } else if (comp == "RESB") {
+        } else if (opcode == "RESB") {
             location_counter += sicxe_asm::dec_to_int(line_iter->operand);
         }
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
