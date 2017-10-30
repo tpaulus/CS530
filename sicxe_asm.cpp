@@ -35,12 +35,14 @@ int main(int argc, char *argv[]) {
 
     file_parser parser(filename);
     try {
-        parser.read_file();
+        parser->read_file();
     } catch (file_parse_exception fileParseException) {
         cout << "ERROR - " << fileParseException.getMessage() << endl;
         exit(1);
     }
-    vector<file_parser::formatted_line> listing_vector(0);
+    symtab symbol_table;
+    opcodetab opcode_table;
+    vector<file_parser::formatted_line> listing_vector;
     vector<file_parser::formatted_line>::iterator line_iter;
 
     unsigned int location_counter = 0;
@@ -49,7 +51,14 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < parser.size(); i++) {
         listing_vector.push_back(parser.get_struct((unsigned int) i));
     }
+    string filename = argv[1];
 
+    sicxe_asm *assembler = new sicxe_asm(filename);
+    assembler->assemble();
+
+}
+
+void sicxe_asm::get_to_start() {
     line_iter = listing_vector.begin(); //Grabs first line
     //While more lines and operand != start
     while (line_iter != listing_vector.end() && sicxe_asm::to_uppercase(line_iter->opcode) != "START") {
@@ -77,7 +86,10 @@ int main(int argc, char *argv[]) {
 
     line_iter++; // Grab the first line after START directive
 
-    string BASE = "";
+void sicxe_asm::do_first_pass() {
+    get_to_start();
+    //loop_through_lines(); //In here implement flowchart
+
 
     // Start of if assembler directive loop
 
@@ -165,6 +177,17 @@ int main(int argc, char *argv[]) {
     } // End while loop
 
     line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
+
+}
+
+void sicxe_asm::do_second_pass() {
+// TODO: in Prog 4
+}
+
+void sicxe_asm::assemble() {
+
+    do_first_pass();
+    //do_second_pass();
 
 }
 
