@@ -69,11 +69,14 @@ private:
 
     string filename;
     file_parser parser;
-    vector<file_parser::formatted_line> list_vec;
+    opcodetab opcode_table;
+    vector<file_parser::formatted_line> listing_vector;
     vector<file_parser::formatted_line>::iterator line_iter;
     string program_name;
-    int location_counter;
+    unsigned int location_counter;
+    unsigned int program_size;
     string BASE;
+    symtab symbol_table;
 
 
 };

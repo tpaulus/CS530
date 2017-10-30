@@ -39,11 +39,12 @@ public:
     // throws an opcode_error_exception if the opcode is not
     // found in the table.
     int get_instruction_size(string);
+    bool is_valid(string);
 
 private:
     map<string, pair<string, int> > marvin;
 
-    bool is_valid(string);
+    
     bool is_incremented(const string &);
     string strip_incremented(const string &);
     string opcode_to_upper(string);
