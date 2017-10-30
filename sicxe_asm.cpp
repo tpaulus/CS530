@@ -56,6 +56,44 @@ int main(int argc, char *argv[]) {
     int location_counter = sicxe_asm::hex_to_int(line_iter->operand);
     //TODO: This is now where start is in the flowchart
     
+    
+    
+   //starts part D
+    else{
+	    if ((line_iter->label) != ''){
+		    if(symtab.contains(line_iter->label))
+			    cout << "ERROR: Duplicate label" << endl;
+		    symtab.insert((line_iter->label), location_counter);
+	    }
+	    string comp = sicxe_asm::to_uppercase(line_iter->opcode);
+	    if (comp == "BASE")
+			base = (line_iter->operand);
+	    else if (comp == "BASE")
+			base = "";
+	    else if (comp == "WORD")
+			location_counter += 3;
+	    else if (comp == "BYTE"){
+			size_t pos_left = (line_iter->operand).find_first_of("'");      
+            size_t pos_right = (line_iter->operand).find_last_of("'");  
+            if (pos_left != "npos" && pos_right != "npos") //if there are two quotes
+                string token = (line_iter->operand.substr(pos_left + 1, pos_right - pos_left - 1)
+            else
+                cout << "ERROR - Mismatched quotes in BYTE operand " << endl;	                  
+            if ((line_iter->operand).find("C") == 0) //starts with C		
+				location_counter += token.length();
+			else if((line_iter->operand).find("X") == 0){  //starts with X
+				if((token.length &1) == 1)
+					cout << "ERROR - Invalid operand for BYTE " << endl;
+			    location_counter += (token.length > > 1)			
+			}
+			else cout << "ERROR - Invalid operand for BYTE " << endl;
+        }
+	    else if (comp == "RESW")	
+			location_counter += 3*(line_iter->operand); //should this be .size()??
+	    else if (comp == "RESB")
+			location_counter += (line_iter->operand); //should this be .size()??
+	   
+   }
 
 }
 
