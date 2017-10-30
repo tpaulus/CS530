@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     //starts part D
 
     string BASE = "";
-    
+
     if (false) {
 
     } else {
@@ -73,7 +73,6 @@ int main(int argc, char *argv[]) {
                 exit(4);
             }
             symbol_table.insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
-            cout << line_iter->label << endl;
         }
         string comp = sicxe_asm::to_uppercase(line_iter->opcode);
         if (comp == "BASE")
