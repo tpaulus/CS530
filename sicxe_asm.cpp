@@ -18,7 +18,7 @@ bool is_comment_or_empty(file_parser::formatted_line line);
 
 int main(int argc, char *argv[]) {
     if(argc != 2) {
-        cout << "Error, you must supply the name of the file to assemble." << endl;
+        cout << "ERROR - You must supply the name of the file to assemble." << endl;
         exit(1);
     }
     string filename = argv[1];
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     try{
         parser.read_file();
     }catch (file_parse_exception fileParseException){
-        cout << "ERROR - " << fileParseException.getMessage() << endl;
+        cout << "ERROR - " << fileParseException.getMessage() << endl; //This should have a line number already
         exit(1);
     }
     vector <file_parser::formatted_line> listing_vector(0);
@@ -55,7 +55,53 @@ int main(int argc, char *argv[]) {
     string program_name = line_iter->label;
     int location_counter = sicxe_asm::hex_to_int(line_iter->operand);
     //TODO: This is now where start is in the flowchart
+    string BASE = "";
     
+    
+   //starts part D
+    else{
+	if ((line_iter->label) != ''){
+		if(symtab.contains(line_iter->label))
+			cout << "ERROR - Duplicate label on line " << line_iter->line_num << endl;
+			exit(4);
+		symtab.insert((line_iter->label), location_counter, true);
+	    }
+	 string comp = sicxe_asm::to_uppercase(line_iter->opcode);
+	 if (comp == "BASE")
+		BASE = (line_iter->operand);
+	 else if (comp == "NOBASE")
+		BASE = "";
+	 else if (comp == "WORD")
+		location_counter += 3;
+	 else if (comp == "BYTE"){
+		size_t pos_left = (line_iter->operand).find_first_of("'");      
+          size_t pos_right = (line_iter->operand).find_last_of("'");  
+         if (pos_left != "npos" && pos_right != "npos") //if there are two quotes
+                string token = (line_iter->operand.substr(pos_left + 1, pos_right - pos_left - 1)
+         else{
+                cout << "ERROR - Mismatched quotes in BYTE operand on line " << line_iter->line_num << endl;
+		exit(5);
+	  }
+          if ((line_iter->operand).find("C") == 0) //starts with C		
+		location_counter++; //TODO: Check to see if will always be just +1 
+	  else if((line_iter->operand).find("X") == 0){  //starts with X
+		if((token.length &1) == 1){
+			cout << "ERROR - Invalid operand for BYTE on line " << line_iter->line_num << endl;
+			exit(6);
+		}
+		location_counter += (token.length > > 1)			
+		}
+		else {
+			cout << "ERROR - Invalid operand for BYTE on line " << line_iter->line_num << endl;
+			exit(7);
+		}
+          }
+	    else if (comp == "RESW")	
+			location_counter += 3*(line_iter->operand); 
+	    else if (comp == "RESB")
+			location_counter += (line_iter->operand); 
+	   
+   }
 
 }
 
