@@ -10,6 +10,9 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <iostream>
+#include <fstream>
+
 
 #include "sicxe_asm.h"
 
@@ -174,12 +177,11 @@ void sicxe_asm::do_first_pass() {
     set_addresses_after_end();
 
     //Prints basics of listing file for error checking
-    for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
-        cout << line_iter->linenum << "        " << hex_to_int(line_iter->address) << "        " << line_iter->opcode
-             << "        " << line_iter->operand << endl;
-    }
-
-    cout << "*********" << endl;
+//    for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
+//        cout << line_iter->linenum << "        " << hex_to_int(line_iter->address) << "        " << line_iter->opcode
+//             << "        " << line_iter->operand << endl;
+//    }
+//    cout << "*********" << endl;
 
    // cout << symbol_table->get_value("OFFB") << endl; //Checks EQU assignment in source3.asm
 
@@ -191,13 +193,36 @@ void sicxe_asm::do_second_pass() {
 
 void sicxe_asm::write_listing_file() {
     //TODO:
+    ofstream lis_file;
+    size_t extension = filename.find_last_of(".");
+    string rawname = filename.substr(0,extension);
+    lis_file.open(rawname+".lis");
+
+    //header
+    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"Line#  ";
+    lis_file << std::setw(7) << std::left << std::setfill(' ') <<"Address  ";
+    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"Label  ";
+    lis_file << std::setw(6) << std::left << std::setfill(' ') << "Opcode  ";
+    lis_file << "Operand" << std::endl;
+    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"=====  ";
+    lis_file << std::setw(7) << std::left << std::setfill(' ') <<"=======  ";
+    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"=====  ";
+    lis_file << std::setw(6) << std::left << std::setfill(' ') << "======  ";
+    lis_file << "=======" << std::endl;
+
+    for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
+        lis_file << *line_iter;
+
+    }
+    lis_file.close();
+
 }
 
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
         //do_second_pass();
-        //write_listing_file();
+        write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
         exit(9);

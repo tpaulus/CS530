@@ -91,18 +91,18 @@ private:
     friend std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l);
 };
 
-inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l) {
-    const int label_col_width = 8;
-    const int opcode_col_width = 8;
-    const int operand_col_width = 8;
-
-    out << std::setw(label_col_width) << std::left << std::setfill(' ') <<f_l.label;
-    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
-    out << std::setw(operand_col_width) << std::left << std::setfill(' ') << f_l.operand;
-    out << f_l.comment << std::endl;
-
-    return out;
-    }
+//inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l) {
+//    const int label_col_width = 8;
+//    const int opcode_col_width = 8;
+//    const int operand_col_width = 8;
+//
+//    out << std::setw(label_col_width) << std::left << std::setfill(' ') <<f_l.label;
+//    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
+//    out << std::setw(operand_col_width) << std::left << std::setfill(' ') << f_l.operand;
+//    out << f_l.comment << std::endl;
+//
+//    return out;
+//    }
 
 
 #endif
