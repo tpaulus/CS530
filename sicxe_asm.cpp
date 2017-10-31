@@ -164,6 +164,9 @@ void sicxe_asm::do_first_pass() {
             }
             line_iter->address = int_to_hex(location_counter, 5);
         }
+
+        line_iter++;
+
     }
 
 }
