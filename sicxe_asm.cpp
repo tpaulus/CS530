@@ -18,12 +18,7 @@ using namespace std;
 bool is_comment_or_empty(file_parser::formatted_line line);
 
 bool is_assembler_directive(string opcode) {
-    if(opcode == "NOBASE" || opcode == "BASE" || opcode == "RESB" || opcode == "RESW" || opcode == "WORD" || opcode == "BYTE" || opcode == "EQU") {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return (opcode == "NOBASE" || opcode == "BASE" || opcode == "RESB" || opcode == "RESW" || opcode == "WORD" || opcode == "BYTE" || opcode == "EQU");
 }
 
 int main(int argc, char *argv[]) {
