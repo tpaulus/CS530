@@ -218,4 +218,3 @@ bool sicxe_asm::is_assembler_directive(string opcode) {
 bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }
-
