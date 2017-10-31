@@ -107,7 +107,7 @@ int opcodetab::get_instruction_size(const string s) {
 string opcodetab::get_machine_code(const string s) {
     if (is_valid(s)) {
         if (opcodetab::is_incremented(s) && is_special(s)) {
-            throw opcode_error_exception("RSUB cannot be format four as it takes no operands");
+            throw opcode_error_exception(s + " cannot be format four as it takes no operands");
         }
 
         return marvin.at(opcode_to_upper(strip_incremented(s))).first;

@@ -82,11 +82,19 @@ private:
     string BASE;
     int location_counter;
 
+
     void load_vector();
     void do_first_pass();
     void get_to_start();
+    void handle_assembler_directive();
+    void handle_byte_directive();
+    void set_addresses_after_end();
+
     void do_second_pass();
 
+    void write_listing_file();
+
+    bool is_assembler_directive(string);
 };
 
 

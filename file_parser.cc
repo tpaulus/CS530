@@ -169,7 +169,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                 }
 
                 if(!isalpha(first_letter)) {
-                    throw file_parse_exception("the first character of your label needs to be a letter at line " + row_num + ".");
+                    throw file_parse_exception("The first character of a label needs to be a letter at line " + row_num + ".");
                 }
 
                 
@@ -219,7 +219,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     break;
                 } else {
                     // Throw comment error
-                    throw file_parse_exception("too many tokens on " + row_num + ".");
+                    throw file_parse_exception("Too many tokens on " + row_num + ".");
                 }
             } else if (column_num == 4 && tok_last == -1) {
                 tmp_line.comment = "";
@@ -237,7 +237,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
                         
                         if(end_quote == -1) {
-                            throw file_parse_exception("quotation marks were not closed at line " + row_num + ".");
+                            throw file_parse_exception("Quotation marks were not closed at line " + row_num + ".");
                         }
                         
                         // index of where the next column begins after end of quote marks
@@ -258,7 +258,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
                         
                         if(end_quote == -1) {
-                            throw file_parse_exception("quotation marks were not closed at line " + row_num + ".");
+                            throw file_parse_exception("Quotation marks were not closed at line " + row_num + ".");
                         }
 
                         int column_end = raw_line.find_first_of(delimiters, end_quote);
@@ -293,13 +293,13 @@ void file_parser::read_file() {
     vector<string>::iterator v_iter;
 
     if (file_name.empty()) {
-        throw file_parse_exception("you must specify a filename on the command line");
+        throw file_parse_exception("Filename must be provided");
     }
 
     infile.open(file_name.c_str(), ios::in);
 
     if (!infile) { //Unreachable code?
-        throw file_parse_exception("sorry, could not open the file for reading");
+        throw file_parse_exception("Could not open the file for reading");
     }
 
     while (!infile.eof()) {
