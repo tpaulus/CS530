@@ -63,6 +63,7 @@ void sicxe_asm::get_to_start() {
             cout << *line_iter << endl;
             exit(2);
         }
+        line_iter->address = int_to_hex(location_counter, 5);
         line_iter++; //Grab next line
     }
     if (line_iter == listing_vector->end()) {
@@ -71,6 +72,8 @@ void sicxe_asm::get_to_start() {
     }
     //Get Program name and starting location counter
     program_name = line_iter->label;
+    line_iter->address = line_iter->address = int_to_hex(location_counter, 5);
+
     location_counter = sicxe_asm::hex_to_int(line_iter->operand);
     line_iter++;
 }
@@ -162,12 +165,22 @@ void sicxe_asm::do_first_pass() {
             } else if (opcode == "RESB") {
                 location_counter += dec_to_int(line_iter->operand);
             }
-            line_iter->address = int_to_hex(location_counter, 5);
+            
         }
 
         line_iter++;
 
     }
+
+    while(line_iter != listing_vector->end()) {
+        line_iter->address = int_to_hex(location_counter, 5);
+        line_iter++;
+    }
+        
+
+    // for( line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++){
+    //     cout << line_iter->linenum << "        " << line_iter->address << "        " << line_iter->opcode << endl;
+    // }
 
 }
 
