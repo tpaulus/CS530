@@ -82,51 +82,88 @@ void sicxe_asm::do_first_pass() {
     //loop_through_lines(); //In here implement flowchart
 
 
-    //TODO: This is now where start is in the flowchart
+    // Start of if assembler directive loop
 
-    //starts part D
-    if (false) {
-
-    } else {
-        if (line_iter->label != "") {
-            if (symbol_table->contains(line_iter->label)) {
-                cout << "ERROR - Duplicate label on line " << line_iter->linenum << endl;
-                exit(4);
-            }
-            symbol_table->insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
-        }
-        string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
-        if (opcode == "BASE")
-            BASE = (line_iter->operand);
-        else if (opcode == "NOBASE")
-            BASE = "";
-        else if (opcode == "WORD")
-            location_counter += 3;
-        else if (opcode == "BYTE") {
-
-
-            size_t pos_left = (line_iter->operand).find_first_of("'"); //Left '
-            size_t pos_right = (line_iter->operand).find_last_of("'"); //Right '
-            string token = (line_iter->operand).substr(pos_left + 1, pos_right - pos_left - 1); //String between ' '
-
-            if ((line_iter->operand).find("C") == 0) //starts with C
-                location_counter++;
-            else if ((line_iter->operand).find("X") == 0) {  //starts with X
-                if ((((int) token.length()) & 1) == 1) {
-                    cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
-                    exit(6);
-                }
-                location_counter += (((int) token.length()) >> 1);
-            } else {
-                cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
-                exit(7);
-            }
-        } else if (opcode == "RESW") {
-            location_counter += 3 * sicxe_asm::dec_to_int(line_iter->operand);
-        } else if (opcode == "RESB") {
-            location_counter += sicxe_asm::dec_to_int(line_iter->operand);
-        }
+    while(line_iter != listing_vector.end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
+
+        if (!is_assembler_directive(sicxe_asm::to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
+            
+            if(line_iter->label != "") {
+                if (symbol_table.contains(line_iter->label)) {
+                    cout << "ERROR - Duplicate label on line " << line_iter->linenum << endl;
+                    exit(4);
+                }
+                symbol_table.insert(line_iter->label, sicxe_asm::int_to_hex(location_counter), true);
+            }
+
+            if(line_iter->opcode != "") {
+                try {
+                    if(opcode_table.is_valid(sicxe_asm::to_uppercase(line_iter->opcode))) {
+                        location_counter += opcode_table.get_instruction_size(sicxe_asm::to_uppercase(line_iter->opcode));
+                    }  
+                }
+                catch (opcode_error_exception exception) {
+                    cout << line_iter->linenum << endl;
+                    cout << exception.getMessage() << endl;
+                }
+            }   
+
+        } // End if
+        else {
+            if(sicxe_asm::to_uppercase(line_iter->opcode) == "EQU") {
+                if(line_iter->label == "") {
+                    cout << "ERROR - Blank label for EQU assignment on line " << line_iter->linenum << endl; 
+                    exit(4);
+                }
+
+                if(symbol_table.contains(line_iter->label)) {
+                    cout << "ERROR - Symbol already exists on line " << line_iter->linenum << endl;
+                    exit(4);
+                }
+
+                symbol_table.insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
+            }
+            else if (line_iter->label != "") {
+                if (symbol_table->contains(line_iter->label)) {
+                    cout << "ERROR - Duplicate label on line " << line_iter->linenum << endl;
+                    exit(4);
+                }
+                symbol_table->insert(line_iter->label, sicxe_asm::int_to_hex(location_counter), true);
+            }
+            string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
+            if (opcode == "BASE")
+                BASE = (line_iter->operand);
+            else if (opcode == "NOBASE")
+                BASE = "";
+            else if (opcode == "WORD")
+                location_counter += 3;
+            else if (opcode == "BYTE") {
+
+
+                size_t pos_left = (line_iter->operand).find_first_of("'"); //Left '
+                size_t pos_right = (line_iter->operand).find_last_of("'"); //Right '
+                string token = (line_iter->operand).substr(pos_left + 1, pos_right - pos_left - 1); //String between ' '
+
+                if ((line_iter->operand).find("C") == 0) //starts with C
+                    location_counter += token.length();
+                else if ((line_iter->operand).find("X") == 0) {  //starts with X
+                    if ((((int) token.length()) & 1) == 1) {
+                        cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
+                        exit(6);
+                    }
+                    location_counter += (((int) token.length()) >> 1);
+                } else {
+                    cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
+                    exit(7);
+                }
+            } else if (opcode == "RESW") {
+                location_counter += 3 * sicxe_asm::dec_to_int(line_iter->operand);
+            } else if (opcode == "RESB") {
+                location_counter += sicxe_asm::dec_to_int(line_iter->operand);
+            }
+            line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
+        }
     }
 
 }
