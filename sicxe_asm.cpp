@@ -44,6 +44,7 @@ void sicxe_asm::load_vector() {
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
+
         cout << "ERROR - Name of the file to assemble must be provided." << endl;
         exit(1);
     }
@@ -51,7 +52,6 @@ int main(int argc, char *argv[]) {
 
     sicxe_asm *assembler = new sicxe_asm(filename);
     assembler->assemble();
-
 }
 
 void sicxe_asm::get_to_start() {
@@ -106,6 +106,7 @@ void sicxe_asm::handle_assembler_directive() {
     } else if (opcode == "RESB") {
         location_counter += dec_to_int(line_iter->operand);
     }
+
 
 }
 
@@ -164,7 +165,6 @@ void sicxe_asm::do_first_pass() {
                     exit(10);
                 }
             }
-
         } else {
             handle_assembler_directive();
         }
@@ -215,7 +215,17 @@ bool sicxe_asm::is_assembler_directive(string opcode) {
             opcode == "BYTE" || opcode == "EQU");
 }
 
+void sicxe_asm::do_second_pass() {
+// TODO: in Prog 4
+}
+
+void sicxe_asm::assemble() {
+
+    do_first_pass();
+    //do_second_pass();
+
+}
+
 bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }
-

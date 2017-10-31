@@ -82,6 +82,7 @@ private:
     string BASE;
     int location_counter;
 
+
     void load_vector();
     void do_first_pass();
     void get_to_start();
