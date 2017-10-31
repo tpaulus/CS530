@@ -36,7 +36,7 @@ addl    lda     alpha,x   .loop control
         compr   x,t
         +jlt     addl
         jlt     addl
-        rsub  
+        rsub
         
 . storage allocation section 
 test    byte    C'12345' 
@@ -45,7 +45,7 @@ alpha   resw    100
 beta    RESW    100
 gamma   resw    100  
 delta   WORD    20 
-zeta    BYTE    C'EOF' 
+zeta    BYTE    c'EOF'
 eta     byte    X'FFFFFE'
 theta	byte	c'eof'
 buffer  RESB    3000

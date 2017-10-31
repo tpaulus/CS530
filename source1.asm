@@ -5,7 +5,7 @@ prog    start   1000    .start of sample program
         ldt     #300
         ldx     #0
 addlf   lda     alpha,x   .loop control
-addlf   add     beta,x
+        add     beta,x
         sta     gamma,x                         
         addr    s,x
         compr   x,t 

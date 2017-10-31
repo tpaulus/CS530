@@ -44,7 +44,7 @@ void sicxe_asm::load_vector() {
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        cout << "Error, you must supply the name of the file to assemble." << endl;
+        cout << "ERROR - Name of the file to assemble must be provided." << endl;
         exit(1);
     }
     string filename = argv[1];
@@ -118,12 +118,15 @@ void sicxe_asm::handle_byte_directive() {
         location_counter += token.length();
     } else if ((line_iter->operand).find("X") == 0 || (line_iter->operand).find("x") == 0) {  //starts with X
         if ((((int) token.length()) & 1) == 1) {
-            cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
-            exit(6);
+            cout << "ERROR - Invalid operand " << line_iter->operand << " for BYTE on line ";
+            cout << line_iter->linenum << endl;
+            exit(7);
         }
         location_counter += (((int) token.length()) >> 1);
     } else {
-        cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
+        //Doesn't start with C or X
+        cout << "ERROR - Invalid operand " << line_iter->operand;
+        cout << " for BYTE on line " << line_iter->linenum << endl;
         exit(7);
     }
 }
