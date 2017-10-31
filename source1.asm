@@ -4,8 +4,8 @@ prog    start   1000    .start of sample program
         lds     #3
         ldt     #300
         ldx     #0
-addlf   lda     alpha,x   .loop control     
-        add     beta,x
+addlf   lda     alpha,x   .loop control
+addlf   add     beta,x
         sta     gamma,x                         
         addr    s,x
         compr   x,t 
