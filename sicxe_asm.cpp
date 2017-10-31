@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
 
     sicxe_asm *assembler = new sicxe_asm(filename);
     assembler->assemble();
-
 }
 
 void sicxe_asm::get_to_start() {
@@ -69,6 +68,7 @@ void sicxe_asm::get_to_start() {
         cout << "ERROR - No START Directive" << endl; //We can't know the line number, following the iterator is nullptr
         exit(3);
     }
+
     //Set Program name
     program_name = line_iter->label;
     //Load 000000 into address field (cosmetic) for line with START directive
@@ -77,6 +77,7 @@ void sicxe_asm::get_to_start() {
     //TODO: Check to see if will always be hex (this assumes always hex)
     location_counter = sicxe_asm::hex_to_int(line_iter->operand);
     line_iter++; //Gets to start (line following start)
+
 }
 
 void sicxe_asm::handle_assembler_directive() {
@@ -162,11 +163,12 @@ void sicxe_asm::do_first_pass() {
                     cout << "ERROR - Invalid opcode \""<< line_iter->opcode << "\" on line ";
                     cout << line_iter->linenum << endl;
                     exit(10);
+
                 }
             }
-
         } else {
             handle_assembler_directive();
+
         }
         line_iter++; //Grab next line and continue
     }
@@ -213,6 +215,17 @@ void sicxe_asm::assemble() {
 bool sicxe_asm::is_assembler_directive(string opcode) {
     return (opcode == "NOBASE" || opcode == "BASE" || opcode == "RESB" || opcode == "RESW" || opcode == "WORD" ||
             opcode == "BYTE" || opcode == "EQU");
+}
+
+void sicxe_asm::do_second_pass() {
+// TODO: in Prog 4
+}
+
+void sicxe_asm::assemble() {
+
+    do_first_pass();
+    //do_second_pass();
+
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {
