@@ -84,23 +84,23 @@ void sicxe_asm::do_first_pass() {
 
     // Start of if assembler directive loop
 
-    while(line_iter != listing_vector.end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+    while(line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
-
-        if (!is_assembler_directive(sicxe_asm::to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
+        
+        if (!is_assembler_directive(to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
             
             if(line_iter->label != "") {
-                if (symbol_table.contains(line_iter->label)) {
+                if (symbol_table->contains(line_iter->label)) {
                     cout << "ERROR - Duplicate label on line " << line_iter->linenum << endl;
                     exit(4);
                 }
-                symbol_table.insert(line_iter->label, sicxe_asm::int_to_hex(location_counter), true);
+                symbol_table->insert(line_iter->label, int_to_hex(location_counter, 5), true);
             }
 
             if(line_iter->opcode != "") {
                 try {
-                    if(opcode_table.is_valid(sicxe_asm::to_uppercase(line_iter->opcode))) {
-                        location_counter += opcode_table.get_instruction_size(sicxe_asm::to_uppercase(line_iter->opcode));
+                    if(opcode_table->is_valid(to_uppercase(line_iter->opcode))) {
+                        location_counter += opcode_table->get_instruction_size(to_uppercase(line_iter->opcode));
                     }  
                 }
                 catch (opcode_error_exception exception) {
@@ -111,25 +111,25 @@ void sicxe_asm::do_first_pass() {
 
         } // End if
         else {
-            if(sicxe_asm::to_uppercase(line_iter->opcode) == "EQU") {
+            if(to_uppercase(line_iter->opcode) == "EQU") {
                 if(line_iter->label == "") {
                     cout << "ERROR - Blank label for EQU assignment on line " << line_iter->linenum << endl; 
                     exit(4);
                 }
 
-                if(symbol_table.contains(line_iter->label)) {
+                if(symbol_table->contains(line_iter->label)) {
                     cout << "ERROR - Symbol already exists on line " << line_iter->linenum << endl;
                     exit(4);
                 }
 
-                symbol_table.insert(line_iter->label, sicxe_asm::int_to_dec(location_counter), true);
+                symbol_table->insert(line_iter->label, int_to_dec(location_counter), true);
             }
             else if (line_iter->label != "") {
                 if (symbol_table->contains(line_iter->label)) {
                     cout << "ERROR - Duplicate label on line " << line_iter->linenum << endl;
                     exit(4);
                 }
-                symbol_table->insert(line_iter->label, sicxe_asm::int_to_hex(location_counter), true);
+                symbol_table->insert(line_iter->label, int_to_hex(location_counter, 5), true);
             }
             string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
             if (opcode == "BASE")
@@ -158,11 +158,11 @@ void sicxe_asm::do_first_pass() {
                     exit(7);
                 }
             } else if (opcode == "RESW") {
-                location_counter += 3 * sicxe_asm::dec_to_int(line_iter->operand);
+                location_counter += 3 * dec_to_int(line_iter->operand);
             } else if (opcode == "RESB") {
-                location_counter += sicxe_asm::dec_to_int(line_iter->operand);
+                location_counter += dec_to_int(line_iter->operand);
             }
-            line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
+            line_iter->address = int_to_hex(location_counter, 5);
         }
     }
 
@@ -177,6 +177,10 @@ void sicxe_asm::assemble() {
     do_first_pass();
     //do_second_pass();
 
+}
+
+bool is_assembler_directive(string opcode) {
+    return (opcode == "NOBASE" || opcode == "BASE" || opcode == "RESB" || opcode == "RESW" || opcode == "WORD" || opcode == "BYTE" || opcode == "EQU");
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {

@@ -87,6 +87,7 @@ private:
     void get_to_start();
     void do_second_pass();
 
+    bool is_assembler_directive(string);
 };
 
 
