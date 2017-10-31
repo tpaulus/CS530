@@ -86,7 +86,7 @@ void sicxe_asm::do_first_pass() {
 
     while(line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
-        
+
         if (!is_assembler_directive(to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
             
             if(line_iter->label != "") {
@@ -179,7 +179,7 @@ void sicxe_asm::assemble() {
 
 }
 
-bool is_assembler_directive(string opcode) {
+bool sicxe_asm::is_assembler_directive(string opcode) {
     return (opcode == "NOBASE" || opcode == "BASE" || opcode == "RESB" || opcode == "RESW" || opcode == "WORD" || opcode == "BYTE" || opcode == "EQU");
 }
 
