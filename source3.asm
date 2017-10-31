@@ -4,7 +4,7 @@
 
 prog    start   1000    .start of sample program
 bsrch   EQU     14
-OFFB    EQU     8 
+OFFB    EQU     bsrch 
         BASE    delta
         LDB     #delta
         lds     #3

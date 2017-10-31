@@ -125,7 +125,8 @@ void sicxe_asm::do_first_pass() {
                     exit(4);
                 }
 
-                symbol_table->insert(line_iter->label, int_to_dec(location_counter), true);
+                // TODO: value or string
+                symbol_table->insert(line_iter->label, line_iter->operand, true);
             }
             else if (line_iter->label != "") {
                 if (symbol_table->contains(line_iter->label)) {
@@ -148,9 +149,9 @@ void sicxe_asm::do_first_pass() {
                 size_t pos_right = (line_iter->operand).find_last_of("'"); //Right '
                 string token = (line_iter->operand).substr(pos_left + 1, pos_right - pos_left - 1); //String between ' '
 
-                if ((line_iter->operand).find("C") == 0) //starts with C
+                if ((line_iter->operand).find("C") == 0 || (line_iter->operand).find("c") == 0) //starts with C
                     location_counter += token.length();
-                else if ((line_iter->operand).find("X") == 0) {  //starts with X
+                else if ((line_iter->operand).find("X") == 0 || (line_iter->operand).find("x") == 0) {  //starts with X
                     if ((((int) token.length()) & 1) == 1) {
                         cout << "ERROR - Invalid operand for BYTE on line " << line_iter->linenum << endl;
                         exit(6);
@@ -178,9 +179,13 @@ void sicxe_asm::do_first_pass() {
     }
         
 
-    // for( line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++){
-    //     cout << line_iter->linenum << "        " << line_iter->address << "        " << line_iter->opcode << endl;
-    // }
+    for( line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++){
+        cout << line_iter->linenum << "        " << hex_to_int(line_iter->address) << "        " << line_iter->opcode << "        " << line_iter->operand << endl;
+    }
+
+    cout << "*********" << endl;
+
+    cout << symbol_table->get_value("OFFB") << endl;
 
 }
 
