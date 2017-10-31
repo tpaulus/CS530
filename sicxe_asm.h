@@ -91,6 +91,8 @@ private:
 
     void do_second_pass();
 
+    void write_listing_file();
+
     bool is_assembler_directive(string);
 };
 
