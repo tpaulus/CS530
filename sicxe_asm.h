@@ -30,6 +30,10 @@ class sicxe_asm {
 
 public:
 
+    sicxe_asm(string);
+
+    void assemble();
+
     inline static int string_to_int(string s){
         istringstream instr(s);
         int n;
@@ -68,13 +72,20 @@ public:
 private:
 
     string filename;
-    file_parser parser;
-    vector<file_parser::formatted_line> list_vec;
+    file_parser *parser;
+    symtab *symbol_table;
+    opcodetab *opcode_table;
+    vector<file_parser::formatted_line> *listing_vector;
     vector<file_parser::formatted_line>::iterator line_iter;
-    string program_name;
-    int location_counter;
-    string BASE;
 
+    string program_name;
+    string BASE;
+    int location_counter;
+
+    void load_vector();
+    void do_first_pass();
+    void get_to_start();
+    void do_second_pass();
 
 };
 
