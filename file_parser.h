@@ -85,13 +85,12 @@ private:
     std::vector<formatted_line> victor;
     std::vector<std::string> file_contents;
     std::string file_name;
-    //Methods	
+    //Methods
     formatted_line line_parser(std::string, unsigned int);
     //Always good to make friends, especially if it makes your compiler happy
     friend std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l);
 };
 
-<<<<<<< HEAD
 inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l) {
     const int label_col_width = 8;
     const int opcode_col_width = 8;
@@ -106,6 +105,4 @@ inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_
     }
 
 
-=======
->>>>>>> 677c5f2a8adba9aa6a9bbd00fdb25c76d862a269
 #endif

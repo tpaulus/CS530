@@ -321,7 +321,6 @@ void file_parser::read_file() {
 }
 
 
-<<<<<<< HEAD
 void file_parser::print_file() {
     vector<formatted_line>::iterator v_iter;
 
@@ -331,8 +330,6 @@ void file_parser::print_file() {
 
 }
 
-=======
->>>>>>> 677c5f2a8adba9aa6a9bbd00fdb25c76d862a269
 string file_parser::get_token(unsigned int row, unsigned int column) {
     if (column == 0) {                  //   0      1       2        3
         return victor.at(row).label;    //(label/opcode/operands/comments)

@@ -175,10 +175,6 @@ void sicxe_asm::do_first_pass() {
     }
 
     set_addresses_after_end();
-<<<<<<< HEAD
-=======
-
->>>>>>> 677c5f2a8adba9aa6a9bbd00fdb25c76d862a269
 }
 
 void sicxe_asm::do_second_pass() {
