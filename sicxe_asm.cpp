@@ -73,9 +73,13 @@ void sicxe_asm::get_to_start() {
     program_name = line_iter->label;
     //Load 000000 into address field (cosmetic) for line with START directive
     line_iter->address = line_iter->address = int_to_hex(location_counter, 5);
+
     //Loads start address to location counter
-    //TODO: Check to see if will always be hex (this assumes always hex)
-    location_counter = sicxe_asm::hex_to_int(line_iter->operand);
+    if(is_hex_string(line_iter->operand)){
+        location_counter = hex_to_int(strip_hex_sign(line_iter->operand));
+    } else {
+        location_counter = dec_to_int(line_iter->operand);
+    }
     line_iter++; //Gets to start (line following start)
 }
 
@@ -90,8 +94,16 @@ void sicxe_asm::handle_assembler_directive() {
             exit(4);
         } else {
             //Label is unique
-            // TODO: value or label
-            symbol_table->insert(line_iter->label, line_iter->operand, true);
+            if(isalpha(*line_iter->operand.begin())){ //Is label
+                symbol_table->insert(line_iter->label, line_iter->operand, true);
+                // TODO: Piush label to find unto exception vector
+            } else { //Is Value
+                if(is_hex_string(line_iter->operand)){
+                    symbol_table->insert(line_iter->label, hex_to_dec(strip_hex_sign(line_iter->operand)), false);
+                } else {
+                    symbol_table->insert(line_iter->label, line_iter->operand, false);
+                }
+            }
         }
     } else if (opcode == "BASE") {
         BASE = (line_iter->operand);
@@ -102,10 +114,17 @@ void sicxe_asm::handle_assembler_directive() {
     } else if (opcode == "BYTE") {
         handle_byte_directive();
     } else if (opcode == "RESW") {
-        if(is_hex_string())
-        location_counter += 3 * dec_to_int(line_iter->operand);
+        if (is_hex_string(line_iter->operand)) {
+            location_counter += 3 * hex_to_int(strip_hex_sign(line_iter->operand));
+        } else {
+            location_counter += 3 * dec_to_int(line_iter->operand);
+        }
     } else if (opcode == "RESB") {
-        location_counter += dec_to_int(line_iter->operand);
+        if (is_hex_string(line_iter->operand)) {
+            location_counter += hex_to_int(strip_hex_sign(line_iter->operand));
+        } else {
+            location_counter += dec_to_int(line_iter->operand);
+        }
     }
 
 }
@@ -147,7 +166,7 @@ void sicxe_asm::do_first_pass() {
         if (!is_assembler_directive(to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
             if (line_iter->label != "") {
                 if (symbol_table->contains(line_iter->label)) {
-                    cout << "ERROR - Duplicate label \""<< line_iter->label << "\" on line ";
+                    cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
                     cout << line_iter->linenum << endl;
                     exit(4);
                 }
@@ -160,7 +179,7 @@ void sicxe_asm::do_first_pass() {
                         location_counter += opcode_table->get_instruction_size(to_uppercase(line_iter->opcode));
                     }
                 } catch (opcode_error_exception exception) {
-                    cout << "ERROR - Invalid opcode \""<< line_iter->opcode << "\" on line ";
+                    cout << "ERROR - Invalid opcode \"" << line_iter->opcode << "\" on line ";
                     cout << line_iter->linenum << endl;
                     exit(10);
                 }
@@ -173,16 +192,6 @@ void sicxe_asm::do_first_pass() {
     }
 
     set_addresses_after_end();
-
-    //Prints basics of listing file for error checking
-    for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
-        cout << line_iter->linenum << "        " << hex_to_int(line_iter->address) << "        " << line_iter->opcode
-             << "        " << line_iter->operand << endl;
-    }
-
-    cout << "*********" << endl;
-
-   // cout << symbol_table->get_value("OFFB") << endl; //Checks EQU assignment in source3.asm
 
 }
 
@@ -216,8 +225,16 @@ bool sicxe_asm::is_assembler_directive(string opcode) {
             opcode == "BYTE" || opcode == "EQU");
 }
 
-bool sicxe_asm::is_hex_string(string) {
-    return line_iter->operand.find("$") == 0;
+bool sicxe_asm::is_hex_string(string str) {
+    return str.find("$") == 0;
+}
+
+string sicxe_asm::strip_hex_sign(string str) {
+    return str.substr(1, str.size() - 1);
+}
+
+string sicxe_asm::hex_to_dec(string str) {
+    return int_to_dec(hex_to_int(str));
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {
