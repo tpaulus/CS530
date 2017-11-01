@@ -102,10 +102,10 @@ private:
     const int label_col_width = 5;
     const int opcode_col_width = 6;
 
-    out << std::setw(linenum_col_width) << std::right << std::setfill(' ') <<f_l.linenum<<"  ";
-    out << std::setw(address_col_width) << std::right << std::setfill(' ') <<f_l.address<< "  ";
-    out << std::setw(label_col_width) << std::left << std::setfill(' ') <<f_l.label<<"  ";
-    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode<<"  ";
+    out << std::setw(linenum_col_width) << std::right << std::setfill(' ') <<f_l.linenum<<"     ";
+    out << std::setw(address_col_width) << std::right << std::setfill(' ') <<f_l.address<< "     ";
+    out << std::setw(label_col_width) << std::left << std::setfill(' ') <<f_l.label<<"     ";
+    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode<<"     ";
     out << f_l.operand << std::endl;
 
     return out;

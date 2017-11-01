@@ -182,18 +182,26 @@ void sicxe_asm::do_second_pass() {
 }
 
 void sicxe_asm::write_listing_file() {
+    //TODO: make label, opcode, operand uppercase
     string rawname = filename.substr(0, filename.length() - 4);
     ofstream lis_file((rawname + ".lis").c_str());
+    //progname
+    int l=(filename).length()+4;
+    int pos=(int)((50-l)/2);
+    for(int i=0;i<pos;i++)
+        lis_file<<" ";
+    lis_file<<"**"<<filename<<"**"<<endl;
+
     //header
-    lis_file << std::left << "Line#  ";
-    lis_file << std::left << "Address  ";
-    lis_file << std::left << "Label  ";
-    lis_file << std::left << "Opcode  ";
+    lis_file << std::left << "Line#     ";
+    lis_file << std::left << "Address     ";
+    lis_file << std::left << "Label     ";
+    lis_file << std::left << "Opcode     ";
     lis_file << "Operand" << std::endl;
-    lis_file << std::left << "=====  ";
-    lis_file << std::left << "=======  ";
-    lis_file << std::left << "=====  ";
-    lis_file << std::left << "======  ";
+    lis_file << std::left << "=====     ";
+    lis_file << std::left << "=======     ";
+    lis_file << std::left << "=====     ";
+    lis_file << std::left << "======     ";
     lis_file << "=======" << std::endl;
 
     for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
