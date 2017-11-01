@@ -176,15 +176,6 @@ void sicxe_asm::do_first_pass() {
 
     set_addresses_after_end();
 
-    //Prints basics of listing file for error checking
-//    for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
-//        cout << line_iter->linenum << "        " << hex_to_int(line_iter->address) << "        " << line_iter->opcode
-//             << "        " << line_iter->operand << endl;
-//    }
-//    cout << "*********" << endl;
-
-   // cout << symbol_table->get_value("OFFB") << endl; //Checks EQU assignment in source3.asm
-
 }
 
 void sicxe_asm::do_second_pass() {
