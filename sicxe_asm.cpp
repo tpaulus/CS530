@@ -199,15 +199,15 @@ void sicxe_asm::write_listing_file() {
     lis_file.open(rawname+".lis");
 
     //header
-    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"Line#  ";
-    lis_file << std::setw(7) << std::left << std::setfill(' ') <<"Address  ";
-    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"Label  ";
-    lis_file << std::setw(6) << std::left << std::setfill(' ') << "Opcode  ";
+    lis_file << std::left << std::setfill(' ') <<"Line#  ";
+    lis_file << std::left << std::setfill(' ') <<"Address  ";
+    lis_file << std::left << std::setfill(' ') <<"Label  ";
+    lis_file << std::left << std::setfill(' ') << "Opcode  ";
     lis_file << "Operand" << std::endl;
-    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"=====  ";
-    lis_file << std::setw(7) << std::left << std::setfill(' ') <<"=======  ";
-    lis_file << std::setw(5) << std::left << std::setfill(' ') <<"=====  ";
-    lis_file << std::setw(6) << std::left << std::setfill(' ') << "======  ";
+    lis_file << std::left << std::setfill(' ') <<"=====  ";
+    lis_file << std::left << std::setfill(' ') <<"=======  ";
+    lis_file << std::left << std::setfill(' ') <<"=====  ";
+    lis_file << std::left << std::setfill(' ') << "======  ";
     lis_file << "=======" << std::endl;
 
     for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
