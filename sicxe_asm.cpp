@@ -186,11 +186,11 @@ void sicxe_asm::write_listing_file() {
     string rawname = filename.substr(0, filename.length() - 4);
     ofstream lis_file((rawname + ".lis").c_str());
     //progname
-    int l=(filename).length()+4;
-    int pos=(int)((50-l)/2);
-    for(int i=0;i<pos;i++)
-        lis_file<<" ";
-    lis_file<<"**"<<filename<<"**"<<endl;
+    int l = (filename).length() + 4;
+    int pos = (int) ((50 - l) / 2);
+    for (int i = 0; i < pos; i++)
+        lis_file << " ";
+    lis_file << "**" << filename << "**" << endl;
 
     //header
     lis_file << std::left << "Line#     ";
