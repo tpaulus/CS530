@@ -149,7 +149,7 @@ void sicxe_asm::do_first_pass() {
         if (!is_assembler_directive(to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
             if (line_iter->label != "") {
                 if (symbol_table->contains(line_iter->label)) {
-                    cout << "ERROR - Duplicate label \""<< line_iter->label << "\" on line ";
+                    cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
                     cout << line_iter->linenum << endl;
                     exit(4);
                 }
@@ -162,7 +162,7 @@ void sicxe_asm::do_first_pass() {
                         location_counter += opcode_table->get_instruction_size(to_uppercase(line_iter->opcode));
                     }
                 } catch (opcode_error_exception exception) {
-                    cout << "ERROR - Invalid opcode \""<< line_iter->opcode << "\" on line ";
+                    cout << "ERROR - Invalid opcode \"" << line_iter->opcode << "\" on line ";
                     cout << line_iter->linenum << endl;
                     exit(10);
                 }
@@ -182,18 +182,18 @@ void sicxe_asm::do_second_pass() {
 }
 
 void sicxe_asm::write_listing_file() {
-    string rawname = filename.substr(0,filename.length()-4);
-    ofstream lis_file((rawname+".lis").c_str());
+    string rawname = filename.substr(0, filename.length() - 4);
+    ofstream lis_file((rawname + ".lis").c_str());
     //header
-    lis_file << std::left << std::setfill(' ') <<"Line#  ";
-    lis_file << std::left << std::setfill(' ') <<"Address  ";
-    lis_file << std::left << std::setfill(' ') <<"Label  ";
-    lis_file << std::left << std::setfill(' ') << "Opcode  ";
+    lis_file << std::left << "Line#  ";
+    lis_file << std::left << "Address  ";
+    lis_file << std::left << "Label  ";
+    lis_file << std::left << "Opcode  ";
     lis_file << "Operand" << std::endl;
-    lis_file << std::left << std::setfill(' ') <<"=====  ";
-    lis_file << std::left << std::setfill(' ') <<"=======  ";
-    lis_file << std::left << std::setfill(' ') <<"=====  ";
-    lis_file << std::left << std::setfill(' ') << "======  ";
+    lis_file << std::left << "=====  ";
+    lis_file << std::left << "=======  ";
+    lis_file << std::left << "=====  ";
+    lis_file << std::left << "======  ";
     lis_file << "=======" << std::endl;
 
     for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
