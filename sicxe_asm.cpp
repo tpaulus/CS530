@@ -182,7 +182,6 @@ void sicxe_asm::do_second_pass() {
 }
 
 void sicxe_asm::write_listing_file() {
-    //TODO:
     string rawname = filename.substr(0,filename.length()-4);
     ofstream lis_file((rawname+".lis").c_str());
     //header
