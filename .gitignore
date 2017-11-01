@@ -5,6 +5,13 @@
 .DS_Store
 *.lis
 
+#listing
+*.lis
+
+#I have no idea
+
+.DS_Store
+
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml

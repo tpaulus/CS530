@@ -95,11 +95,16 @@ private:
 
     void set_addresses_after_end();
 
+
+
     void do_second_pass();
 
     void write_listing_file();
 
+    string strip_hex_sign(string);
     bool is_assembler_directive(string);
+    bool is_hex_string(string);
+    string hex_to_dec(string);
 };
 
 inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatted_line &f_l) {
