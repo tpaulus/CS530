@@ -105,13 +105,13 @@ private:
 inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatted_line &f_l) {
     const int linenum_col_width = 5;
     const int address_col_width = 7;
-    const int label_col_width = 5;
-    const int opcode_col_width = 6;
+    const int label_col_width = 10;
+    const int opcode_col_width = 11;
 
     out << std::setw(linenum_col_width) << std::right << std::setfill(' ') << f_l.linenum << "     ";
     out << std::setw(address_col_width) << std::right << std::setfill(' ') << f_l.address << "     ";
-    out << std::setw(label_col_width) << std::left << std::setfill(' ') << f_l.label << "     ";
-    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode << "     ";
+    out << std::setw(label_col_width) << std::left << std::setfill(' ') << f_l.label;
+    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
     out << f_l.operand << std::endl;
 
     return out;
