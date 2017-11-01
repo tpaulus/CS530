@@ -63,7 +63,7 @@ struct formatted_line {
     }
     ~formatted_line(){
     }
-           
+
 };
 
 string formatted_line::getlabel() const {
@@ -103,7 +103,7 @@ string file_name;
 //Constructor
 file_parser::file_parser(const string f_n) {
     file_name = f_n;
-    
+
 }
 
 //Deconstructor
@@ -172,7 +172,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     throw file_parse_exception("The first character of a label needs to be a letter at line " + row_num + ".");
                 }
 
-                
+
 
                 tmp_line.label = column.substr(tok_last, tok_first - tok_last);
             } else if (column_num == 1 && tok_last == -1) {
@@ -235,11 +235,11 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     if (isQuote) {
                         // index of the last quote
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
-                        
+
                         if(end_quote == -1) {
                             throw file_parse_exception("Quotation marks were not closed at line " + row_num + ".");
                         }
-                        
+
                         // index of where the next column begins after end of quote marks
                         int column_end = raw_line.find_first_of(delimiters, end_quote);
                         col_space = raw_line.find_first_not_of(delimiters, column_end);
@@ -247,7 +247,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                         tmp_line.operand = raw_line.substr(column_start, column_end - column_start);
 
                         isQuote = false;
-                        
+
                     } else {
                         int column_end = raw_line.find_first_of(delimiters, (column_start + 8));
                         col_space = raw_line.find_first_not_of(delimiters, column_end);
@@ -256,7 +256,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     if (isQuote) {
                         // index of the last quote
                         int end_quote = raw_line.find_first_of('\'', (column_start + tok_last + 2));
-                        
+
                         if(end_quote == -1) {
                             throw file_parse_exception("Quotation marks were not closed at line " + row_num + ".");
                         }
@@ -267,7 +267,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                         tmp_line.operand = raw_line.substr(column_start, column_end - column_start);
 
                         isQuote = false;
-                        
+
                     } else {
                         col_space = raw_line.find_first_not_of(delimiters, (column_start + tok_first));
                     }
@@ -321,6 +321,7 @@ void file_parser::read_file() {
 }
 
 
+<<<<<<< HEAD
 void file_parser::print_file() {
     vector<formatted_line>::iterator v_iter;
 
@@ -330,6 +331,8 @@ void file_parser::print_file() {
 
 }
 
+=======
+>>>>>>> 677c5f2a8adba9aa6a9bbd00fdb25c76d862a269
 string file_parser::get_token(unsigned int row, unsigned int column) {
     if (column == 0) {                  //   0      1       2        3
         return victor.at(row).label;    //(label/opcode/operands/comments)

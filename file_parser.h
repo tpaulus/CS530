@@ -91,6 +91,7 @@ private:
     friend std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l);
 };
 
+<<<<<<< HEAD
 inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_line &f_l) {
     const int label_col_width = 8;
     const int opcode_col_width = 8;
@@ -105,4 +106,6 @@ inline std::ostream &operator<<(std::ostream &out, const file_parser::formatted_
     }
 
 
+=======
+>>>>>>> 677c5f2a8adba9aa6a9bbd00fdb25c76d862a269
 #endif
