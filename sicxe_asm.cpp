@@ -183,12 +183,8 @@ void sicxe_asm::do_second_pass() {
 
 void sicxe_asm::write_listing_file() {
     //TODO:
-
-    ofstream lis_file;
-    size_t extension = filename.find_last_of(".");
-    string rawname = filename.substr(0,extension);
-    lis_file.open(rawname+".lis");
-
+    string rawname = filename.substr(0,filename.length()-4);
+    ofstream lis_file(rawname+".lis");
     //header
     lis_file << std::left << std::setfill(' ') <<"Line#  ";
     lis_file << std::left << std::setfill(' ') <<"Address  ";
