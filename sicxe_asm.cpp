@@ -183,6 +183,7 @@ void sicxe_asm::do_second_pass() {
 
 void sicxe_asm::write_listing_file() {
     //TODO:
+
     ofstream lis_file;
     size_t extension = filename.find_last_of(".");
     string rawname = filename.substr(0,extension);

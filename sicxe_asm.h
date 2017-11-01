@@ -96,7 +96,7 @@ private:
     bool is_assembler_directive(string);
 };
 
-inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatted_line &f_l) {
+ inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatted_line &f_l) {
     const int linenum_col_width =5;
     const int address_col_width = 7;
     const int label_col_width = 5;
