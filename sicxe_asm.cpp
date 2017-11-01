@@ -102,6 +102,7 @@ void sicxe_asm::handle_assembler_directive() {
     } else if (opcode == "BYTE") {
         handle_byte_directive();
     } else if (opcode == "RESW") {
+        if(is_hex_string())
         location_counter += 3 * dec_to_int(line_iter->operand);
     } else if (opcode == "RESB") {
         location_counter += dec_to_int(line_iter->operand);
@@ -213,6 +214,10 @@ void sicxe_asm::assemble() {
 bool sicxe_asm::is_assembler_directive(string opcode) {
     return (opcode == "NOBASE" || opcode == "BASE" || opcode == "RESB" || opcode == "RESW" || opcode == "WORD" ||
             opcode == "BYTE" || opcode == "EQU");
+}
+
+bool sicxe_asm::is_hex_string(string) {
+    return line_iter->operand.find("$") == 0;
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {

@@ -94,6 +94,7 @@ private:
     void write_listing_file();
 
     bool is_assembler_directive(string);
+    bool is_hex_string(string);
 };
 
 
