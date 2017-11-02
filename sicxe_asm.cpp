@@ -250,7 +250,7 @@ void sicxe_asm::assemble() {
         cout << "ERROR: " << error.getMessage() << endl;
         exit(7);
     } catch (exception error) {
-      cout << "UNEXEPECTED ERROR: " << error.getMessage() << endl;
+      cout << "UNEXEPECTED ERROR: Something when wrong and we don't really know what." << endl;
       exit(1);
     }
 }
