@@ -98,8 +98,12 @@ void sicxe_asm::handle_assembler_directive() {
         } else {
             //Label is unique
             if(isalpha(*line_iter->operand.begin())){ //Is label
-                symbol_table->insert(line_iter->label, line_iter->operand, true);
-                // TODO: Piush label to find unto exception vector
+                if(symbol_table->contains(line_iter->operand)){
+                    symbol_table->insert(line_iter->label, symbol_table->get_value(line_iter->operand), false);
+                } else {
+                    //Forward Reference
+                    //symbol_table->insert(line_iter->label, line_iter->operand, false);
+                }
             } else { //Is Value
                 if(is_hex_string(line_iter->operand)){
                     symbol_table->insert(line_iter->label, hex_to_dec(strip_hex_sign(line_iter->operand)), false);

@@ -60,6 +60,7 @@ bool symtab::contains(string key) {
 }
 
 string symtab::get_value(string string1) {
+    string1 = sym_to_upper(string1);
     if (symtab::contains(string1)) {
         return symbol_table.at(string1).first;
     }
@@ -67,6 +68,7 @@ string symtab::get_value(string string1) {
 }
 
 bool symtab::is_relative(string string1) {
+    string1 = sym_to_upper(string1);
     if (symtab::contains(string1)) {
         return symbol_table.at(string1).second;
     }
