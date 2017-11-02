@@ -1,10 +1,10 @@
 # Team Virginia - CS 530, Fall 2017
 
-Program Assignment 2 - Opcode Parser
+Program Assignment 3 - Listing File
 
 Submitted via account: `cssc1015`
 
-To the best of our knowledge, this program performs correctly under all reasonable circumstances. Use of Emojis or other non-ascii characters has not been tested, and may result in unexpected behavior.
+Programs larger than the amount of free memory on the executing system will probably break something, if it hasn't already broken the poor developer who has written that ungodly amount of assembly. RIP developer. Further, the use of non ascii characters in assembler files is not included anywhere in the language specifications, it will probably break something in the assembler.
 
 ## Team Members
 + Alexander Pearson-Goulart
