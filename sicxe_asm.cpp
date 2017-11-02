@@ -13,7 +13,6 @@
 #include <iostream>
 #include <fstream>
 
-
 #include "sicxe_asm.h"
 
 using namespace std;
@@ -203,10 +202,10 @@ void sicxe_asm::do_second_pass() {
 }
 
 void sicxe_asm::write_listing_file() {
-    //TODO: make label, opcode, operand uppercase
     string rawname = filename.substr(0, filename.length() - 4);
     ofstream lis_file((rawname + ".lis").c_str());
-    //progname
+
+    //prog name
     int l = (filename).length() + 4;
     int pos = (int) ((50 - l) / 2);
     for (int i = 0; i < pos; i++)
@@ -214,23 +213,22 @@ void sicxe_asm::write_listing_file() {
     lis_file << "**" << filename << "**" << endl;
 
     //header
-    lis_file << std::left << "Line#     ";
-    lis_file << std::left << "Address     ";
-    lis_file << std::left << "Label     ";
-    lis_file << std::left << "Opcode     ";
-    lis_file << "Operand" << std::endl;
-    lis_file << std::left << "=====     ";
-    lis_file << std::left << "=======     ";
-    lis_file << std::left << "=====     ";
-    lis_file << std::left << "======     ";
-    lis_file << "=======" << std::endl;
+    lis_file << "Line#     ";
+    lis_file << "Address     ";
+    lis_file << "Label     ";
+    lis_file <<  "Opcode     ";
+    lis_file << "Operand" << endl;
+    lis_file << "=====     ";
+    lis_file << "=======     ";
+    lis_file << "=====     ";
+    lis_file << "======     ";
+    lis_file << "=======" << endl;
 
     for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
         lis_file << *line_iter;
-
     }
-    lis_file.close();
 
+    lis_file.close();
 }
 
 void sicxe_asm::assemble() {
@@ -247,6 +245,9 @@ void sicxe_asm::assemble() {
     } catch (symtab_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
         exit(7);
+    } catch (exception error) {
+      cout << "UNEXEPECTED ERROR: " << error.getMessage() << endl;
+      exit(1);
     }
 }
 
