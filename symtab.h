@@ -25,22 +25,22 @@ public:
     symtab();
 
     //Obj insert
-    void insert(pair<string, pair<string, bool> >);
+    void insert(pair<string, pair<int, bool> >);
 
     //Primative Insert
-    void insert(string, string, bool);
+    void insert(string, int, bool);
 
     //Updates the entry using an object
-    void update(pair<string, pair<string, bool> >);
+    void update(pair<string, pair<int, bool> >);
 
     //Updates the entry using Primitives
-    void update(string, string, bool);
+    void update(string, int, bool);
 
     //Returns true if key exists, false if not
     bool contains(string);
 
     //Returns the value (Adress/Value) of the key
-    string get_value(string);
+    int get_value(string);
 
     //Returns true if the key is relative, false if not
     bool is_relative(string);
@@ -48,7 +48,7 @@ public:
 private:
 
     //Key <Label> Value<Address/Value, is_relative>
-    map<string, pair<string, bool> > symbol_table;
+    map<string, pair<int, bool> > symbol_table;
 
 };
 

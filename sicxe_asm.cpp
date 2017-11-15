@@ -106,9 +106,9 @@ void sicxe_asm::handle_assembler_directive() {
                 }
             } else { //Is Value
                 if(is_hex_string(line_iter->operand)){
-                    symbol_table->insert(line_iter->label, hex_to_dec(strip_hex_sign(line_iter->operand)), false);
+                    symbol_table->insert(line_iter->label, hex_to_int(strip_hex_sign(line_iter->operand)), false);
                 } else {
-                    symbol_table->insert(line_iter->label, line_iter->operand, false);
+                    symbol_table->insert(line_iter->label, dec_to_int(line_iter->operand), false);
                 }
             }
         }
@@ -177,7 +177,7 @@ void sicxe_asm::do_first_pass() {
                     cout << line_iter->linenum << endl;
                     exit(4);
                 }
-                symbol_table->insert(line_iter->label, int_to_hex(location_counter, 5), true);
+                symbol_table->insert(line_iter->label, location_counter, true);
             }
 
             if (line_iter->opcode != "") {
