@@ -17,7 +17,7 @@
 
 using namespace std;
 
-map<string, pair<string, bool> > symbol_table;
+map<string, pair<int, bool> > symbol_table;
 
 string sym_to_upper(string s) {
     transform(s.begin(), s.end(), s.begin(), ::toupper);
@@ -28,7 +28,7 @@ symtab::symtab() {
     //TODO: Does anything belong in here?
 }
 
-void symtab::insert(pair<string, pair<string, bool> > obj) {
+void symtab::insert(pair<string, pair<int, bool> > obj) {
 
     obj.first = sym_to_upper(obj.first);
     if (contains(obj.first)) {
@@ -38,12 +38,12 @@ void symtab::insert(pair<string, pair<string, bool> > obj) {
     symbol_table.insert(obj);
 }
 
-void symtab::insert(string string1, string string2, bool is_r) {
-    symtab::insert(pair<string, pair<string, bool> >(string1, pair<string, bool>(string2, is_r)));
+void symtab::insert(string string1, int value, bool is_r) {
+    symtab::insert(pair<string, pair<int, bool> >(string1, pair<int, bool>(value, is_r)));
 }
 
-void symtab::update(pair<string, pair<string, bool> > obj) {
-    map<string, pair<string, bool> >::iterator m_iter = symbol_table.find(sym_to_upper(obj.first));
+void symtab::update(pair<string, pair<int, bool> > obj) {
+    map<string, pair<int, bool> >::iterator m_iter = symbol_table.find(sym_to_upper(obj.first));
     //if key was found
     if (m_iter != symbol_table.end()) {
         m_iter->second = obj.second;
@@ -51,26 +51,26 @@ void symtab::update(pair<string, pair<string, bool> > obj) {
     throw symtab_exception(obj.first + ": Not found");
 }
 
-void symtab::update(string string1, string string2, bool is_r) {
-    symtab::update(pair<string, pair<string, bool> >(string1, pair<string, bool>(string2, is_r)));
+void symtab::update(string string1, int value, bool is_r) {
+    symtab::update(pair<string, pair<int, bool> >(string1, pair<int, bool>(value, is_r)));
 }
 
 bool symtab::contains(string key) {
     return symbol_table.find(sym_to_upper(key)) != symbol_table.end();
 }
 
-string symtab::get_value(string string1) {
-    string1 = sym_to_upper(string1);
-    if (symtab::contains(string1)) {
-        return symbol_table.at(string1).first;
+int symtab::get_value(string key) {
+    key = sym_to_upper(key);
+    if (symtab::contains(key)) {
+        return symbol_table.at(key).first;
     }
-    throw symtab_exception(string1 + ": Not found");
+    throw symtab_exception(key + ": Not found");
 }
 
-bool symtab::is_relative(string string1) {
-    string1 = sym_to_upper(string1);
-    if (symtab::contains(string1)) {
-        return symbol_table.at(string1).second;
+bool symtab::is_relative(string key) {
+    key = sym_to_upper(key);
+    if (symtab::contains(key)) {
+        return symbol_table.at(key).second;
     }
-    throw symtab_exception(string1 + ": Not found");
+    throw symtab_exception(key + ": Not found");
 }
