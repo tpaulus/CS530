@@ -115,7 +115,8 @@ private:
     bool is_immediate(string);
     bool is_indirect(string);
     bool is_indexed(string);
-    int get_register_number();
+    int get_register_number(string);
+    int get_format(string);
 
     void handle_format_one();
 

@@ -204,34 +204,34 @@ void sicxe_asm::do_first_pass() {
 // SECOND PASS FUNCTIONS
 
 // Checks if offset is within -2048 and 2047 range
-bool is_valid_pc(int offset) {
+bool sicxe_asm::is_valid_pc(int offset) {
     return (offset <= 2047 && offset >= -2048);
 }
 
 // Checks if offset is within 0 and 2^12 (4096)
-bool is_valid_base(int offset) {
+bool sicxe_asm::is_valid_base(int offset) {
     return (offset < 4096 && offset >= 0);
 }
 
 // Checks if value is within 0 and 2^20 (1048576)
-bool is_valid_extended(int value) {
+bool sicxe_asm::is_valid_extended(int value) {
     return (value < 1048576 && value >= 0);
 }
 
 // Checks if the operand holds an immediate value
-bool is_immediate(string operand) {
+bool sicxe_asm::is_immediate(string operand) {
     char first_char = operand.at(0);
     return (first_char == '#');
 }
 
 // Checks if the operand holds an indirect value
-bool is_indirect(string operand) {
+bool sicxe_asm::is_indirect(string operand) {
     char first_char = operand.at(0);
     return (first_char == '@');
 }
 
 // Checks if the operand holds an indexed value
-bool is_indexed(string operand) {
+bool sicxe_asm::is_indexed(string operand) {
     // TODO: Any special cases???
     int comma = operand.find(',');
     if(comma >= 0) 
@@ -241,7 +241,7 @@ bool is_indexed(string operand) {
 }
 
 // Returns the register number for format two machine code
-int get_register_number(string reg) {
+int sicxe_asm::get_register_number(string reg) {
 
     // TODO: Get the rest of the register values; 0 is a placeholder for now
 
@@ -263,18 +263,48 @@ int get_register_number(string reg) {
         return 0;
     else {
         cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
-        cout << second_line_iter->linenum << endl;
+        cout << line_iter->linenum << endl;
         exit(11);
     }
 }
 
-void handle_format_one() {
-    line_iter->machinecode = string_to_int(opcode_table->get_machine_code(line_iter->opcode));
+int sicxe_asm::get_format(string opcode) {
+    return opcode_table->get_instruction_size(opcode);
+}
+
+void sicxe_asm::handle_format_one() {
+    line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
 }
 
 void sicxe_asm::do_second_pass() {
-// TODO: in Prog 4
-    
+    // TODO: in Prog 4
+    get_to_start();
+
+    while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+        // Check formats
+        int format = get_format(line_iter->opcode);
+
+        if (format == 1)
+            handle_format_one();
+        else if (format == 2) {
+            // Handle format 2
+        }
+        else if (format == 3) {
+            // Handle format 3
+        }
+        else if (format == 4) {
+            // Handle format 4
+        }
+        else {
+            cout << "ERROR - Format type not detected on line ";
+            cout << line_iter->linenum << endl;
+            exit(12);
+        }
+
+        line_iter++; //Grab next line and continue
+    }
+
+    set_addresses_after_end();
 }
 
 void sicxe_asm::write_listing_file() {
@@ -293,12 +323,14 @@ void sicxe_asm::write_listing_file() {
     lis_file << "Address     ";
     lis_file << "Label     ";
     lis_file <<  "Opcode     ";
-    lis_file << "Operand" << endl;
+    lis_file << "Operand     ";
+    lis_file << "Machine Code     " << endl;
     lis_file << "=====     ";
     lis_file << "=======     ";
     lis_file << "=====     ";
     lis_file << "======     ";
-    lis_file << "=======" << endl;
+    lis_file << "=======     ";
+    lis_file << "============     " << endl;
 
     for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
         lis_file << *line_iter;
@@ -310,7 +342,7 @@ void sicxe_asm::write_listing_file() {
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
-        //do_second_pass();
+        do_second_pass();
         write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
