@@ -201,8 +201,80 @@ void sicxe_asm::do_first_pass() {
 
 }
 
+// SECOND PASS FUNCTIONS
+
+// Checks if offset is within -2048 and 2047 range
+bool is_valid_pc(int offset) {
+    return (offset <= 2047 && offset >= -2048);
+}
+
+// Checks if offset is within 0 and 2^12 (4096)
+bool is_valid_base(int offset) {
+    return (offset < 4096 && offset >= 0);
+}
+
+// Checks if value is within 0 and 2^20 (1048576)
+bool is_valid_extended(int value) {
+    return (value < 1048576 && value >= 0);
+}
+
+// Checks if the operand holds an immediate value
+bool is_immediate(string operand) {
+    char first_char = operand.at(0);
+    return (first_char == '#');
+}
+
+// Checks if the operand holds an indirect value
+bool is_indirect(string operand) {
+    char first_char = operand.at(0);
+    return (first_char == '@');
+}
+
+// Checks if the operand holds an indexed value
+bool is_indexed(string operand) {
+    // TODO: Any special cases???
+    int comma = operand.find(',');
+    if(comma >= 0) 
+        return true;
+    else
+        return false;
+}
+
+// Returns the register number for format two machine code
+int get_register_number(string reg) {
+
+    // TODO: Get the rest of the register values; 0 is a placeholder for now
+
+    if(reg.compare("T") == 0) 
+        return 5;
+    else if(reg.compare("S") == 0)
+        return 4;
+    else if(reg.compare("X") == 0)
+        return 1;
+    else if(reg.compare("A") == 0)
+        return 0;
+    else if(reg.compare("L") == 0)
+        return 0;
+    else if(reg.compare("B") == 0)
+        return 0;
+    else if(reg.compare("PC") == 0)
+        return 0;
+    else if(reg.compare("SW") == 0)
+        return 0;
+    else {
+        cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
+        cout << second_line_iter->linenum << endl;
+        exit(11);
+    }
+}
+
+void handle_format_one() {
+    line_iter->machinecode = string_to_int(opcode_table->get_machine_code(line_iter->opcode));
+}
+
 void sicxe_asm::do_second_pass() {
 // TODO: in Prog 4
+    
 }
 
 void sicxe_asm::write_listing_file() {

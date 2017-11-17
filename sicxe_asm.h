@@ -23,6 +23,18 @@
 #include "symtab.h"
 #include "symtab_exception.h"
 
+// Defines for bit setting NIXBPE format 3
+#define SET_3N 0x20000
+#define SET_3I 0x10000
+#define SET_3X 0x08000
+#define SET_3B 0x04000
+#define SET_3P 0x02000
+
+// Defines for bit setting NIXBPE format 4
+#define SET_4N (SET_3N << 8)
+#define SET_4I (SET_3I << 8)
+#define SET_4X (SET_3X << 8)
+#define SET_4E 0x100000
 
 using namespace std;
 
@@ -95,6 +107,17 @@ private:
     void do_second_pass();
 
     void write_listing_file();
+
+// Second Pass Procedures
+    bool is_valid_pc(int);
+    bool is_valid_base(int);
+    bool is_valid_extended(int);
+    bool is_immediate(string);
+    bool is_indirect(string);
+    bool is_indexed(string);
+    int get_register_number();
+
+    void handle_format_one();
 
 // Functions
     string strip_hex_sign(string);
