@@ -24,7 +24,7 @@ public:
         std::string operand;
         std::string comment;
         std::string address;
-        std::string machinecode;
+        unsigned int machinecode;
         unsigned int linenum;
         //Methods
         inline formatted_line() {
@@ -33,7 +33,7 @@ public:
             operand = "";
             comment = "";
             address = "";
-            machinecode = "";
+            machinecode = 0;
             linenum = 0;
         }
         std::string getlabel() const;
@@ -41,7 +41,7 @@ public:
         std::string getoperand() const;
         std::string getcomment() const;
         std::string getaddress() const;
-        std::string getmachinecode() const;
+        unsigned int getmachinecode();
         unsigned int getlinenum();
     };
     // ctor, filename is the parameter.  A driver program will read

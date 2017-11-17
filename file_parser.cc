@@ -32,7 +32,7 @@ struct formatted_line {
 
     //Bonus Features
     string address;
-    string machinecode;
+    unsigned int machinecode;
     unsigned int linenum;
 
 
@@ -46,7 +46,7 @@ struct formatted_line {
 
     string getaddress() const;
 
-    string getmachinecode() const;
+    unsigned int getmachinecode();
 
     unsigned int getlinenum();
 
@@ -58,7 +58,7 @@ struct formatted_line {
         comment = "";
 
         address = "";
-        machinecode = "";
+        machinecode = 0;
         linenum = 0;
     }
     ~formatted_line(){
@@ -82,7 +82,7 @@ string formatted_line::getcomment() const {
     return comment;
 }
 
-string formatted_line::getmachinecode() const {
+unsigned int formatted_line::getmachinecode() {
     return machinecode;
 }
 
