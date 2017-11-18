@@ -99,7 +99,7 @@ private:
     void do_first_pass();
 
 // First Pass Procedures
-    void get_to_start();
+    void get_to_start_first_pass();
     void handle_assembler_directive();
     void handle_byte_directive();
     void set_addresses_after_end();

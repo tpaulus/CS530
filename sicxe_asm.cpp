@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 }
 
-void sicxe_asm::get_to_start() {
+void sicxe_asm::get_to_start_first_pass() {
     line_iter = listing_vector->begin(); //Grabs first line
     //While more lines and operand != start
     while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "START") {
@@ -164,7 +164,7 @@ void sicxe_asm::set_addresses_after_end() {
 }
 
 void sicxe_asm::do_first_pass() {
-    get_to_start();
+    get_to_start_first_pass();
     // Start of flowchart loop
     while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
@@ -220,24 +220,19 @@ bool sicxe_asm::is_valid_extended(int value) {
 
 // Checks if the operand holds an immediate value
 bool sicxe_asm::is_immediate(string operand) {
-    char first_char = operand.at(0);
-    return (first_char == '#');
+    return '#' == operand.at(0);
 }
 
 // Checks if the operand holds an indirect value
 bool sicxe_asm::is_indirect(string operand) {
-    char first_char = operand.at(0);
-    return (first_char == '@');
+    return '@' == operand.at(0);
 }
 
 // Checks if the operand holds an indexed value
 bool sicxe_asm::is_indexed(string operand) {
     // TODO: Any special cases???
-    int comma = operand.find(',');
-    if(comma >= 0) 
-        return true;
-    else
-        return false;
+                                                   //    , is at 5 here, length is 7
+    return (operand.length() - 2) == operand.find(','); //alpha,x length starts at 1, find at 0
 }
 
 // Returns the register number for format two machine code
@@ -277,10 +272,12 @@ void sicxe_asm::handle_format_one() {
 }
 
 void sicxe_asm::do_second_pass() {
-    // TODO: in Prog 4
-    get_to_start();
+    line_iter = listing_vector->begin();
+    while (to_uppercase(line_iter++->opcode) != "START"); //Gets to line after start
 
-    while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+
+        while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+        //TODO: Handle Byte/Word Directives
         // Check formats
         int format = get_format(line_iter->opcode);
 
@@ -296,15 +293,15 @@ void sicxe_asm::do_second_pass() {
             // Handle format 4
         }
         else {
-            cout << "ERROR - Format type not detected on line ";
-            cout << line_iter->linenum << endl;
-            exit(12);
+          //  cout << "ERROR - Format type not detected on line ";
+            //cout << line_iter->linenum << endl;
+            //exit(12);
         }
 
         line_iter++; //Grab next line and continue
     }
 
-    set_addresses_after_end();
+    //set_machinecode_after_end();
 }
 
 void sicxe_asm::write_listing_file() {
