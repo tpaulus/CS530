@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 }
 
-void sicxe_asm::get_to_start() {
+void sicxe_asm::get_to_start_first_pass() {
     line_iter = listing_vector->begin(); //Grabs first line
     //While more lines and operand != start
     while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "START") {
@@ -164,7 +164,7 @@ void sicxe_asm::set_addresses_after_end() {
 }
 
 void sicxe_asm::do_first_pass() {
-    get_to_start();
+    get_to_start_first_pass();
     // Start of flowchart loop
     while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
@@ -201,8 +201,107 @@ void sicxe_asm::do_first_pass() {
 
 }
 
+// SECOND PASS FUNCTIONS
+
+// Checks if offset is within -2048 and 2047 range
+bool sicxe_asm::is_valid_pc(int offset) {
+    return (offset <= 2047 && offset >= -2048);
+}
+
+// Checks if offset is within 0 and 2^12 (4096)
+bool sicxe_asm::is_valid_base(int offset) {
+    return (offset < 4096 && offset >= 0);
+}
+
+// Checks if value is within 0 and 2^20 (1048576)
+bool sicxe_asm::is_valid_extended(int value) {
+    return (value < 1048576 && value >= 0);
+}
+
+// Checks if the operand holds an immediate value
+bool sicxe_asm::is_immediate(string operand) {
+    return '#' == operand.at(0);
+}
+
+// Checks if the operand holds an indirect value
+bool sicxe_asm::is_indirect(string operand) {
+    return '@' == operand.at(0);
+}
+
+// Checks if the operand holds an indexed value
+bool sicxe_asm::is_indexed(string operand) {
+    // TODO: Any special cases???
+                                                   //    , is at 5 here, length is 7
+    return (operand.length() - 2) == operand.find(','); //alpha,x length starts at 1, find at 0
+}
+
+// Returns the register number for format two machine code
+int sicxe_asm::get_register_number(string reg) {
+
+    // TODO: Get the rest of the register values; 0 is a placeholder for now
+
+    if(reg.compare("T") == 0) 
+        return 5;
+    else if(reg.compare("S") == 0)
+        return 4;
+    else if(reg.compare("X") == 0)
+        return 1;
+    else if(reg.compare("A") == 0)
+        return 0;
+    else if(reg.compare("L") == 0)
+        return 0;
+    else if(reg.compare("B") == 0)
+        return 0;
+    else if(reg.compare("PC") == 0)
+        return 0;
+    else if(reg.compare("SW") == 0)
+        return 0;
+    else {
+        cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
+        cout << line_iter->linenum << endl;
+        exit(11);
+    }
+}
+
+int sicxe_asm::get_format(string opcode) {
+    return opcode_table->get_instruction_size(opcode);
+}
+
+void sicxe_asm::handle_format_one() {
+    line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
+}
+
 void sicxe_asm::do_second_pass() {
-// TODO: in Prog 4
+    line_iter = listing_vector->begin();
+    while (to_uppercase(line_iter++->opcode) != "START"); //Gets to line after start
+
+
+        while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+        //TODO: Handle Byte/Word Directives
+        // Check formats
+        int format = get_format(line_iter->opcode);
+
+        if (format == 1)
+            handle_format_one();
+        else if (format == 2) {
+            // Handle format 2
+        }
+        else if (format == 3) {
+            // Handle format 3
+        }
+        else if (format == 4) {
+            // Handle format 4
+        }
+        else {
+          //  cout << "ERROR - Format type not detected on line ";
+            //cout << line_iter->linenum << endl;
+            //exit(12);
+        }
+
+        line_iter++; //Grab next line and continue
+    }
+
+    //set_machinecode_after_end();
 }
 
 void sicxe_asm::write_listing_file() {
@@ -221,12 +320,14 @@ void sicxe_asm::write_listing_file() {
     lis_file << "Address     ";
     lis_file << "Label     ";
     lis_file <<  "Opcode     ";
-    lis_file << "Operand" << endl;
+    lis_file << "Operand     ";
+    lis_file << "Machine Code     " << endl;
     lis_file << "=====     ";
     lis_file << "=======     ";
     lis_file << "=====     ";
     lis_file << "======     ";
-    lis_file << "=======" << endl;
+    lis_file << "=======     ";
+    lis_file << "============     " << endl;
 
     for (line_iter = listing_vector->begin(); line_iter != listing_vector->end(); line_iter++) {
         lis_file << *line_iter;
@@ -238,7 +339,7 @@ void sicxe_asm::write_listing_file() {
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
-        //do_second_pass();
+        do_second_pass();
         write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
