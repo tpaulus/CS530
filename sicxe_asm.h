@@ -91,6 +91,8 @@ private:
     vector<file_parser::formatted_line> *listing_vector;
     vector<file_parser::formatted_line>::iterator line_iter;
 
+    vector<pair<file_parser::formatted_line, string> > *forward_ref_vector;
+
     string program_name;
     string BASE;
     int location_counter;
@@ -103,12 +105,12 @@ private:
     void handle_assembler_directive();
     void handle_byte_directive();
     void set_addresses_after_end();
+    void set_forward_references();
 
-    void do_second_pass();
 
-    void write_listing_file();
 
 // Second Pass Procedures
+    void do_second_pass();
     bool is_valid_pc(int);
     bool is_valid_base(int);
     bool is_valid_extended(int);
@@ -121,6 +123,9 @@ private:
     void handle_format_one();
 
 // Functions
+
+    void write_listing_file();
+
     string strip_hex_sign(string);
     bool is_assembler_directive(string);
     bool is_hex_string(string);

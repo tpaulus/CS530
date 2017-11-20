@@ -31,6 +31,7 @@ sicxe_asm::sicxe_asm(string fn) {
     symbol_table = new symtab();
     opcode_table = new opcodetab();
     listing_vector = new vector<file_parser::formatted_line>();
+    forward_ref_vector = new vector<pair<file_parser::formatted_line, string> >;
     program_name = "";
     BASE = "";
     location_counter = 0;
@@ -101,7 +102,7 @@ void sicxe_asm::handle_assembler_directive() {
                     symbol_table->insert(line_iter->label, symbol_table->get_value(line_iter->operand), false);
                 } else {
                     //Forward Reference
-                    //symbol_table->insert(line_iter->label, line_iter->operand, false);
+                    forward_ref_vector->push_back(pair<file_parser::formatted_line, string>(*line_iter, line_iter->operand));
                 }
             } else { //Is Value
                 if(is_hex_string(line_iter->operand)){
@@ -163,6 +164,20 @@ void sicxe_asm::set_addresses_after_end() {
     }
 }
 
+void sicxe_asm::set_forward_references() {
+    vector<pair <file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line
+    for(; fr_iter != forward_ref_vector->end(); fr_iter++){
+        string reference = fr_iter->second;
+        if(symbol_table->contains(reference)){
+            symbol_table->insert(fr_iter->first.label, symbol_table->get_value(reference), true);
+        } else {
+            //Forward Reference not found
+            cout << "ERROR - Label \"" << reference << "\" on line " << fr_iter->first.linenum << " not found" << endl;
+            exit(32);
+        }
+    }
+}
+
 void sicxe_asm::do_first_pass() {
     get_to_start_first_pass();
     // Start of flowchart loop
@@ -198,6 +213,7 @@ void sicxe_asm::do_first_pass() {
     }
 
     set_addresses_after_end();
+    set_forward_references();
 
 }
 
@@ -273,8 +289,8 @@ void sicxe_asm::handle_format_one() {
 
 void sicxe_asm::do_second_pass() {
     line_iter = listing_vector->begin();
-    while (to_uppercase(line_iter++->opcode) != "START"); //Gets to line after start
-
+    while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
+    ; //Silences warning for no body while loop
 
         while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         //TODO: Handle Byte/Word Directives
@@ -339,7 +355,7 @@ void sicxe_asm::write_listing_file() {
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
-        do_second_pass();
+       // do_second_pass();
         write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
