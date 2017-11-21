@@ -310,14 +310,11 @@ void sicxe_asm::handle_format_three(){
 
 void sicxe_asm::handle_format_four(){
     string opcode= to_uppercase(line_iter->opcode);
-    string hex_machine_code = opcode_table->get_machine_code(opcode);
-    int int_machine_code = hex_to_int(hex_machine_code);
-    line_iter->machinecode= int_machine_code<<26;
-
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(opcode)) << 26;
+    string operand;
     if(is_indirect(opcode)){
         line_iter->machinecode |= SET_4N;
         line_iter->machinecode |= SET_4E;
-
 
     } else if (is_immediate(opcode)){
         line_iter->machinecode |= SET_4I;
@@ -328,7 +325,6 @@ void sicxe_asm::handle_format_four(){
         line_iter->machinecode |= SET_4I;
         line_iter->machinecode |= SET_4N;
         line_iter->machinecode |= SET_4E;
-
 
     } else {
         //No Addressing Mode
