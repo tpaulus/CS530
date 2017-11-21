@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <utility>
 
 #include "sicxe_asm.h"
 
@@ -89,7 +90,7 @@ void sicxe_asm::get_to_start_first_pass() {
 void sicxe_asm::handle_assembler_directive() {
     string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
     if (to_uppercase(line_iter->opcode) == "EQU") {
-        if (line_iter->label == "") {
+        if (line_iter->label.empty()) {
             cout << "ERROR - Expecting label for EQU assignment on line " << line_iter->linenum << endl;
             exit(4);
         } else if (symbol_table->contains(line_iter->label)) {
@@ -137,13 +138,13 @@ void sicxe_asm::handle_assembler_directive() {
 }
 
 void sicxe_asm::handle_byte_directive() {
-    size_t pos_left = (line_iter->operand).find_first_of("'"); //Left '
-    size_t pos_right = (line_iter->operand).find_last_of("'"); //Right '
+    size_t pos_left = (line_iter->operand).find_first_of('\''); //Left '
+    size_t pos_right = (line_iter->operand).find_last_of('\''); //Right '
     string token = (line_iter->operand).substr(pos_left + 1, pos_right - pos_left - 1); //String between ' '
 
-    if ((line_iter->operand).find("C") == 0 || (line_iter->operand).find("c") == 0) { //starts with C
+    if ((line_iter->operand).find('C') == 0 || (line_iter->operand).find('c') == 0) { //starts with C
         location_counter += token.length();
-    } else if ((line_iter->operand).find("X") == 0 || (line_iter->operand).find("x") == 0) {  //starts with X
+    } else if ((line_iter->operand).find('X') == 0 || (line_iter->operand).find('x') == 0) {  //starts with X
         if ((((int) token.length()) & 1) == 1) {
             cout << "ERROR - Invalid operand " << line_iter->operand << " for BYTE on line ";
             cout << line_iter->linenum << endl;
@@ -165,7 +166,7 @@ void sicxe_asm::set_addresses_after_end() {
 }
 
 void sicxe_asm::set_forward_references() {
-    vector<pair <file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line
+    vector<pair <file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line // NOLINT
     for(; fr_iter != forward_ref_vector->end(); fr_iter++){
         string reference = fr_iter->second;
         if(symbol_table->contains(reference)){
@@ -185,7 +186,7 @@ void sicxe_asm::do_first_pass() {
         line_iter->address = sicxe_asm::int_to_hex(location_counter, 5);
 
         if (!is_assembler_directive(to_uppercase(line_iter->opcode)) && !is_comment_or_empty(*line_iter)) {
-            if (line_iter->label != "") {
+            if (!line_iter->label.empty()) {
                 if (symbol_table->contains(line_iter->label)) {
                     cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
                     cout << line_iter->linenum << endl;
@@ -194,7 +195,7 @@ void sicxe_asm::do_first_pass() {
                 symbol_table->insert(line_iter->label, location_counter, true);
             }
 
-            if (line_iter->opcode != "") {
+            if (!line_iter->opcode.empty()) {
                 try {
                     if (opcode_table->is_valid(to_uppercase(line_iter->opcode))) {
                         location_counter += opcode_table->get_instruction_size(to_uppercase(line_iter->opcode));
@@ -256,21 +257,21 @@ int sicxe_asm::get_register_number(string reg) {
 
     // TODO: Get the rest of the register values; 0 is a placeholder for now
 
-    if(reg.compare("T") == 0) 
+    if(reg == "T")
         return 5;
-    else if(reg.compare("S") == 0)
+    else if(reg == "S")
         return 4;
-    else if(reg.compare("X") == 0)
+    else if(reg == "X")
         return 1;
-    else if(reg.compare("A") == 0)
+    else if(reg == "A")
         return 0;
-    else if(reg.compare("L") == 0)
+    else if(reg == "L")
         return 0;
-    else if(reg.compare("B") == 0)
+    else if(reg == "B")
         return 0;
-    else if(reg.compare("PC") == 0)
+    else if(reg == "PC")
         return 0;
-    else if(reg.compare("SW") == 0)
+    else if(reg == "SW")
         return 0;
     else {
         cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
@@ -280,11 +281,31 @@ int sicxe_asm::get_register_number(string reg) {
 }
 
 int sicxe_asm::get_format(string opcode) {
-    return opcode_table->get_instruction_size(opcode);
+    return opcode_table->get_instruction_size(std::move(opcode));
 }
 
 void sicxe_asm::handle_format_one() {
     line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
+}
+
+void sicxe_asm::handle_format_three(){
+    string opcode = to_uppercase(line_iter->opcode);
+    if(is_indirect(opcode)){
+        line_iter->machinecode |= SET_3N;
+
+    } else if (is_immediate(opcode)){
+        line_iter->machinecode |= SET_3I;
+
+    } else if (is_indexed(opcode)){
+        line_iter->machinecode |= SET_3X;
+        line_iter->machinecode |= SET_3I;
+        line_iter->machinecode |= SET_3N;
+    } else {
+        //No Addressing Mode
+        line_iter->machinecode |= SET_3I;
+        line_iter->machinecode |= SET_3N;
+
+    }
 }
 
 void sicxe_asm::do_second_pass() {
@@ -293,7 +314,7 @@ void sicxe_asm::do_second_pass() {
     ; //Silences warning for no body while loop
 
         while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
-            if(line_iter->opcode == ""){
+            if(line_iter->opcode.empty()){
                 //Do Nothing
             } else if (is_assembler_directive(to_uppercase(line_iter->opcode))){
                 //Handle Byte/Word Directives
@@ -305,7 +326,7 @@ void sicxe_asm::do_second_pass() {
                 else if (format == 2) {
                     // Handle format 2
                 } else if (format == 3) {
-                    // Handle format 3
+                    handle_format_three();
                 } else if (format == 4) {
                     // Handle format 4
                 } else {
@@ -326,8 +347,8 @@ void sicxe_asm::write_listing_file() {
     ofstream lis_file((rawname + ".lis").c_str());
 
     //prog name
-    int l = (filename).length() + 4;
-    int pos = (int) ((50 - l) / 2);
+    long l = (filename).length() + 4;
+    long pos = (50 - l) / 2;
     for (int i = 0; i < pos; i++)
         lis_file << " ";
     lis_file << "**" << filename << "**" << endl;
@@ -379,7 +400,7 @@ bool sicxe_asm::is_assembler_directive(string opcode) {
 }
 
 bool sicxe_asm::is_hex_string(string str) {
-    return str.find("$") == 0;
+    return str.find('$') == 0;
 }
 
 string sicxe_asm::strip_hex_sign(string str) {
@@ -387,7 +408,7 @@ string sicxe_asm::strip_hex_sign(string str) {
 }
 
 string sicxe_asm::hex_to_dec(string str) {
-    return int_to_dec(hex_to_int(str));
+    return int_to_dec(hex_to_int(std::move(str)));
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {

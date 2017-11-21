@@ -9,15 +9,11 @@
 
 #include <iostream>
 #include <map>
-#include <algorithm>
-#include <string>
 #include <sstream>
 #include "opcodetab.h"
 
 using namespace std;
 
-map<string, pair<string, int> > marvin;
-// Don't make the space between > > go away - You will cry!
 
 // ============== BEGIN Helper Functions ==============
 

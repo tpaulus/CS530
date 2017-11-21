@@ -42,7 +42,7 @@ class sicxe_asm {
 
 public:
 
-    sicxe_asm(string);
+    explicit sicxe_asm(string);
 
     void assemble();
 
@@ -121,6 +121,7 @@ private:
     int get_format(string);
 
     void handle_format_one();
+    void handle_format_three();
 
 // Functions
 
