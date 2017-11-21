@@ -293,27 +293,28 @@ void sicxe_asm::do_second_pass() {
     ; //Silences warning for no body while loop
 
         while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
-        //TODO: Handle Byte/Word Directives
-        // Check formats
-        int format = get_format(line_iter->opcode);
-
-        if (format == 1)
-            handle_format_one();
-        else if (format == 2) {
-            // Handle format 2
-        }
-        else if (format == 3) {
-            // Handle format 3
-        }
-        else if (format == 4) {
-            // Handle format 4
-        }
-        else {
-          //  cout << "ERROR - Format type not detected on line ";
-            //cout << line_iter->linenum << endl;
-            //exit(12);
-        }
-
+            if(line_iter->opcode == ""){
+                //Do Nothing
+            } else if (is_assembler_directive(to_uppercase(line_iter->opcode))){
+                //Handle Byte/Word Directives
+            } else {
+                // Check formats
+                int format = get_format(line_iter->opcode);
+                if (format == 1)
+                    handle_format_one();
+                else if (format == 2) {
+                    // Handle format 2
+                } else if (format == 3) {
+                    // Handle format 3
+                } else if (format == 4) {
+                    // Handle format 4
+                } else {
+                    //TODO: Try/Catch in assemble() should handle this?
+                    //  cout << "ERROR - Format type not detected on line ";
+                    //cout << line_iter->linenum << endl;
+                    //exit(12);
+                }
+            }
         line_iter++; //Grab next line and continue
     }
 
@@ -355,13 +356,13 @@ void sicxe_asm::write_listing_file() {
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
-       // do_second_pass();
+        do_second_pass();
         write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
         exit(9);
     } catch (opcode_error_exception error) {
-        cout << "ERROR: " << error.getMessage() << endl;
+        cout << "ERROR: On Line: " << line_iter->linenum << " " << error.getMessage() << endl;
         exit(8);
     } catch (symtab_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
