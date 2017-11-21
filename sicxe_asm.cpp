@@ -80,7 +80,7 @@ void sicxe_asm::get_to_start_first_pass() {
 
     //Loads start address to location counter
     if(is_hex_string(line_iter->operand)){
-        location_counter = hex_to_int(strip_hex_sign(line_iter->operand));
+        location_counter = hex_to_int(strip_flag(line_iter->operand));
     } else {
         location_counter = dec_to_int(line_iter->operand);
     }
@@ -107,7 +107,7 @@ void sicxe_asm::handle_assembler_directive() {
                 }
             } else { //Is Value
                 if(is_hex_string(line_iter->operand)){
-                    symbol_table->insert(line_iter->label, hex_to_int(strip_hex_sign(line_iter->operand)), false);
+                    symbol_table->insert(line_iter->label, hex_to_int(strip_flag(line_iter->operand)), false);
                 } else {
                     symbol_table->insert(line_iter->label, dec_to_int(line_iter->operand), false);
                 }
@@ -123,13 +123,13 @@ void sicxe_asm::handle_assembler_directive() {
         handle_byte_directive();
     } else if (opcode == "RESW") {
         if (is_hex_string(line_iter->operand)) {
-            location_counter += 3 * hex_to_int(strip_hex_sign(line_iter->operand));
+            location_counter += 3 * hex_to_int(strip_flag(line_iter->operand));
         } else {
             location_counter += 3 * dec_to_int(line_iter->operand);
         }
     } else if (opcode == "RESB") {
         if (is_hex_string(line_iter->operand)) {
-            location_counter += hex_to_int(strip_hex_sign(line_iter->operand));
+            location_counter += hex_to_int(strip_flag(line_iter->operand));
         } else {
             location_counter += dec_to_int(line_iter->operand);
         }

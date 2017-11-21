@@ -128,7 +128,7 @@ private:
 
     void write_listing_file();
 
-    string strip_hex_sign(string);
+    string strip_flag(string);
     bool is_assembler_directive(string);
     bool is_hex_string(string);
     string hex_to_dec(string);
