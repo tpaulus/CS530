@@ -290,21 +290,65 @@ void sicxe_asm::handle_format_one() {
 
 void sicxe_asm::handle_format_three(){
     string opcode = to_uppercase(line_iter->opcode);
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(opcode)) << 18;
+    string operand;
     if(is_indirect(opcode)){
         line_iter->machinecode |= SET_3N;
-
+        operand = strip_flag(line_iter->operand);
     } else if (is_immediate(opcode)){
         line_iter->machinecode |= SET_3I;
-
+        operand = strip_flag(line_iter->operand);
     } else if (is_indexed(opcode)){
         line_iter->machinecode |= SET_3X;
         line_iter->machinecode |= SET_3I;
         line_iter->machinecode |= SET_3N;
+        operand = line_iter->operand.substr(0,(line_iter->operand.length()-2));
     } else {
         //No Addressing Mode
         line_iter->machinecode |= SET_3I;
         line_iter->machinecode |= SET_3N;
-
+        operand = line_iter->operand;
+    }
+    if(opcode == "RSUB"){
+        return;
+    } else if (isalpha(*operand.begin())){ //Label
+        int offset = 0;
+        try{
+            offset = symbol_table->get_value(operand);
+        } catch (symtab_exception ste){
+            cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
+            exit(63);
+        }
+        offset -= (hex_to_int(line_iter->address) + 3);
+        if(is_valid_pc(offset)){
+            line_iter->machinecode |= offset;
+            line_iter->machinecode |= SET_3P;
+        } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))){
+            if(BASE == ""){
+                cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line " << line_iter->linenum << endl;
+                exit(63);
+            } else{
+                line_iter->machinecode |= (symbol_table->get_value(BASE) - symbol_table->get_value(operand));
+                line_iter->machinecode |= SET_3B;
+            }
+        }
+    } else { //Constant
+        int value = 0;
+        if(is_hex_string(operand)){
+            value = hex_to_int(strip_flag(operand));
+        } else {
+            value = dec_to_int(operand);
+        }
+        if(is_valid_pc(value)){
+            line_iter->machinecode |= value;
+            line_iter->machinecode |= SET_3P;
+        } else if (is_valid_base(value)){
+            line_iter->machinecode |= value;
+            line_iter->machinecode |= SET_3B;
+        } else {
+            cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum << endl;
+            exit(73);
+         }
     }
 }
 
@@ -377,7 +421,7 @@ void sicxe_asm::write_listing_file() {
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
-       // do_second_pass();
+        do_second_pass();
         write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
@@ -403,7 +447,7 @@ bool sicxe_asm::is_hex_string(string str) {
     return str.find('$') == 0;
 }
 
-string sicxe_asm::strip_hex_sign(string str) {
+string sicxe_asm::strip_flag(string str) {
     return str.substr(1, str.size() - 1);
 }
 
