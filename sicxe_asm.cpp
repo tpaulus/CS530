@@ -308,6 +308,38 @@ void sicxe_asm::handle_format_three(){
     }
 }
 
+void sicxe_asm::handle_format_four(){
+    string opcode= to_uppercase(line_iter->opcode);
+    string hex_machine_code = opcode_table->get_machine_code(opcode);
+    int int_machine_code = hex_to_int(hex_machine_code);
+    line_iter->machinecode= int_machine_code<<26;
+
+    if(is_indirect(opcode)){
+        line_iter->machinecode |= SET_4N;
+        line_iter->machinecode |= SET_4E;
+
+
+    } else if (is_immediate(opcode)){
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4E;
+
+    } else if (is_indexed(opcode)){
+        line_iter->machinecode |= SET_4X;
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4N;
+        line_iter->machinecode |= SET_4E;
+
+
+    } else {
+        //No Addressing Mode
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4N;
+        line_iter->machinecode |= SET_4E;
+
+    }
+
+}
+
 void sicxe_asm::do_second_pass() {
     line_iter = listing_vector->begin();
     while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
@@ -328,7 +360,7 @@ void sicxe_asm::do_second_pass() {
                 } else if (format == 3) {
                     handle_format_three();
                 } else if (format == 4) {
-                    // Handle format 4
+                    handle_format_four();
                 } else {
                     //TODO: Try/Catch in assemble() should handle this?
                     //  cout << "ERROR - Format type not detected on line ";
