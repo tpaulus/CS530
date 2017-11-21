@@ -137,12 +137,16 @@ inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatte
     const int address_col_width = 7;
     const int label_col_width = 10;
     const int opcode_col_width = 11;
+    const int operand_col_width = 12;
+    int machine_code = f_l.machinecode;
 
     out << std::setw(linenum_col_width) << std::right << std::setfill(' ') << f_l.linenum << "     ";
     out << std::setw(address_col_width) << std::right << std::setfill(' ') << f_l.address << "     ";
     out << std::setw(label_col_width) << std::left << std::setfill(' ') << f_l.label;
     out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
-    out << f_l.operand << std::endl;
+    out << std::setw(operand_col_width) << std::left << std::setfill(' ') << f_l.operand;
+    //If it's 0 -> print "" if not print hex version
+    out << ( machine_code == 0 ? "" : sicxe_asm::int_to_hex(machine_code, 8)) << std::endl;
 
     return out;
 }
