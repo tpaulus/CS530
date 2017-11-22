@@ -11,6 +11,8 @@
 #include <map>
 #include <sstream>
 #include "opcodetab.h"
+#include <algorithm>
+
 
 using namespace std;
 
