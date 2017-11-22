@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
+#include <algorithm>
 
 #include "sicxe_asm.h"
 
