@@ -79,7 +79,7 @@ void sicxe_asm::get_to_start_first_pass() {
     line_iter->address = line_iter->address = int_to_hex(location_counter, 5);
 
     //Loads start address to location counter
-    if(is_hex_string(line_iter->operand)){
+    if (is_hex_string(line_iter->operand)) {
         location_counter = hex_to_int(strip_flag(line_iter->operand));
     } else {
         location_counter = dec_to_int(line_iter->operand);
@@ -98,40 +98,51 @@ void sicxe_asm::handle_assembler_directive() {
             exit(4);
         } else {
             //Label is unique
-            if(isalpha(*line_iter->operand.begin())){ //Is label
-                if(symbol_table->contains(line_iter->operand)){
+            if (isalpha(*line_iter->operand.begin())) { //Is label
+                if (symbol_table->contains(line_iter->operand)) {
                     symbol_table->insert(line_iter->label, symbol_table->get_value(line_iter->operand), false);
                 } else {
                     //Forward Reference
-                    forward_ref_vector->push_back(pair<file_parser::formatted_line, string>(*line_iter, line_iter->operand));
+                    forward_ref_vector->push_back(
+                            pair<file_parser::formatted_line, string>(*line_iter, line_iter->operand));
                 }
             } else { //Is Value
-                if(is_hex_string(line_iter->operand)){
+                if (is_hex_string(line_iter->operand)) {
                     symbol_table->insert(line_iter->label, hex_to_int(strip_flag(line_iter->operand)), false);
                 } else {
                     symbol_table->insert(line_iter->label, dec_to_int(line_iter->operand), false);
                 }
             }
         }
-    } else if (opcode == "BASE") {
-        BASE = (line_iter->operand);
-    } else if (opcode == "NOBASE") {
-        BASE = "";
-    } else if (opcode == "WORD") {
-        location_counter += 3;
-    } else if (opcode == "BYTE") {
-        handle_byte_directive();
-    } else if (opcode == "RESW") {
-        if (is_hex_string(line_iter->operand)) {
-            location_counter += 3 * hex_to_int(strip_flag(line_iter->operand));
-        } else {
-            location_counter += 3 * dec_to_int(line_iter->operand);
+    }else {
+        if (!line_iter->label.empty()) {
+            if (symbol_table->contains(line_iter->label)) {
+                cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
+                cout << line_iter->linenum << endl;
+                exit(4);
+            }
+            symbol_table->insert(line_iter->label, location_counter, true);
         }
-    } else if (opcode == "RESB") {
-        if (is_hex_string(line_iter->operand)) {
-            location_counter += hex_to_int(strip_flag(line_iter->operand));
-        } else {
-            location_counter += dec_to_int(line_iter->operand);
+        if (opcode == "BASE") {
+            BASE = (line_iter->operand);
+        } else if (opcode == "NOBASE") {
+            BASE = "";
+        } else if (opcode == "WORD") {
+            location_counter += 3;
+        } else if (opcode == "BYTE") {
+            handle_byte_directive();
+        } else if (opcode == "RESW") {
+            if (is_hex_string(line_iter->operand)) {
+                location_counter += 3 * hex_to_int(strip_flag(line_iter->operand));
+            } else {
+                location_counter += 3 * dec_to_int(line_iter->operand);
+            }
+        } else if (opcode == "RESB") {
+            if (is_hex_string(line_iter->operand)) {
+                location_counter += hex_to_int(strip_flag(line_iter->operand));
+            } else {
+                location_counter += dec_to_int(line_iter->operand);
+            }
         }
     }
 
@@ -166,10 +177,10 @@ void sicxe_asm::set_addresses_after_end() {
 }
 
 void sicxe_asm::set_forward_references() {
-    vector<pair <file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line // NOLINT
-    for(; fr_iter != forward_ref_vector->end(); fr_iter++){
+    vector<pair<file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line // NOLINT
+    for (; fr_iter != forward_ref_vector->end(); fr_iter++) {
         string reference = fr_iter->second;
-        if(symbol_table->contains(reference)){
+        if (symbol_table->contains(reference)) {
             symbol_table->insert(fr_iter->first.label, symbol_table->get_value(reference), true);
         } else {
             //Forward Reference not found
@@ -236,20 +247,25 @@ bool sicxe_asm::is_valid_extended(int value) {
 }
 
 // Checks if the operand holds an immediate value
-bool sicxe_asm::is_immediate(string operand) {
-    return '#' == operand.at(0);
+bool sicxe_asm::is_immediate(string opcode) {
+    if(opcode.empty())
+        return false;
+    return '#' == opcode.at(0);
 }
 
 // Checks if the operand holds an indirect value
-bool sicxe_asm::is_indirect(string operand) {
-    return '@' == operand.at(0);
+bool sicxe_asm::is_indirect(string opcode) {
+    if(opcode.empty())
+        return false;
+    return '@' == opcode.at(0);
 }
 
 // Checks if the operand holds an indexed value
-bool sicxe_asm::is_indexed(string operand) {
-    // TODO: Any special cases???
-                                                   //    , is at 5 here, length is 7
-    return (operand.length() - 2) == operand.find(','); //alpha,x length starts at 1, find at 0
+bool sicxe_asm::is_indexed(string opcode) {
+    if(opcode.empty())
+        return false;
+                                                         //    , is at 5 here, length is 7
+    return (opcode.length() - 2) == opcode.find(','); //alpha,x length starts at 1, find at 0
 }
 
 // Returns the register number for format two machine code
@@ -257,21 +273,21 @@ int sicxe_asm::get_register_number(string reg) {
 
     // TODO: Get the rest of the register values; 0 is a placeholder for now
 
-    if(reg == "T")
+    if (reg == "T")
         return 5;
-    else if(reg == "S")
+    else if (reg == "S")
         return 4;
-    else if(reg == "X")
+    else if (reg == "X")
         return 1;
-    else if(reg == "A")
+    else if (reg == "A")
         return 0;
-    else if(reg == "L")
+    else if (reg == "L")
         return 0;
-    else if(reg == "B")
+    else if (reg == "B")
         return 0;
-    else if(reg == "PC")
+    else if (reg == "PC")
         return 0;
-    else if(reg == "SW")
+    else if (reg == "SW")
         return 0;
     else {
         cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
@@ -288,98 +304,106 @@ void sicxe_asm::handle_format_one() {
     line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
 }
 
-void sicxe_asm::handle_format_three(){
-    string opcode = to_uppercase(line_iter->opcode);
-    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(opcode)) << 18;
-    string operand;
-    if(is_indirect(opcode)){
+void sicxe_asm::handle_format_three() {
+    string operand = to_uppercase(line_iter->operand);
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 16;
+    if (is_indirect(operand)) {
         line_iter->machinecode |= SET_3N;
         operand = strip_flag(line_iter->operand);
-    } else if (is_immediate(opcode)){
+    } else if (is_immediate(operand)) {
         line_iter->machinecode |= SET_3I;
         operand = strip_flag(line_iter->operand);
-    } else if (is_indexed(opcode)){
+    } else if (is_indexed(operand)) {
+        if (operand.at(operand.length() - 1) != 'X') {
+            cout << "ERROR: Invalid Indexed Addressing Mode on line " << line_iter->linenum << endl;
+            exit(132);
+        }
         line_iter->machinecode |= SET_3X;
         line_iter->machinecode |= SET_3I;
         line_iter->machinecode |= SET_3N;
-        operand = line_iter->operand.substr(0,(line_iter->operand.length()-2));
+        operand = line_iter->operand.substr(0, (line_iter->operand.find_first_of(',')));
     } else {
         //No Addressing Mode
         line_iter->machinecode |= SET_3I;
         line_iter->machinecode |= SET_3N;
         operand = line_iter->operand;
     }
-    if(opcode == "RSUB"){
+    if (to_uppercase(line_iter->opcode) == "RSUB") {
         return;
-    } else if (isalpha(*operand.begin())){ //Label
+    } else if (isalpha(*operand.begin())) { //Label
         int offset = 0;
-        try{
+        try {
             offset = symbol_table->get_value(operand);
-        } catch (symtab_exception ste){
+        } catch (symtab_exception ste) {
             cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
             exit(63);
         }
         offset -= (hex_to_int(line_iter->address) + 3);
-        if(is_valid_pc(offset)){
+        if (is_valid_pc(offset)) {
+            if(offset < 0) {
+                offset += 4096; //Makes negative offset positive version, If you or a negative number it wipes machine code
+            }
             line_iter->machinecode |= offset;
             line_iter->machinecode |= SET_3P;
-        } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))){
-            if(BASE == ""){
-                cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line " << line_iter->linenum << endl;
+        } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))) {
+            if (BASE == "") {
+                cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
+                     << line_iter->linenum << endl;
                 exit(63);
-            } else{
+            } else {
                 line_iter->machinecode |= (symbol_table->get_value(BASE) - symbol_table->get_value(operand));
                 line_iter->machinecode |= SET_3B;
             }
         }
     } else { //Constant
         int value = 0;
-        if(is_hex_string(operand)){
+        if (is_hex_string(operand)) {
             value = hex_to_int(strip_flag(operand));
         } else {
             value = dec_to_int(operand);
         }
-        if(is_valid_pc(value)){
+        if (is_valid_pc(value)) {
             line_iter->machinecode |= value;
             line_iter->machinecode |= SET_3P;
-        } else if (is_valid_base(value)){
+        } else if (is_valid_base(value)) {
             line_iter->machinecode |= value;
             line_iter->machinecode |= SET_3B;
         } else {
-            cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum << endl;
+            cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum
+                 << endl;
             exit(73);
-         }
+        }
     }
 }
 
 void sicxe_asm::do_second_pass() {
     line_iter = listing_vector->begin();
     while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
-    ; //Silences warning for no body while loop
+        ; //Silences warning for no body while loop
 
-        while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
-            if(line_iter->opcode.empty()){
-                //Do Nothing
-            } else if (is_assembler_directive(to_uppercase(line_iter->opcode))){
-                //Handle Byte/Word Directives
+    while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+        if (line_iter->opcode.empty()) {
+            //Do Nothing
+        } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) {
+            //Handle Byte/Word Directives
+        } else {
+            // Check formats
+            int format = get_format(line_iter->opcode);
+            if (format == 1)
+                handle_format_one();
+            else if (format == 2) {
+                // Handle format 2
+            } else if (format == 3) {
+                handle_format_three();
+            } else if (format == 4) {
+                // Handle format 4
             } else {
-                // Check formats
-                int format = get_format(line_iter->opcode);
-                if (format == 1)
-                    handle_format_one();
-                else if (format == 2) {
-                    // Handle format 2
-                } else if (format == 3) {
-                    handle_format_three();
-                } else if (format == 4) {
-                    // Handle format 4
-                } else {
-                    //TODO: Try/Catch in assemble() should handle this?
-                    //  cout << "ERROR - Format type not detected on line ";
-                    //cout << line_iter->linenum << endl;
-                    //exit(12);
-                }
+                //TODO: Try/Catch in assemble() should handle this?
+                //  cout << "ERROR - Format type not detected on line ";
+                //cout << line_iter->linenum << endl;
+                //exit(12);
             }
+        }
         line_iter++; //Grab next line and continue
     }
 
@@ -401,7 +425,7 @@ void sicxe_asm::write_listing_file() {
     lis_file << "Line#     ";
     lis_file << "Address     ";
     lis_file << "Label     ";
-    lis_file <<  "Opcode     ";
+    lis_file << "Opcode     ";
     lis_file << "Operand     ";
     lis_file << "Machine Code     " << endl;
     lis_file << "=====     ";
@@ -433,8 +457,8 @@ void sicxe_asm::assemble() {
         cout << "ERROR: " << error.getMessage() << endl;
         exit(7);
     } catch (exception error) {
-      cout << "UNEXEPECTED ERROR: Something when wrong and we don't really know what." << endl;
-      exit(1);
+        cout << "UNEXEPECTED ERROR: on line " << line_iter->linenum << endl;
+        exit(1);
     }
 }
 
