@@ -79,7 +79,7 @@ void sicxe_asm::get_to_start_first_pass() {
     line_iter->address = line_iter->address = int_to_hex(location_counter, 5);
 
     //Loads start address to location counter
-    if(is_hex_string(line_iter->operand)){
+    if (is_hex_string(line_iter->operand)) {
         location_counter = hex_to_int(strip_flag(line_iter->operand));
     } else {
         location_counter = dec_to_int(line_iter->operand);
@@ -98,15 +98,16 @@ void sicxe_asm::handle_assembler_directive() {
             exit(4);
         } else {
             //Label is unique
-            if(isalpha(*line_iter->operand.begin())){ //Is label
-                if(symbol_table->contains(line_iter->operand)){
+            if (isalpha(*line_iter->operand.begin())) { //Is label
+                if (symbol_table->contains(line_iter->operand)) {
                     symbol_table->insert(line_iter->label, symbol_table->get_value(line_iter->operand), false);
                 } else {
                     //Forward Reference
-                    forward_ref_vector->push_back(pair<file_parser::formatted_line, string>(*line_iter, line_iter->operand));
+                    forward_ref_vector->push_back(
+                            pair<file_parser::formatted_line, string>(*line_iter, line_iter->operand));
                 }
             } else { //Is Value
-                if(is_hex_string(line_iter->operand)){
+                if (is_hex_string(line_iter->operand)) {
                     symbol_table->insert(line_iter->label, hex_to_int(strip_flag(line_iter->operand)), false);
                 } else {
                     symbol_table->insert(line_iter->label, dec_to_int(line_iter->operand), false);
@@ -166,10 +167,10 @@ void sicxe_asm::set_addresses_after_end() {
 }
 
 void sicxe_asm::set_forward_references() {
-    vector<pair <file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line // NOLINT
-    for(; fr_iter != forward_ref_vector->end(); fr_iter++){
+    vector<pair<file_parser::formatted_line, string> >::iterator fr_iter = forward_ref_vector->begin(); //Here to make for one one line // NOLINT
+    for (; fr_iter != forward_ref_vector->end(); fr_iter++) {
         string reference = fr_iter->second;
-        if(symbol_table->contains(reference)){
+        if (symbol_table->contains(reference)) {
             symbol_table->insert(fr_iter->first.label, symbol_table->get_value(reference), true);
         } else {
             //Forward Reference not found
@@ -248,7 +249,7 @@ bool sicxe_asm::is_indirect(string operand) {
 // Checks if the operand holds an indexed value
 bool sicxe_asm::is_indexed(string operand) {
     // TODO: Any special cases???
-                                                   //    , is at 5 here, length is 7
+    //    , is at 5 here, length is 7
     return (operand.length() - 2) == operand.find(','); //alpha,x length starts at 1, find at 0
 }
 
@@ -257,21 +258,21 @@ int sicxe_asm::get_register_number(string reg) {
 
     // TODO: Get the rest of the register values; 0 is a placeholder for now
 
-    if(reg == "T")
+    if (reg == "T")
         return 5;
-    else if(reg == "S")
+    else if (reg == "S")
         return 4;
-    else if(reg == "X")
+    else if (reg == "X")
         return 1;
-    else if(reg == "A")
+    else if (reg == "A")
         return 0;
-    else if(reg == "L")
+    else if (reg == "L")
         return 0;
-    else if(reg == "B")
+    else if (reg == "B")
         return 0;
-    else if(reg == "PC")
+    else if (reg == "PC")
         return 0;
-    else if(reg == "SW")
+    else if (reg == "SW")
         return 0;
     else {
         cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
@@ -288,15 +289,15 @@ void sicxe_asm::handle_format_one() {
     line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
 }
 
-void sicxe_asm::handle_format_three(){
+void sicxe_asm::handle_format_three() {
     string opcode = to_uppercase(line_iter->opcode);
-    if(is_indirect(opcode)){
+    if (is_indirect(opcode)) {
         line_iter->machinecode |= SET_3N;
 
-    } else if (is_immediate(opcode)){
+    } else if (is_immediate(opcode)) {
         line_iter->machinecode |= SET_3I;
 
-    } else if (is_indexed(opcode)){
+    } else if (is_indexed(opcode)) {
         line_iter->machinecode |= SET_3X;
         line_iter->machinecode |= SET_3I;
         line_iter->machinecode |= SET_3N;
@@ -308,34 +309,95 @@ void sicxe_asm::handle_format_three(){
     }
 }
 
+void sicxe_asm::handle_format_four() {
+    string operand = to_uppercase(line_iter->operand);
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 24;
+    line_iter->machinecode |= SET_4E;
+    if (is_indirect(operand)) {
+        line_iter->machinecode |= SET_4N;
+        operand = strip_flag(line_iter->operand);
+    } else if (is_immediate(operand)) {
+        line_iter->machinecode |= SET_4I;
+        operand = strip_flag(line_iter->operand);
+    } else if (is_indexed(operand)) {
+        if (operand.at(operand.length() - 1) != 'X') {
+            cout << "ERROR: Invalid Indexed Addressing Mode on line " << line_iter->linenum << endl;
+            exit(132);
+        }
+        line_iter->machinecode |= SET_4X;
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4N;
+        operand = line_iter->operand.substr(0, (line_iter->operand.find_first_of(',')));
+
+    } else {
+        //No Addressing Mode
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4N;
+        operand = line_iter->operand;
+    }
+    if (isalpha(*operand.begin())) { //Label
+        int address = 0;
+        try {
+            address = symbol_table->get_value(operand);
+        } catch (symtab_exception ste) {
+            cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
+            exit(93);
+        }
+        if(is_valid_extended(address)) {
+            line_iter->machinecode |= address;
+        } else {
+            cout << "ERROR: Label " << line_iter->operand << "\'s value is too large for extended format on line " <<
+                 line_iter->linenum << endl;
+            exit(456);
+        }
+
+    } else { //Constant
+        int value = 0;
+        if (is_hex_string(operand)) {
+            value = hex_to_int(strip_flag(operand));
+        } else {
+            value = dec_to_int(operand);
+        }
+        if(is_valid_extended(value)) {
+            line_iter->machinecode |= value;
+        } else {
+            cout << "ERROR: Constant Value " << line_iter->operand << " is too large for extended format on line " <<
+                 line_iter->linenum << endl;
+            exit(654);
+        }
+
+    }
+
+}
+
 void sicxe_asm::do_second_pass() {
     line_iter = listing_vector->begin();
     while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
-    ; //Silences warning for no body while loop
+        ; //Silences warning for no body while loop
 
-        while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
-            if(line_iter->opcode.empty()){
-                //Do Nothing
-            } else if (is_assembler_directive(to_uppercase(line_iter->opcode))){
-                //Handle Byte/Word Directives
+    while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
+        if (line_iter->opcode.empty()) {
+            //Do Nothing
+        } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) {
+            //Handle Byte/Word Directives
+        } else {
+            // Check formats
+            int format = get_format(line_iter->opcode);
+            if (format == 1)
+                handle_format_one();
+            else if (format == 2) {
+                // Handle format 2
+            } else if (format == 3) {
+                handle_format_three();
+            } else if (format == 4) {
+                handle_format_four();
             } else {
-                // Check formats
-                int format = get_format(line_iter->opcode);
-                if (format == 1)
-                    handle_format_one();
-                else if (format == 2) {
-                    // Handle format 2
-                } else if (format == 3) {
-                    handle_format_three();
-                } else if (format == 4) {
-                    // Handle format 4
-                } else {
-                    //TODO: Try/Catch in assemble() should handle this?
-                    //  cout << "ERROR - Format type not detected on line ";
-                    //cout << line_iter->linenum << endl;
-                    //exit(12);
-                }
+                //TODO: Try/Catch in assemble() should handle this?
+                //  cout << "ERROR - Format type not detected on line ";
+                //cout << line_iter->linenum << endl;
+                //exit(12);
             }
+        }
         line_iter++; //Grab next line and continue
     }
 
@@ -357,7 +419,7 @@ void sicxe_asm::write_listing_file() {
     lis_file << "Line#     ";
     lis_file << "Address     ";
     lis_file << "Label     ";
-    lis_file <<  "Opcode     ";
+    lis_file << "Opcode     ";
     lis_file << "Operand     ";
     lis_file << "Machine Code     " << endl;
     lis_file << "=====     ";
@@ -377,7 +439,7 @@ void sicxe_asm::write_listing_file() {
 void sicxe_asm::assemble() {
     try {
         do_first_pass();
-       // do_second_pass();
+        do_second_pass();
         write_listing_file();
     } catch (file_parse_exception error) {
         cout << "ERROR: " << error.getMessage() << endl;
@@ -389,8 +451,8 @@ void sicxe_asm::assemble() {
         cout << "ERROR: " << error.getMessage() << endl;
         exit(7);
     } catch (exception error) {
-      cout << "UNEXEPECTED ERROR: Something when wrong and we don't really know what." << endl;
-      exit(1);
+        cout << "UNEXEPECTED ERROR: Something when wrong and we don't really know what." << endl;
+        exit(1);
     }
 }
 
@@ -403,7 +465,7 @@ bool sicxe_asm::is_hex_string(string str) {
     return str.find('$') == 0;
 }
 
-string sicxe_asm::strip_hex_sign(string str) {
+string sicxe_asm::strip_flag(string str) {
     return str.substr(1, str.size() - 1);
 }
 
