@@ -309,28 +309,55 @@ void sicxe_asm::handle_format_three(){
 }
 
 void sicxe_asm::handle_format_four(){
-    string opcode= to_uppercase(line_iter->opcode);
-    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(opcode)) << 26;
-    string operand;
-    if(is_indirect(opcode)){
+    string operand= to_uppercase(line_iter->operand);
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 26;
+    if(is_indirect(operand)){
         line_iter->machinecode |= SET_4N;
         line_iter->machinecode |= SET_4E;
+        operand = strip_flag(line_iter->operand);
 
-    } else if (is_immediate(opcode)){
+    } else if (is_immediate(operand)){
         line_iter->machinecode |= SET_4I;
         line_iter->machinecode |= SET_4E;
+        operand = strip_flag(line_iter->operand);
 
-    } else if (is_indexed(opcode)){
+    } else if (is_indexed(operand)){
+        if (operand.at(operand.length() - 1) != 'X') {
+            cout << "ERROR: Invalid Indexed Addressing Mode on line " << line_iter->linenum << endl;
+            exit(132);
+        }
         line_iter->machinecode |= SET_4X;
         line_iter->machinecode |= SET_4I;
         line_iter->machinecode |= SET_4N;
         line_iter->machinecode |= SET_4E;
+        operand = line_iter->operand.substr(0,(line_iter->operand.length()-2));
 
     } else {
         //No Addressing Mode
         line_iter->machinecode |= SET_4I;
         line_iter->machinecode |= SET_4N;
         line_iter->machinecode |= SET_4E;
+        operand = line_iter->operand;
+
+    }
+    if(isalpha(*operand.begin())){ //Label
+        int dest =0;
+        try{
+            dest = symbol_table->get_value(operand);
+        } catch (symtab_exception ste){
+            cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
+            exit(63);
+        }
+        line_iter->machinecode |= dest;
+
+    } else{ //Constant
+        int value=0;
+        if(is_hex_string(operand)){
+            value = hex_to_int(strip_flag(operand));
+        } else{
+            value = dec_to_int(operand);
+        }
+        line_iter->machinecode |= value;
 
     }
 
