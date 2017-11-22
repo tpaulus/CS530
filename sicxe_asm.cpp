@@ -377,6 +377,67 @@ void sicxe_asm::handle_format_three() {
     }
 }
 
+void sicxe_asm::handle_format_four() {
+    string operand = to_uppercase(line_iter->operand);
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 24;
+    line_iter->machinecode |= SET_4E;
+    if (is_indirect(operand)) {
+        line_iter->machinecode |= SET_4N;
+        operand = strip_flag(line_iter->operand);
+    } else if (is_immediate(operand)) {
+        line_iter->machinecode |= SET_4I;
+        operand = strip_flag(line_iter->operand);
+    } else if (is_indexed(operand)) {
+        if (operand.at(operand.length() - 1) != 'X') {
+            cout << "ERROR: Invalid Indexed Addressing Mode on line " << line_iter->linenum << endl;
+            exit(132);
+        }
+        line_iter->machinecode |= SET_4X;
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4N;
+        operand = line_iter->operand.substr(0, (line_iter->operand.find_first_of(',')));
+
+    } else {
+        //No Addressing Mode
+        line_iter->machinecode |= SET_4I;
+        line_iter->machinecode |= SET_4N;
+        operand = line_iter->operand;
+    }
+    if (isalpha(*operand.begin())) { //Label
+        int address = 0;
+        try {
+            address = symbol_table->get_value(operand);
+        } catch (symtab_exception ste) {
+            cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
+            exit(93);
+        }
+        if(is_valid_extended(address)) {
+            line_iter->machinecode |= address;
+        } else {
+            cout << "ERROR: Label " << line_iter->operand << "\'s value is too large for extended format on line " <<
+                 line_iter->linenum << endl;
+            exit(456);
+        }
+
+    } else { //Constant
+        int value = 0;
+        if (is_hex_string(operand)) {
+            value = hex_to_int(strip_flag(operand));
+        } else {
+            value = dec_to_int(operand);
+        }
+        if(is_valid_extended(value)) {
+            line_iter->machinecode |= value;
+        } else {
+            cout << "ERROR: Constant Value " << line_iter->operand << " is too large for extended format on line " <<
+                 line_iter->linenum << endl;
+            exit(654);
+        }
+
+    }
+
+}
+
 void sicxe_asm::do_second_pass() {
     line_iter = listing_vector->begin();
     while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
@@ -397,7 +458,7 @@ void sicxe_asm::do_second_pass() {
             } else if (format == 3) {
                 handle_format_three();
             } else if (format == 4) {
-                // Handle format 4
+                handle_format_four();
             } else {
                 //TODO: Try/Catch in assemble() should handle this?
                 //  cout << "ERROR - Format type not detected on line ";
