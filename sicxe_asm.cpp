@@ -298,7 +298,7 @@ int sicxe_asm::get_register_number(string reg) {
 }
 
 int sicxe_asm::get_format(string opcode) {
-    return opcode_table->get_instruction_size(std::move(opcode));
+    return opcode_table->get_instruction_size((opcode));
 }
 
 void sicxe_asm::handle_format_one() {
@@ -477,7 +477,7 @@ string sicxe_asm::strip_flag(string str) {
 }
 
 string sicxe_asm::hex_to_dec(string str) {
-    return int_to_dec(hex_to_int(std::move(str)));
+    return int_to_dec(hex_to_int((str)));
 }
 
 bool is_comment_or_empty(file_parser::formatted_line line) {
