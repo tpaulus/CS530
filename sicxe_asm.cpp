@@ -272,24 +272,24 @@ bool sicxe_asm::is_indexed(string opcode) {
 // Returns the register number for format two machine code
 int sicxe_asm::get_register_number(string reg) {
 
-    // TODO: Get the rest of the register values; 0 is a placeholder for now
-
-    if (reg == "T")
-        return 5;
-    else if (reg == "S")
-        return 4;
+    if (reg == "A")
+        return 0;
     else if (reg == "X")
         return 1;
-    else if (reg == "A")
-        return 0;
     else if (reg == "L")
-        return 0;
+        return 2;
     else if (reg == "B")
-        return 0;
+        return 3;
+    else if (reg == "S")
+        return 4;
+    else if (reg == "T")
+        return 5;
+    else if (reg == "F")
+        return 6;           //There doesn't seem to be a 7th?
     else if (reg == "PC")
-        return 0;
+        return 8;
     else if (reg == "SW")
-        return 0;
+        return 9;
     else {
         cout << "ERROR - Invalid register in the operand \"" << reg << "\" on line ";
         cout << line_iter->linenum << endl;
