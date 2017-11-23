@@ -115,7 +115,7 @@ void sicxe_asm::handle_assembler_directive() {
                 }
             }
         }
-    }else {
+    } else {
         if (!line_iter->label.empty()) {
             if (symbol_table->contains(line_iter->label)) {
                 cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
@@ -249,23 +249,23 @@ bool sicxe_asm::is_valid_extended(int value) {
 
 // Checks if the operand holds an immediate value
 bool sicxe_asm::is_immediate(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
     return '#' == opcode.at(0);
 }
 
 // Checks if the operand holds an indirect value
 bool sicxe_asm::is_indirect(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
     return '@' == opcode.at(0);
 }
 
 // Checks if the operand holds an indexed value
 bool sicxe_asm::is_indexed(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
-                                                         //    , is at 5 here, length is 7
+    //    , is at 5 here, length is 7
     return (opcode.length() - 2) == opcode.find(','); //alpha,x length starts at 1, find at 0
 }
 
@@ -308,8 +308,8 @@ void sicxe_asm::handle_format_one() {
 void sicxe_asm::handle_format_two() {
     string operand = to_uppercase(line_iter->operand);
     line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 8;
-    string regOne = operand.substr(0,operand.find(','));
-    string regTwo = operand.substr(operand.find(',')+1);
+    string regOne = operand.substr(0, operand.find(','));
+    string regTwo = operand.substr(operand.find(',') + 1);
     int reg1 = get_register_number(regOne);
     int reg2 = get_register_number(regTwo);
     line_iter->machinecode |= reg1 << 4;
@@ -352,7 +352,7 @@ void sicxe_asm::handle_format_three() {
         }
         offset -= (hex_to_int(line_iter->address) + 3);
         if (is_valid_pc(offset)) {
-            if(offset < 0) {
+            if (offset < 0) {
                 offset += 4096; //Makes negative offset positive version, If you or a negative number it wipes machine code
             }
             line_iter->machinecode |= offset;
@@ -422,7 +422,7 @@ void sicxe_asm::handle_format_four() {
             cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
             exit(93);
         }
-        if(is_valid_extended(address)) {
+        if (is_valid_extended(address)) {
             line_iter->machinecode |= address;
         } else {
             cout << "ERROR: Label " << line_iter->operand << "\'s value is too large for extended format on line " <<
@@ -437,7 +437,7 @@ void sicxe_asm::handle_format_four() {
         } else {
             value = dec_to_int(operand);
         }
-        if(is_valid_extended(value)) {
+        if (is_valid_extended(value)) {
             line_iter->machinecode |= value;
         } else {
             cout << "ERROR: Constant Value " << line_iter->operand << " is too large for extended format on line " <<
@@ -490,6 +490,9 @@ void sicxe_asm::write_listing_file() {
     //prog name
     long l = (filename).length() + 4;
     long pos = (50 - l) / 2;
+    for (int i = 0; i < pos; i++)
+        lis_file << " ";
+    lis_file << "**" << filename << "**" << endl;
     lis_file << "Line#     ";
     lis_file << "Address     ";
     lis_file << "Label     ";
