@@ -456,6 +456,7 @@ void sicxe_asm::do_second_pass() {
 
     while (line_iter != listing_vector->end() && sicxe_asm::to_uppercase(line_iter->opcode) != "END") {
         if (line_iter->opcode.empty()) {
+
             //Do Nothing
         } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) {
             //Handle Byte/Word Directives
@@ -493,6 +494,8 @@ void sicxe_asm::write_listing_file() {
     for (int i = 0; i < pos; i++)
         lis_file << " ";
     lis_file << "**" << filename << "**" << endl;
+    
+    //header
     lis_file << "Line#     ";
     lis_file << "Address     ";
     lis_file << "Label     ";
