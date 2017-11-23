@@ -305,6 +305,17 @@ void sicxe_asm::handle_format_one() {
     line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
 }
 
+void sicxe_asm::handle_format_two() {
+    string operand = to_uppercase(line_iter->operand);
+    line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 8;
+    string regOne = operand.substr(0,operand.find(','));
+    string regTwo = operand.substr(operand.find(',')+1);
+    int reg1 = get_register_number(regOne);
+    int reg2 = get_register_number(regTwo);
+    line_iter->machinecode |= reg1 << 4;
+    line_iter->machinecode |= reg2;
+}
+
 void sicxe_asm::handle_format_three() {
     string operand = to_uppercase(line_iter->operand);
     line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 16;
@@ -454,7 +465,7 @@ void sicxe_asm::do_second_pass() {
             if (format == 1)
                 handle_format_one();
             else if (format == 2) {
-                // Handle format 2
+                handle_format_two();
             } else if (format == 3) {
                 handle_format_three();
             } else if (format == 4) {
@@ -479,11 +490,6 @@ void sicxe_asm::write_listing_file() {
     //prog name
     long l = (filename).length() + 4;
     long pos = (50 - l) / 2;
-    for (int i = 0; i < pos; i++)
-        lis_file << " ";
-    lis_file << "**" << filename << "**" << endl;
-
-    //header
     lis_file << "Line#     ";
     lis_file << "Address     ";
     lis_file << "Label     ";
