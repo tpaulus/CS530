@@ -309,33 +309,30 @@ void sicxe_asm::handle_format_two() {
     string operand = to_uppercase(line_iter->operand);
     string opcode = sicxe_asm::to_uppercase(line_iter->opcode);
 
-    if( opcode  == "CLEAR" || opcode  == "TIXR"){
+    if (opcode == "CLEAR" || opcode == "TIXR") {
         line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 8;
         string regOne = operand;
         int reg1 = get_register_number(regOne);
         line_iter->machinecode |= reg1 << 4;
-    }
-     else if( opcode  == "SHIFTR" || opcode == "SHIFTL"){
+    } else if (opcode == "SHIFTR" || opcode == "SHIFTL") {
         int shift_amount = dec_to_int(operand.substr(operand.find(',') + 1));
-        if(shift_amount < 1 || shift_amount > 16){
+        if (shift_amount < 1 || shift_amount > 16) {
             cout << "ERROR: invalid shift amoount on line" << line_iter->linenum << endl;
             exit(1);
-        }else{
+        } else {
             shift_amount -= 1;
-            string regOne =  operand.substr(0, operand.find(','));
+            string regOne = operand.substr(0, operand.find(','));
             int reg1 = get_register_number(regOne);
-             line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 8;
+            line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 8;
             line_iter->machinecode |= reg1 << 4;
             line_iter->machinecode |= shift_amount;
         }
-    }
-    else if( opcode  == "SVC"){
+    } else if (opcode == "SVC") {
         int value = dec_to_int(operand.substr(operand.find(',') + 1));
         line_iter->machinecode |= hex_to_int(opcode_table->get_machine_code(line_iter->opcode)) << 8;
         line_iter->machinecode |= value << 4;
-    }
-    else{
-     //standard format 2
+    } else {
+        //standard format 2
         string regOne = operand.substr(0, operand.find(','));
         string regTwo = operand.substr(operand.find(',') + 1);
         int reg1 = get_register_number(regOne);
@@ -524,7 +521,7 @@ void sicxe_asm::write_listing_file() {
     for (int i = 0; i < pos; i++)
         lis_file << " ";
     lis_file << "**" << filename << "**" << endl;
-    
+
     //header
     lis_file << "Line#     ";
     lis_file << "Address     ";
