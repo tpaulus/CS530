@@ -317,8 +317,8 @@ void sicxe_asm::handle_format_two() {
     } else if (opcode == "SHIFTR" || opcode == "SHIFTL") {
         int shift_amount = dec_to_int(operand.substr(operand.find(',') + 1));
         if (shift_amount < 1 || shift_amount > 16) {
-            cout << "ERROR: invalid shift amoount on line" << line_iter->linenum << endl;
-            return;
+            cout << "ERROR: Invalid shift amount on line " << line_iter->linenum << endl;
+            exit(435);
         } else {
             shift_amount -= 1;
             string regOne = operand.substr(0, operand.find(','));
