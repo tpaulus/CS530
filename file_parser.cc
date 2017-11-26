@@ -168,7 +168,7 @@ file_parser::formatted_line file_parser::line_parser(string raw_line, unsigned i
                     break;
                 }
 
-                if(!isalpha(first_letter)) {
+                if(!isalpha(first_letter) && !isspace(first_letter)) {
                     throw file_parse_exception("The first character of a label needs to be a letter at line " + row_num + ".");
                 }
 
