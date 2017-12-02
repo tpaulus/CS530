@@ -331,6 +331,10 @@ void sicxe_asm::handle_format_three() {
     }
     if (to_uppercase(line_iter->opcode) == "RSUB") {
         return;
+    } else if(sicxe_asm::to_uppercase(line_iter->opcode) == "WORD"){
+        handle_word();
+    } else if(sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE")
+        handle_byte();
     } else if (isalpha(*operand.begin())) { //Label
         int offset = 0;
         try {
@@ -403,6 +407,10 @@ void sicxe_asm::handle_format_four() {
         line_iter->machinecode |= SET_4N;
         operand = line_iter->operand;
     }
+    if(sicxe_asm::to_uppercase(line_iter->opcode) == "WORD"){
+        handle_word();
+    } else if(sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE")
+        handle_byte();
     if (isalpha(*operand.begin())) { //Label
         int address = 0;
         try {
@@ -543,4 +551,39 @@ string sicxe_asm::hex_to_dec(string str) {
 
 bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
+}
+
+void handle_word(){
+    int value = 0;
+	if(is_string(line_iter->operand)
+		value = hex_to_int(strip_flag(line_iter->operand);
+	else
+		value = dec_to_int(operand);
+	if(value < -8388608 || value > 8388607){ // 2^23 < value < 2^23-1 
+		cout << "ERROR - invalid storage allocation of WORD on line " << line_iter->line_num << endl;
+        exit(1);
+     }
+	 else //In range
+		line_iter->machinecode = value;
+}
+   
+void handle_byte(){
+    size_t pos_lft = (line_iter->operand).find_first_of('\''); //Left '
+    size_t pos_rght = (line_iter->operand).find_last_of('\''); //Right '
+    string striped_operand = (line_iter->operand).substr(pos_lft + 1, pos_rght - pos_lft - 1); //String between ' '
+
+    if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'C')
+        string token = string_to_hex(striped_operand);       
+        
+    line_iter->machinecode = hex_to_int(token) 
+
+     else if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'X')
+        line_iter->machinecode = hex_to_int(striped_operand)    //hex string to int
+}
+
+string string_to_hex(string s){
+    ostringstream os;
+    for (int i=0; i<s.length() ; i++)
+        os << hex << uppercase << (int) s[i];
+    return os.str();
 }
