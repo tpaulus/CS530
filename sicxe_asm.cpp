@@ -115,7 +115,7 @@ void sicxe_asm::handle_assembler_directive() {
                 }
             }
         }
-    }else {
+    } else {
         if (!line_iter->label.empty()) {
             if (symbol_table->contains(line_iter->label)) {
                 cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
@@ -249,23 +249,23 @@ bool sicxe_asm::is_valid_extended(int value) {
 
 // Checks if the operand holds an immediate value
 bool sicxe_asm::is_immediate(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
     return '#' == opcode.at(0);
 }
 
 // Checks if the operand holds an indirect value
 bool sicxe_asm::is_indirect(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
     return '@' == opcode.at(0);
 }
 
 // Checks if the operand holds an indexed value
 bool sicxe_asm::is_indexed(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
-                                                         //    , is at 5 here, length is 7
+    //    , is at 5 here, length is 7
     return (opcode.length() - 2) == opcode.find(','); //alpha,x length starts at 1, find at 0
 }
 
@@ -341,11 +341,14 @@ void sicxe_asm::handle_format_three() {
         }
         offset -= (hex_to_int(line_iter->address) + 3);
         if (is_valid_pc(offset)) {
-            if(offset < 0) {
+            if (offset < 0) {
                 offset += 4096; //Makes negative offset positive version, If you or a negative number it wipes machine code
             }
             line_iter->machinecode |= offset;
             line_iter->machinecode |= SET_3P;
+        } else if (to_uppercase(line_iter->opcode) == "LDB") {
+            cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum << endl;
+            exit(254);
         } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))) {
             if (BASE == "") {
                 cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
@@ -358,20 +361,29 @@ void sicxe_asm::handle_format_three() {
         }
     } else { //Constant
         int value = 0;
-        if (is_hex_string(operand)) {
+        if (
+                is_hex_string(operand)
+                ) {
             value = hex_to_int(strip_flag(operand));
         } else {
             value = dec_to_int(operand);
         }
-        if (is_valid_pc(value)) {
-            line_iter->machinecode |= value;
+        if (
+                is_valid_pc(value)
+                ) {
+            line_iter->machinecode |=
+                    value;
             line_iter->machinecode |= SET_3P;
-        } else if (is_valid_base(value)) {
-            line_iter->machinecode |= value;
+        } else if (
+                is_valid_base(value)
+                ) {
+            line_iter->machinecode |=
+                    value;
             line_iter->machinecode |= SET_3B;
         } else {
             cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum
-                 << endl;
+                 <<
+                 endl;
             exit(73);
         }
     }
@@ -411,7 +423,7 @@ void sicxe_asm::handle_format_four() {
             cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
             exit(93);
         }
-        if(is_valid_extended(address)) {
+        if (is_valid_extended(address)) {
             line_iter->machinecode |= address;
         } else {
             cout << "ERROR: Label " << line_iter->operand << "\'s value is too large for extended format on line " <<
@@ -426,7 +438,7 @@ void sicxe_asm::handle_format_four() {
         } else {
             value = dec_to_int(operand);
         }
-        if(is_valid_extended(value)) {
+        if (is_valid_extended(value)) {
             line_iter->machinecode |= value;
         } else {
             cout << "ERROR: Constant Value " << line_iter->operand << " is too large for extended format on line " <<
