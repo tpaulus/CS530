@@ -115,7 +115,7 @@ void sicxe_asm::handle_assembler_directive() {
                 }
             }
         }
-    }else {
+    } else {
         if (!line_iter->label.empty()) {
             if (symbol_table->contains(line_iter->label)) {
                 cout << "ERROR - Duplicate label \"" << line_iter->label << "\" on line ";
@@ -249,23 +249,23 @@ bool sicxe_asm::is_valid_extended(int value) {
 
 // Checks if the operand holds an immediate value
 bool sicxe_asm::is_immediate(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
     return '#' == opcode.at(0);
 }
 
 // Checks if the operand holds an indirect value
 bool sicxe_asm::is_indirect(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
     return '@' == opcode.at(0);
 }
 
 // Checks if the operand holds an indexed value
 bool sicxe_asm::is_indexed(string opcode) {
-    if(opcode.empty())
+    if (opcode.empty())
         return false;
-                                                         //    , is at 5 here, length is 7
+    //    , is at 5 here, length is 7
     return (opcode.length() - 2) == opcode.find(','); //alpha,x length starts at 1, find at 0
 }
 
@@ -302,7 +302,7 @@ int sicxe_asm::get_format(string opcode) {
 }
 
 void sicxe_asm::handle_format_one() {
-    line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
+    line_iter->machinecode = static_cast<unsigned int>(hex_to_int(opcode_table->get_machine_code(line_iter->opcode)));
 }
 
 void sicxe_asm::handle_format_three() {
@@ -341,7 +341,7 @@ void sicxe_asm::handle_format_three() {
         }
         offset -= (hex_to_int(line_iter->address) + 3);
         if (is_valid_pc(offset)) {
-            if(offset < 0) {
+            if (offset < 0) {
                 offset += 4096; //Makes negative offset positive version, If you or a negative number it wipes machine code
             }
             line_iter->machinecode |= offset;
@@ -402,7 +402,7 @@ void sicxe_asm::handle_format_four() {
         line_iter->machinecode |= SET_4I;
         line_iter->machinecode |= SET_4N;
         operand = line_iter->operand;
-    } 
+    }
     if (isalpha(*operand.begin())) { //Label
         int address = 0;
         try {
@@ -411,7 +411,7 @@ void sicxe_asm::handle_format_four() {
             cout << "ERROR: Label " << operand << " not found on line " << line_iter->linenum << endl;
             exit(93);
         }
-        if(is_valid_extended(address)) {
+        if (is_valid_extended(address)) {
             line_iter->machinecode |= address;
         } else {
             cout << "ERROR: Label " << line_iter->operand << "\'s value is too large for extended format on line " <<
@@ -426,7 +426,7 @@ void sicxe_asm::handle_format_four() {
         } else {
             value = dec_to_int(operand);
         }
-        if(is_valid_extended(value)) {
+        if (is_valid_extended(value)) {
             line_iter->machinecode |= value;
         } else {
             cout << "ERROR: Constant Value " << line_iter->operand << " is too large for extended format on line " <<
@@ -447,11 +447,12 @@ void sicxe_asm::do_second_pass() {
         if (line_iter->opcode.empty()) {
             //Do Nothing
         } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) { //Handle Byte/Word Directives
-		if(sicxe_asm::to_uppercase(line_iter->opcode) == "WORD"){
-        		handle_word();
-		} else if(sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE"){
-       			handle_byte();
-        }} else {
+            if (sicxe_asm::to_uppercase(line_iter->opcode) == "WORD") {
+                handle_word();
+            } else if (sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE") {
+                handle_byte();
+            }
+        } else {
             // Check formats
             int format = get_format(line_iter->opcode);
             if (format == 1)
@@ -548,35 +549,34 @@ bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }
 
-void sicxe_asm::handle_word(){
+void sicxe_asm::handle_word() {
     int value = 0;
-	if(is_hex_string(line_iter->operand))
-		value = hex_to_int(strip_flag(line_iter->operand));
-	else
-		value = dec_to_int(line_iter->operand);
-	if(value < -8388608 || value > 8388607){ // 2^23 < value < 2^23-1 
-		cout << "ERROR - invalid storage allocation of WORD on line " << line_iter->linenum << endl;
+    if (is_hex_string(line_iter->operand))
+        value = hex_to_int(strip_flag(line_iter->operand));
+    else
+        value = dec_to_int(line_iter->operand);
+    if (value < -8388608 || value > 8388607) { // 2^23 < value < 2^23-1
+        cout << "ERROR - invalid storage allocation of WORD on line " << line_iter->linenum << endl;
         exit(1);
-     }
-	 else //In range
-		line_iter->machinecode = value;
+    } else //In range
+        line_iter->machinecode = static_cast<unsigned int>(value);
 }
-   
-void sicxe_asm::handle_byte(){
+
+void sicxe_asm::handle_byte() {
     size_t pos_lft = (line_iter->operand).find_first_of('\''); //Left '
     size_t pos_rght = (line_iter->operand).find_last_of('\''); //Right '
     string striped_operand = (line_iter->operand).substr(pos_lft + 1, pos_rght - pos_lft - 1); //String between ' '
 
-    if(to_uppercase(string(line_iter->operand.at(0), 1)) == "C"){
+    if (to_uppercase(string(static_cast<unsigned long>(line_iter->operand.at(0)), 1)) == "C") {
         string token = string_to_ascii(striped_operand);
-        line_iter->machinecode = hex_to_int(token);
-    } else if(to_uppercase(string(line_iter->operand.at(0), 1)) == "X")
-        line_iter->machinecode = hex_to_int(striped_operand);    //hex string to int
+        line_iter->machinecode = static_cast<unsigned int>(hex_to_int(token));
+    } else if (to_uppercase(string(static_cast<unsigned long>(line_iter->operand.at(0)), 1)) == "X")
+        line_iter->machinecode = static_cast<unsigned int>(hex_to_int(striped_operand));    //hex string to int
 }
 
-string sicxe_asm::string_to_ascii(string s){
+string sicxe_asm::string_to_ascii(string s) {
     ostringstream os;
-    for (int i=0; i<s.length() ; i++)
-        os << hex << (int) s[i];
+    for (char i : s)
+        os << hex << (int) i;
     return os.str();
 }
