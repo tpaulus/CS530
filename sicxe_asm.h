@@ -121,6 +121,7 @@ private:
     int get_format(string);
 
     void handle_format_one();
+    void handle_format_two();
     void handle_format_three();
     void handle_format_four();
 
