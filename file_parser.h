@@ -24,6 +24,7 @@ public:
         std::string operand;
         std::string comment;
         std::string address;
+        std::string formatted_machinecode;
         unsigned int machinecode;
         unsigned int linenum;
         //Methods
@@ -41,6 +42,7 @@ public:
         std::string getoperand() const;
         std::string getcomment() const;
         std::string getaddress() const;
+        std::string get_formatted_machinecode() const;
         unsigned int getmachinecode();
         unsigned int getlinenum();
     };

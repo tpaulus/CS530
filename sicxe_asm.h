@@ -124,6 +124,8 @@ private:
     void handle_format_three();
     void handle_format_four();
 
+    void format_machinecode(int);
+
 // Functions
 
     void write_listing_file();
@@ -148,7 +150,7 @@ inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatte
     out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
     out << std::setw(operand_col_width) << std::left << std::setfill(' ') << f_l.operand;
     //If it's 0 -> print "" if not print hex version
-    out << ( machine_code == 0 ? "" : sicxe_asm::int_to_hex(machine_code, 2)) << std::endl;
+    out << f_l.formatted_machinecode << std::endl;
 
     return out;
 }
