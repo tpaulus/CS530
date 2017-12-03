@@ -501,11 +501,8 @@ void sicxe_asm::do_second_pass() {
                 handle_byte();
             } else if (to_uppercase(line_iter->opcode) == "BASE") {
                 BASE = line_iter->operand;
-                cout << "NEW BASE WITH " << BASE << endl;
             } else if (to_uppercase(line_iter->opcode) == "NOBASE") {
                 BASE = "";
-                cout << "NO BASE On " << line_iter->linenum << endl;
-
             }
         } else {
             // Check formats
