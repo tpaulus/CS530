@@ -634,6 +634,6 @@ void sicxe_asm::handle_byte() {
 string sicxe_asm::string_to_ascii(string s) {
     ostringstream os;
     for (unsigned int i = 0; i < s.length(); i++)
-        os << hex << uppercase << (int) s[i];
+        os << hex << (int) s[i];
     return os.str();
 }
