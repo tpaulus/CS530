@@ -133,7 +133,7 @@ private:
     bool is_hex_string(string);
     string hex_to_dec(string);
     
-    string string_to_hex(string);
+    string string_to_ascii(string);
     void handle_byte();
     void handle_word();
 };
