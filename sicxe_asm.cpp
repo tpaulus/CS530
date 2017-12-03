@@ -547,7 +547,7 @@ bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
 }
 
-void handle_word(){
+void sicxe_asm::handle_word(){
     int value = 0;
 	if(is_hex_string(line_iter->operand))
 		value = hex_to_int(strip_flag(line_iter->operand);
@@ -561,7 +561,7 @@ void handle_word(){
 		line_iter->machinecode = value;
 }
    
-void handle_byte(){
+void sicxe_asm::handle_byte(){
     size_t pos_lft = (line_iter->operand).find_first_of('\''); //Left '
     size_t pos_rght = (line_iter->operand).find_last_of('\''); //Right '
     string striped_operand = (line_iter->operand).substr(pos_lft + 1, pos_rght - pos_lft - 1); //String between ' '
