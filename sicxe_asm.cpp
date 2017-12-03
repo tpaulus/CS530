@@ -551,11 +551,11 @@ bool is_comment_or_empty(file_parser::formatted_line line) {
 void sicxe_asm::handle_word(){
     int value = 0;
 	if(is_hex_string(line_iter->operand))
-		value = hex_to_int(strip_flag(line_iter->operand);
+		value = hex_to_int(strip_flag(line_iter->operand));
 	else
 		value = dec_to_int(line_iter->operand);
 	if(value < -8388608 || value > 8388607){ // 2^23 < value < 2^23-1 
-		cout << "ERROR - invalid storage allocation of WORD on line " << line_iter->line_num << endl;
+		cout << "ERROR - invalid storage allocation of WORD on line " << line_iter->linenum << endl;
         exit(1);
      }
 	 else //In range
@@ -567,15 +567,14 @@ void sicxe_asm::handle_byte(){
     size_t pos_rght = (line_iter->operand).find_last_of('\''); //Right '
     string striped_operand = (line_iter->operand).substr(pos_lft + 1, pos_rght - pos_lft - 1); //String between ' '
 
-    if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'C'){
-        string token = string_to_hex(striped_operand);       
-        line_iter->machinecode = hex_to_int(token); 
-    
-    } else if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'X')
-        line_iter->machinecode = hex_to_int(striped_operand)    //hex string to int
+    if(to_uppercase(string(line_iter->operand.at(0), 1)) == "C"){
+        string token = string_to_ascii(striped_operand);
+        line_iter->machinecode = hex_to_int(token);
+    } else if(to_uppercase(string(line_iter->operand.at(0), 1)) == "X")
+        line_iter->machinecode = hex_to_int(striped_operand);    //hex string to int
 }
 
-string string_to_ascii(string s){
+string sicxe_asm::string_to_ascii(string s){
     ostringstream os;
     for (int i=0; i<s.length() ; i++)
         os << hex << (int) s[i];
