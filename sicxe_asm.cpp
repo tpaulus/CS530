@@ -382,7 +382,8 @@ void sicxe_asm::handle_format_three() {
             line_iter->machinecode |= offset;
             line_iter->machinecode |= SET_3P;
         } else if (to_uppercase(line_iter->opcode) == "LDB") {
-            cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum << endl;
+            cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum
+                 << endl;
             exit(254);
         } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))) {
             if (BASE == "") {
@@ -499,10 +500,14 @@ void sicxe_asm::do_second_pass() {
 
             //Do Nothing
         } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) { //Handle Byte/Word Directives
-            if (sicxe_asm::to_uppercase(line_iter->opcode) == "WORD") {
+            if (to_uppercase(line_iter->opcode) == "WORD") {
                 handle_word();
-            } else if (sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE") {
+            } else if (to_uppercase(line_iter->opcode) == "BYTE") {
                 handle_byte();
+            } else if (to_uppercase(line_iter->opcode) == "BASE") {
+                BASE = line_iter->operand;
+            } else if (to_uppercase(line_iter->opcode) == "BASE") {
+                BASE = "";
             }
         } else {
             // Check formats
@@ -613,7 +618,7 @@ void sicxe_asm::handle_word() {
         exit(1);
     } else //In range
         line_iter->machinecode = static_cast<unsigned int>(value);
-        format_machinecode(3);
+    format_machinecode(3);
 }
 
 void sicxe_asm::handle_byte() {
