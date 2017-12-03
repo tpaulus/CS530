@@ -485,6 +485,10 @@ void sicxe_asm::handle_format_four() {
 
 }
 
+void sicxe_asm::format_machinecode(int byte_size) {
+    line_iter->formatted_machinecode = int_to_hex(line_iter->machinecode, byte_size * 2);
+}
+
 void sicxe_asm::do_second_pass() {
     line_iter = listing_vector->begin();
     while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
@@ -513,6 +517,7 @@ void sicxe_asm::do_second_pass() {
                 //cout << line_iter->linenum << endl;
                 //exit(12);
             }
+            format_machinecode(format);
         }
         line_iter++; //Grab next line and continue
     }
