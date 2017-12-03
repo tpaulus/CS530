@@ -94,7 +94,7 @@ string formatted_line::getaddress() const {
     return address;
 }
 
-std::string formatted_line::get_formatted_machinecode() const {
+string formatted_line::get_formatted_machinecode() const {
     return formatted_machinecode;
 }
 
