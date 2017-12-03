@@ -402,7 +402,8 @@ void sicxe_asm::handle_format_four() {
         line_iter->machinecode |= SET_4I;
         line_iter->machinecode |= SET_4N;
         operand = line_iter->operand;
-    } if (isalpha(*operand.begin())) { //Label
+    } 
+    if (isalpha(*operand.begin())) { //Label
         int address = 0;
         try {
             address = symbol_table->get_value(operand);
