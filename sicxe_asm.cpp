@@ -385,41 +385,36 @@ void sicxe_asm::handle_format_three() {
             cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum
                  << endl;
             exit(254);
-        } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))) {
+        } else if (is_valid_base(symbol_table->get_value(operand)) - symbol_table->get_value(BASE)) {
             if (BASE == "") {
                 cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
                      << line_iter->linenum << endl;
                 exit(63);
             } else {
-                line_iter->machinecode |= (symbol_table->get_value(BASE) - symbol_table->get_value(operand));
+                line_iter->machinecode |= (symbol_table->get_value(operand)) - symbol_table->get_value(BASE);
                 line_iter->machinecode |= SET_3B;
             }
+        } else {
+            cout << "ERROR: Label " << operand << " can not be encoded using format three on line "
+                 << line_iter->linenum << endl;
+            exit(875);
         }
     } else { //Constant
         int value = 0;
-        if (
-                is_hex_string(operand)
-                ) {
+        if (is_hex_string(operand)) {
             value = hex_to_int(strip_flag(operand));
         } else {
             value = dec_to_int(operand);
         }
-        if (
-                is_valid_pc(value)
-                ) {
-            line_iter->machinecode |=
-                    value;
+        if (is_valid_pc(value)) {
+            line_iter->machinecode |= value;
             line_iter->machinecode |= SET_3P;
-        } else if (
-                is_valid_base(value)
-                ) {
-            line_iter->machinecode |=
-                    value;
+        } else if (is_valid_base(value)) {
+            line_iter->machinecode |= value;
             line_iter->machinecode |= SET_3B;
         } else {
             cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum
-                 <<
-                 endl;
+                 << endl;
             exit(73);
         }
     }
@@ -506,8 +501,11 @@ void sicxe_asm::do_second_pass() {
                 handle_byte();
             } else if (to_uppercase(line_iter->opcode) == "BASE") {
                 BASE = line_iter->operand;
-            } else if (to_uppercase(line_iter->opcode) == "BASE") {
+                cout << "NEW BASE WITH " << BASE << endl;
+            } else if (to_uppercase(line_iter->opcode) == "NOBASE") {
                 BASE = "";
+                cout << "NO BASE On " << line_iter->linenum << endl;
+
             }
         } else {
             // Check formats
