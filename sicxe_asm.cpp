@@ -302,7 +302,7 @@ int sicxe_asm::get_format(string opcode) {
 }
 
 void sicxe_asm::handle_format_one() {
-    line_iter->machinecode = hex_to_int(opcode_table->get_machine_code(line_iter->opcode));
+    line_iter->machinecode = static_cast<unsigned int>(hex_to_int(opcode_table->get_machine_code(line_iter->opcode)));
 }
 
 void sicxe_asm::handle_format_two() {
@@ -498,8 +498,12 @@ void sicxe_asm::do_second_pass() {
         if (line_iter->opcode.empty()) {
 
             //Do Nothing
-        } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) {
-            //Handle Byte/Word Directives
+        } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) { //Handle Byte/Word Directives
+            if (sicxe_asm::to_uppercase(line_iter->opcode) == "WORD") {
+                handle_word();
+            } else if (sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE") {
+                handle_byte();
+            }
         } else {
             // Check formats
             int format = get_format(line_iter->opcode);
@@ -596,4 +600,36 @@ string sicxe_asm::hex_to_dec(string str) {
 
 bool is_comment_or_empty(file_parser::formatted_line line) {
     return line.label.empty() && line.opcode.empty() && line.operand.empty();
+}
+
+void sicxe_asm::handle_word() {
+    int value = 0;
+    if (is_hex_string(line_iter->operand))
+        value = hex_to_int(strip_flag(line_iter->operand));
+    else
+        value = dec_to_int(line_iter->operand);
+    if (value < -8388608 || value > 8388607) { // 2^23 < value < 2^23-1
+        cout << "ERROR - invalid storage allocation of WORD on line " << line_iter->linenum << endl;
+        exit(1);
+    } else //In range
+        line_iter->machinecode = static_cast<unsigned int>(value);
+}
+
+void sicxe_asm::handle_byte() {
+    size_t pos_lft = (line_iter->operand).find_first_of('\''); //Left '
+    size_t pos_rght = (line_iter->operand).find_last_of('\''); //Right '
+    string striped_operand = (line_iter->operand).substr(pos_lft + 1, pos_rght - pos_lft - 1); //String between ' '
+
+    if (to_uppercase(string(static_cast<unsigned long>(line_iter->operand.at(0)), 1)) == "C") {
+        string token = string_to_ascii(striped_operand);
+        line_iter->machinecode = static_cast<unsigned int>(hex_to_int(token));
+    } else if (to_uppercase(string(static_cast<unsigned long>(line_iter->operand.at(0)), 1)) == "X")
+        line_iter->machinecode = static_cast<unsigned int>(hex_to_int(striped_operand));    //hex string to int
+}
+
+string sicxe_asm::string_to_ascii(string s) {
+    ostringstream os;
+    for (unsigned int i = 0; i < s.length(); i++)
+        os << hex << uppercase << (int) s[i];
+    return os.str();
 }
