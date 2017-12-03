@@ -568,10 +568,9 @@ void handle_byte(){
 
     if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'C'){
         string token = string_to_hex(striped_operand);       
-    }    
-    line_iter->machinecode = hex_to_int(token); 
-
-     else if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'X')
+        line_iter->machinecode = hex_to_int(token); 
+    
+    } else if(sicxe_asm::to_uppercase(line_iter->operand.at(0)) == 'X')
         line_iter->machinecode = hex_to_int(striped_operand)    //hex string to int
 }
 
