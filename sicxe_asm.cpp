@@ -613,6 +613,7 @@ void sicxe_asm::handle_word() {
         exit(1);
     } else //In range
         line_iter->machinecode = static_cast<unsigned int>(value);
+        format_machinecode(3);
 }
 
 void sicxe_asm::handle_byte() {
@@ -620,11 +621,14 @@ void sicxe_asm::handle_byte() {
     size_t pos_rght = (line_iter->operand).find_last_of('\''); //Right '
     string striped_operand = (line_iter->operand).substr(pos_lft + 1, pos_rght - pos_lft - 1); //String between ' '
 
-    if (to_uppercase(string(static_cast<unsigned long>(line_iter->operand.at(0)), 1)) == "C") {
+    if (line_iter->operand.at(0) == 'C' || line_iter->operand.at(0) == 'c') {
         string token = string_to_ascii(striped_operand);
         line_iter->machinecode = static_cast<unsigned int>(hex_to_int(token));
-    } else if (to_uppercase(string(static_cast<unsigned long>(line_iter->operand.at(0)), 1)) == "X")
+        format_machinecode(token.length() >> 1);    //Going from char to ascii doubles size
+    } else if (line_iter->operand.at(0) == 'X' || line_iter->operand.at(0) == 'x') {
         line_iter->machinecode = static_cast<unsigned int>(hex_to_int(striped_operand));    //hex string to int
+        format_machinecode(striped_operand.length() >> 1);
+    }
 }
 
 string sicxe_asm::string_to_ascii(string s) {
