@@ -130,11 +130,15 @@ private:
 // Functions
 
     void write_listing_file();
-
+    
     string strip_flag(string);
     bool is_assembler_directive(string);
     bool is_hex_string(string);
     string hex_to_dec(string);
+    
+    string string_to_ascii(string);
+    void handle_byte();
+    void handle_word();
 };
 
 inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatted_line &f_l) {
@@ -143,7 +147,6 @@ inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatte
     const int label_col_width = 10;
     const int opcode_col_width = 11;
     const int operand_col_width = 12;
-    int machine_code = f_l.machinecode;
 
     out << std::setw(linenum_col_width) << std::right << std::setfill(' ') << f_l.linenum << "     ";
     out << std::setw(address_col_width) << std::right << std::setfill(' ') << f_l.address << "     ";
