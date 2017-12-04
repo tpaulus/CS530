@@ -406,14 +406,10 @@ void sicxe_asm::handle_format_three() {
         } else {
             value = dec_to_int(operand);
         }
-        if (is_valid_pc(value)) {
-            line_iter->machinecode |= value;
-            line_iter->machinecode |= SET_3P;
-        } else if (is_valid_base(value)) {
-            line_iter->machinecode |= value;
-            line_iter->machinecode |= SET_3B;
+        if (is_valid_base(value)) {
+            line_iter->machinecode |=value;
         } else {
-            cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum
+            cout << "ERROR: Constant Value " << operand << " out of bounds for format 3 on line " << line_iter->linenum
                  << endl;
             exit(73);
         }
