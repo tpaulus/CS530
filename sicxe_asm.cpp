@@ -385,15 +385,19 @@ void sicxe_asm::handle_format_three() {
             cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum
                  << endl;
             exit(254);
-        } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))) {
+        } else if (is_valid_base(symbol_table->get_value(operand)) - symbol_table->get_value(BASE)) {
             if (BASE == "") {
                 cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
                      << line_iter->linenum << endl;
                 exit(63);
             } else {
-                line_iter->machinecode |= (symbol_table->get_value(BASE) - symbol_table->get_value(operand));
+                line_iter->machinecode |= (symbol_table->get_value(operand)) - symbol_table->get_value(BASE);
                 line_iter->machinecode |= SET_3B;
             }
+        } else {
+            cout << "ERROR: Label " << operand << " can not be encoded using format three on line "
+                 << line_iter->linenum << endl;
+            exit(875);
         }
     } else { //Constant
         int value = 0;
@@ -487,10 +491,14 @@ void sicxe_asm::do_second_pass() {
 
             //Do Nothing
         } else if (is_assembler_directive(to_uppercase(line_iter->opcode))) { //Handle Byte/Word Directives
-            if (sicxe_asm::to_uppercase(line_iter->opcode) == "WORD") {
+            if (to_uppercase(line_iter->opcode) == "WORD") {
                 handle_word();
-            } else if (sicxe_asm::to_uppercase(line_iter->opcode) == "BYTE") {
+            } else if (to_uppercase(line_iter->opcode) == "BYTE") {
                 handle_byte();
+            } else if (to_uppercase(line_iter->opcode) == "BASE") {
+                BASE = line_iter->operand;
+            } else if (to_uppercase(line_iter->opcode) == "NOBASE") {
+                BASE = "";
             }
         } else {
             // Check formats
@@ -611,8 +619,7 @@ void sicxe_asm::handle_byte() {
 
     if (line_iter->operand.at(0) == 'C' || line_iter->operand.at(0) == 'c') {
         string token = string_to_ascii(striped_operand);
-        line_iter->machinecode = static_cast<unsigned int>(hex_to_int(token));
-        format_machinecode(token.length() >> 1);    //Going from char to ascii doubles size
+        line_iter->formatted_machinecode = to_uppercase(token);
     } else if (line_iter->operand.at(0) == 'X' || line_iter->operand.at(0) == 'x') {
         line_iter->machinecode = static_cast<unsigned int>(hex_to_int(striped_operand));    //hex string to int
         format_machinecode(striped_operand.length() >> 1);
