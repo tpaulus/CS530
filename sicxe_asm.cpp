@@ -382,7 +382,8 @@ void sicxe_asm::handle_format_three() {
             line_iter->machinecode |= offset;
             line_iter->machinecode |= SET_3P;
         } else if (to_uppercase(line_iter->opcode) == "LDB") {
-            cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum << endl;
+            cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum
+                 << endl;
             exit(254);
         } else if (is_valid_base(symbol_table->get_value(BASE) - symbol_table->get_value(operand))) {
             if (BASE == "") {
@@ -396,29 +397,16 @@ void sicxe_asm::handle_format_three() {
         }
     } else { //Constant
         int value = 0;
-        if (
-                is_hex_string(operand)
-                ) {
+        if (is_hex_string(operand)) {
             value = hex_to_int(strip_flag(operand));
         } else {
             value = dec_to_int(operand);
         }
-        if (
-                is_valid_pc(value)
-                ) {
-            line_iter->machinecode |=
-                    value;
-            line_iter->machinecode |= SET_3P;
-        } else if (
-                is_valid_base(value)
-                ) {
-            line_iter->machinecode |=
-                    value;
-            line_iter->machinecode |= SET_3B;
+        if (is_valid_base(value)) {
+            line_iter->machinecode |=value;
         } else {
-            cout << "ERROR: Constant Value " << operand << " too large for format 3 on line " << line_iter->linenum
-                 <<
-                 endl;
+            cout << "ERROR: Constant Value " << operand << " out of bounds for format 3 on line " << line_iter->linenum
+                 << endl;
             exit(73);
         }
     }
@@ -613,7 +601,7 @@ void sicxe_asm::handle_word() {
         exit(1);
     } else //In range
         line_iter->machinecode = static_cast<unsigned int>(value);
-        format_machinecode(3);
+    format_machinecode(3);
 }
 
 void sicxe_asm::handle_byte() {
