@@ -2,7 +2,7 @@
  * Alexander Pearson-Goulart, Athena Campbell, Jon Verne, Neha Nene, Tom Paulus, William Fox
  * cssc1015
  * Team Virginia
- * prog3
+ * prog4
  * CS530, Fall 2017
  *
 */
