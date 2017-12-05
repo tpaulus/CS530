@@ -148,11 +148,11 @@ inline std::ofstream &operator<<(std::ofstream &out, const file_parser::formatte
     const int opcode_col_width = 11;
     const int operand_col_width = 12;
 
-//    out << std::setw(linenum_col_width) << std::right << std::setfill(' ') << f_l.linenum << "     ";
-//    out << std::setw(address_col_width) << std::right << std::setfill(' ') << f_l.address << "     ";
-//    out << std::setw(label_col_width) << std::left << std::setfill(' ') << f_l.label;
-//    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
-//    out << std::setw(operand_col_width) << std::left << std::setfill(' ') << f_l.operand;
+    out << std::setw(linenum_col_width) << std::right << std::setfill(' ') << f_l.linenum << "     ";
+    out << std::setw(address_col_width) << std::right << std::setfill(' ') << f_l.address << "     ";
+    out << std::setw(label_col_width) << std::left << std::setfill(' ') << f_l.label;
+    out << std::setw(opcode_col_width) << std::left << std::setfill(' ') << f_l.opcode;
+    out << std::setw(operand_col_width) << std::left << std::setfill(' ') << f_l.operand;
     out << f_l.formatted_machinecode << std::endl;
 
     return out;
