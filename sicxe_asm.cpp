@@ -385,7 +385,7 @@ void sicxe_asm::handle_format_three() {
             cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum
                  << endl;
             exit(254);
-        } else if (is_valid_base(symbol_table->get_value(operand)) - symbol_table->get_value(BASE)) {
+        } else if (is_valid_base(symbol_table->get_value(operand) - symbol_table->get_value(BASE))) {
             if (BASE == "") {
                 cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
                      << line_iter->linenum << endl;
