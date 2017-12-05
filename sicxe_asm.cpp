@@ -385,20 +385,19 @@ void sicxe_asm::handle_format_three() {
             cout << "ERROR: Can not load base register using base relative addressing on line " << line_iter->linenum
                  << endl;
             exit(254);
+        } else if (BASE == "") {
+            cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
+                 << line_iter->linenum << endl;
+            exit(63);
         } else if (is_valid_base(symbol_table->get_value(operand) - symbol_table->get_value(BASE))) {
-            if (BASE == "") {
-                cout << "ERROR: Label " << operand << " too far away for pc relative and base not set on line "
-                     << line_iter->linenum << endl;
-                exit(63);
-            } else {
-                line_iter->machinecode |= (symbol_table->get_value(operand)) - symbol_table->get_value(BASE);
-                line_iter->machinecode |= SET_3B;
-            }
+            line_iter->machinecode |= (symbol_table->get_value(operand)) - symbol_table->get_value(BASE);
+            line_iter->machinecode |= SET_3B;
         } else {
-            cout << "ERROR: Label " << operand << " can not be encoded using format three on line "
+            cout << "ERROR: Label " << operand << " too far away for pc relative and base relative on line "
                  << line_iter->linenum << endl;
             exit(875);
         }
+
     } else { //Constant
         int value = 0;
         if (is_hex_string(operand)) {
@@ -407,7 +406,7 @@ void sicxe_asm::handle_format_three() {
             value = dec_to_int(operand);
         }
         if (is_valid_base(value)) {
-            line_iter->machinecode |=value;
+            line_iter->machinecode |= value;
         } else {
             cout << "ERROR: Constant Value " << operand << " out of bounds for format 3 on line " << line_iter->linenum
                  << endl;
@@ -482,6 +481,7 @@ void sicxe_asm::format_machinecode(int byte_size) {
 }
 
 void sicxe_asm::do_second_pass() {
+    BASE = "";
     line_iter = listing_vector->begin();
     while (to_uppercase(line_iter++->opcode) != "START") //Gets to line after start
         ; //Silences warning for no body while loop
