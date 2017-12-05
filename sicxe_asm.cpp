@@ -395,7 +395,7 @@ void sicxe_asm::handle_format_three() {
         } else {
             cout << "ERROR: Label " << operand << " too far away for pc relative and base relative on line "
                  << line_iter->linenum << endl;
-            exit(63);
+            exit(875);
         }
 
     } else { //Constant
